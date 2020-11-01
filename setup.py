@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="automate-insurance-pricing", 
-    version="0.0.1",
+    version="0.0.2",
     author="Nassim Ezzakraoui",
     author_email="nassmim972@gmail.com",
     description="Bunch of functions for insurance pricing purposes",
