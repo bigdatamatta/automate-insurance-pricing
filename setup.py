@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="automate-insurance-pricing", # Replace with your own username
+    name="automate-insurance-pricing", 
     version="0.0.1",
     author="Nassim Ezzakraoui",
     author_email="nassmim972@gmail.com",
