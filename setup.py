@@ -6,14 +6,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="automate-pricing-nassimezz", # Replace with your own username
+    name="automate-insurance-pricing", # Replace with your own username
     version="0.0.1",
     author="Nassim Ezzakraoui",
     author_email="nassmim972@gmail.com",
     description="Bunch of functions for insurance pricing purposes",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/nassmim/automate-insurance-pricing-nezz",
+    url="https://github.com/nassmim/automate-insurance-pricing",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python",

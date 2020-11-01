@@ -1,4 +1,4 @@
-# automate-insurance-pricing-nezz
+# automate-insurance-pricing
 
 ## Introduction
 Library built on top of pandas gathering within submodules a bunch of functions aiming at speeding up usual tasks while dealing with data prep, visualization, profitability analysis and risk modelling in insurance field.
