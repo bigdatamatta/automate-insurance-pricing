@@ -1,20 +1,45 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# automate-insurance-pricing-nezz
+
+## Introduction
+Library built on top of pandas gathering within submodules a bunch of functions aiming at speeding up usual tasks while dealing with data prep, visualization, profitability analysis and risk modelling in insurance field.
+
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## 1.	Installation process
+
+To install use pip: pip install chainladder
+
+Alternatively, install directly from github: pip install git+https://github.com/nassmim/automate-insurance-pricing-nezz
+
+*Note: This package requires Python 3.7 and later.*
+
+## 2.	Software/Libraries dependencies
+
+Below the list of necessary libraries:
+
+*chainladder==0.7.1
+docx-mailmerge==0.5.0
+graphviz==0.13.2
+hyperopt==0.2.3
+imbalanced-learn==0.6.2
+joypy==0.2.2
+lightgbm==2.3.0
+matplotlib==3.1.3
+numpy==1.18.1
+openpyxl==3.0.3
+pandas==1.0.3
+requests==2.22.0
+scikit-learn==0.22.1
+scipy==1.4.1
+seaborn==0.10.0
+statsmodels==0.11.1
+streamlit==0.59.0
+xgboost==0.90
+xlrd==1.2.0
+XlsxWriter==1.2.7
+xlwings==0.19.2*
+
 
 # Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Anyone willing to make this library more exhaustive and efficient  

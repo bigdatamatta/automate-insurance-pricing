@@ -1,40 +1,24 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-import re
-import subprocess
-from typing import List
-
-from setuptools import setup
+import setuptools
 
 PYTHON_VERSION="3.7"
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
-# Return git remote url
-def _git_url() -> str:
-    try:
-        out = subprocess.check_output(["git", "remote", "get-url", "origin"], cwd=".", universal_newlines=True)
-        return out.strip()
-    except subprocess.CalledProcessError:
-        # git returned error, we are not in a git repo
-        return ""
-    except OSError:
-        # git command not found, probably
-        return ""
-
-
-# Return Git remote in HTTP form
-def _git_http_url() -> str:
-    return re.sub(r".*@(.*):(.*).git", r"http://\1/\2", _git_url())
-
-setup(
-    name='automated_pricing_flow',
-    version=automated_pricing_flow.__version__,
-    author="Wakam",
-    author_email="nassim.ezzakraoui@wakam.com",
-    description="Package made to automate the pricing steps from exploration to modelling",
-    url=_git_http_url(),
-    license='Private usage',
+setuptools.setup(
+    name="automate-pricing-nassimezz", # Replace with your own username
+    version="0.0.1",
+    author="Nassim Ezzakraoui",
+    author_email="nassmim972@gmail.com",
+    description="Bunch of functions for insurance pricing purposes",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/nassmim/automate-insurance-pricing-nezz",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "Programming Language :: Python",
+        "License :: Private usage",
+        "Operating System :: OS Independent",
+    ],
     python_requires='~=' + PYTHON_VERSION,
-    packages=['automated_pricing_flow']
 )
-
