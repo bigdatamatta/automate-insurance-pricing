@@ -105,7 +105,7 @@ def derive_yearly_amounts(df, start_business_year, extraction_date, main_column_
     if row_per_each_contract_year == True:
         for year in range(start_business_year, extraction_year + 1):
             df_copy['exposure_in_{}'.format(year)] = df_copy.apply(lambda x: derive_annual_exposure(x, year, extraction_date, main_column_contract_date, add_one_day), axis=1)
-            df_copy['asif_earned_premium_in_{}'.format(year)] = df_copy['exposure_in_{}'.format(year)] * df_copy[]
+            df_copy['asif_earned_premium_in_{}'.format(year)] = df_copy['exposure_in_{}'.format(year)] * df_copy[premium_column_name]
 
     else:
         for year in range(start_business_year, extraction_year + 1):
