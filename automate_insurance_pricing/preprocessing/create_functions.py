@@ -89,10 +89,10 @@ def derive_policy_totals(row, start_business_year, extraction_year, column_to_us
 
 
 
-def derive_yearly_amounts(df, start_business_year, extraction_date, main_column_contract_date, row_per_each_contract_year=True, add_one_day=False, premium_column_name='asif_written_premium_excl_taxes', number_paid_premim_column_name='written_multiplier'):
+def derive_yearly_amounts(df, start_business_year, extraction_date, main_column_contract_date, contract_end_date='contract_end_date', row_per_each_contract_year=True, add_one_day=False, premium_column_name='asif_written_premium_excl_taxes', number_paid_premim_column_name='written_multiplier'):
     """
         Derives the earned amounts (premium, commission, etc.) for each occurrence year
-        Arguments --> the df row, the business start year, the data extraction date, the contract column name
+        Arguments --> the df row, the business start year, the data extraction date, the contract start and end columns names
                     a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
                     a flag indicating if a day must be added to the end date to derive the dates differences,
                     the columns names to use for premium and for the number of times premiums was paid 
@@ -104,14 +104,14 @@ def derive_yearly_amounts(df, start_business_year, extraction_date, main_column_
     
     if row_per_each_contract_year == True:
         for year in range(start_business_year, extraction_year + 1):
-            df_copy['exposure_in_{}'.format(year)] = df_copy.apply(lambda x: derive_annual_exposure(x, year, extraction_date, main_column_contract_date, add_one_day), axis=1)
+            df_copy['exposure_in_{}'.format(year)] = df_copy.apply(lambda x: derive_annual_exposure(x, year, extraction_date, main_column_contract_date, contract_end_date, add_one_day), axis=1)
             df_copy['asif_earned_premium_in_{}'.format(year)] = df_copy['exposure_in_{}'.format(year)] * df_copy[premium_column_name]
 
     else:
         for year in range(start_business_year, extraction_year + 1):
-            df_copy['exposure_in_{}'.format(year)] = df_copy.apply(lambda x: derive_annual_exposure(x, year, extraction_date, main_column_contract_date, add_one_day), axis=1)
-            df_copy['asif_written_premium_in_{}'.format(year)] = df_copy.apply(lambda x: derive_yearly_amount(x, year, extraction_date, main_column_contract_date, column_to_use=premium_column_name), axis=1)
-            df_copy['asif_earned_premium_in_{}'.format(year)] = df_copy['exposure_in_{}'.format(year)] * df_copy[premium_column_name] / df_copy[written_multiplier]
+            df_copy['exposure_in_{}'.format(year)] = df_copy.apply(lambda x: derive_annual_exposure(x, year, extraction_date, main_column_contract_date, contract_end_date, add_one_day), axis=1)
+            df_copy['asif_written_premium_in_{}'.format(year)] = df_copy.apply(lambda x: derive_yearly_amount(x, year, extraction_date, main_column_contract_date, premium_column_name=premium_column_name, contract_end_date=contract_end_date, number_paid_premim_column_name=number_paid_premim_column_name), axis=1)
+            df_copy['asif_earned_premium_in_{}'.format(year)] = df_copy['exposure_in_{}'.format(year)] * df_copy[premium_column_name] / df_copy[number_paid_premim_column_name]
 
     return df_copy
 
@@ -140,7 +140,7 @@ def derive_yearly_amounts(df, start_business_year, extraction_date, main_column_
 
 
 
-def derive_yearly_amount(row, year, extraction_date, main_column_contract_date, premium_column_name='asif_written_premium_excl_taxes', actual_contract_end_date_column_name='actual_contract_end_date', number_paid_premim_column_name='written_multiplier'):
+def derive_yearly_amount(row, year, extraction_date, main_column_contract_date, premium_column_name='asif_written_premium_excl_taxes', contract_end_date='actual_contract_end_date', number_paid_premim_column_name='written_multiplier'):
     """
         Derives the earned amounts (premium, commission, etc.) in a specific year
         Arguments --> the df row, the year
@@ -152,19 +152,16 @@ def derive_yearly_amount(row, year, extraction_date, main_column_contract_date, 
 
     multiplier = row[number_paid_premim_column_name]
     amount = row[premium_column_name] / multiplier if multiplier > 0 else 0
-    year_number_of_days = 365
 
-    if year < row[main_column_contract_date].year or year > row[actual_contract_end_date_column_name].year:
+    if year < row[main_column_contract_date].year or year > row[contract_end_date].year:
         amount = 0
 
-    elif year == row[actual_contract_end_date_column_name].year:
-
-        year_number_of_days = 366
+    elif year == row[contract_end_date].year:
 
         if year < row[main_column_contract_date].year + multiplier:
-            if row[actual_contract_end_date_column_name] <= addYears(row[main_column_contract_date], multiplier - 1):
+            if row[contract_end_date] <= addYears(row[main_column_contract_date], multiplier - 1):
                 amount = 0
-        elif row[actual_contract_end_date_column_name] <= addYears(row[main_column_contract_date], multiplier):
+        elif row[contract_end_date] <= addYears(row[main_column_contract_date], multiplier):
             amount = 0
         elif extraction_date < addYears(row[main_column_contract_date], multiplier):
             amount = 0
@@ -254,19 +251,19 @@ def derive_premium_multiplier(df, main_column_contract_date, row_per_each_contra
         Arguments --> the df row, the data main contract date (if it's at effective or inception year), a boolean indicating if only the annual premium is indicated,
                     a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment
         Returns --> The total premium depending on the contract length
-    """
+    """ 
 
     def derive_length(row):
         """ Calculate the length of the contract """
 
-        contract_length = math.ceil(row[actual_contract_length_column_name])
+        contract_length = row[actual_contract_length_column_name]
 
         derived_end = addYears(row[main_column_contract_date], contract_length - 1)
 
-        if row[actual_contract_end_date_column_name] == row[main_column_contract_date]:
+        if contract_length == 0 or row[actual_contract_end_date_column_name] == row[main_column_contract_date]:
             return 0
         else:
-            return contract_length if row[actual_contract_end_date_column_name] > derived_end else max(1, contract_length - 1) 
+            return contract_length if derived_end < row[actual_contract_end_date_column_name] else max(1, contract_length - 1) 
 
     if row_per_each_contract_year == False and annual_premium == True:
         multipliers = df.apply(lambda x: derive_length(x), axis=1)
@@ -340,19 +337,19 @@ def impute_mean_mode(df, columns):
 
 
 
-def check_create_datetime(df, column):
+def check_create_datetime(df, column, format='%d/%m/%Y'):
     """Checks if the column is a datetime or if it needs to be converted"""
 
     try:
         check = df[column].dt.year
         return df[column]
     except:
-        return convert_to_datetime(df, column)
+        return convert_to_datetime(df, column, format=format)
 
     
 
-def convert_to_datetime(df, columns=None):
-    return df[columns].apply(pd.to_datetime)
+def convert_to_datetime(df, columns=None, format='%d/%m/%Y'):
+    return df[columns].apply(pd.to_datetime, format=format)
 
 
 
@@ -401,5 +398,4 @@ def create_columns(df, columns):
 
 
 def rename_columns(df, names_mapping):
-    cols = df.columns
     return df.rename(columns=names_mapping)

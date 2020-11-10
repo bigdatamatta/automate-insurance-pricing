@@ -36,17 +36,18 @@ def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features
 
 
 def get_interquartile_lower_upper(df, target_column):   
-    """Gets thequantiles to see which level should be considered consistent"""
+    """Gets the quantiles to see which level should be considered consistent"""
     
     quantile_25 = df[target_column].quantile(0.25)
     median = df[target_column].quantile(0.5)
     quantile_75 = df[target_column].quantile(0.75)
 
-    interquartile_range = quantile_75 - quantile_25
-    lower_bound = quantile_25 - 1.5 * interquartile_range
-    upper_bound = quantile_75 + 1.5 * interquartile_range   
+    interquartile_range = [quantile_25, quantile_75]
+    interquartile = quantile_75 - quantile_25
+    lower_bound = quantile_25 - 1.5 * interquartile
+    upper_bound = quantile_75 + 1.5 * interquartile   
     
-    return lower_bound, upper_bound
+    return interquartile_range, lower_bound, upper_bound
 
 
 
@@ -127,7 +128,7 @@ def run_all_analysis_by_year(df_portfolio, df_claims, portfolio_kpis, claims_kpi
     return df_analysis_occurrence_year, df_analysis_inception_year, df_analysis_effective_year
 
 
-def build_table(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, row_per_each_contract_year=True, table_for_prediction=True, kpis_list=None, analysis_year_level=None, portfolio_group_by_columns=None, claims_group_by_columns=None, earned_premium_column_name='earned_premium' triangle=None, style_format=False, currency='€', **kwargs):
+def build_table(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, row_per_each_contract_year=True, table_for_prediction=True, kpis_list=None, analysis_year_level=None, portfolio_group_by_columns=None, claims_group_by_columns=None, earned_premium_column_name='earned_premium', triangle=None, style_format=False, currency='€', **kwargs):
     """
         Creates a summary table displaying the selected KPIs per variable through a groupby aggregate
         Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.),
@@ -351,7 +352,7 @@ def derive_per_occurrence_year(df, start_business_year, extraction_year, main_co
     return df_sum
 
 
-def get_written_premium_occurrence_year(df, policy_id_column_name, column_to_sum_name, main_column_contract_date, row_per_each_contract_year=True, unknown_rows_name=None, start_business_year=None, extraction_year=None, =None, years=None, year_column_name=None, df_group_by=None, alone=True, style_format=True, currency='€'):
+def get_written_premium_occurrence_year(df, policy_id_column_name, column_to_sum_name, main_column_contract_date, row_per_each_contract_year=True, unknown_rows_name=None, start_business_year=None, extraction_year=None, years=None, year_column_name=None, df_group_by=None, alone=True, style_format=True, currency='€'):
     """
         This function derives the right written premium per occurrence year depending on the df format
         Arguments --> the df, the columns name for the policy id, the written premium the contract date and the claim occurrence year,
