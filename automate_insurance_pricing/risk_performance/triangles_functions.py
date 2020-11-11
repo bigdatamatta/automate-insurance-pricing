@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 
-def include_ibnr(row, ibnr_rates, extraction_year, claims_column_name='asif_total_capped_cost', occurrence_date_column_name='occurrence_date'):
+def add_ibnr(row, ibnr_rates, extraction_year, claims_column_name='asif_total_capped_cost', occurrence_date_column_name='occurrence_date'):
 
     claim_year = row[occurrence_date_column_name].year
 
