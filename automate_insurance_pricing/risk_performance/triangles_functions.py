@@ -7,6 +7,18 @@ import matplotlib.pyplot as plt
 
 
 
+def include_ibnr(row, ibnr_rates, extraction_year, claims_column_name='asif_total_capped_cost', occurrence_date_column_name='occurrence_date'):
+
+    claim_year = row[occurrence_date_column_name].year
+
+    try:
+        rates_index = int(extraction_year - claim_year)
+    except:
+        rates_index = 0
+
+    return row[claims_column_name] * (1 + ibnr_rates[rates_index]) 
+
+
 def get_triangle_projections(triangles, average_methods=None, n_periods=None, grain='OYDY'):
     """
         Generates the main kpis such as ultimate loss, ibnr, loss development factors
@@ -73,7 +85,7 @@ def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_na
         plt.show()
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column_name + '.png')
+            plt.savefig('Charts/' + prefix_name_fig + '_' + column_name + '.png')
 
 
 def select_triangles(multi_triangles, all_indexes_total=True, columns=None):

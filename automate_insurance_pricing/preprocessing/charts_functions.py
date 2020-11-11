@@ -35,7 +35,7 @@ def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_ful
         plt.show()
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column + '.png')
+            plt.savefig('Charts/' + prefix_name_fig + '_' + column + '.png')
 
     plot_columns = [columns] if isinstance(columns, str) == True else columns
 
@@ -56,7 +56,7 @@ def plot_scatter_charts(df, features, target_column=None, height=5, save=True, p
     if target_column is None:
         for i,j,v in features:
             sns.pairplot(df, height=6, x_vars=i, y_vars=j)
-            plt.savefig('charts/' + prefix_name_fig + '_' + '.png')
+            plt.savefig('Charts/' + prefix_name_fig + '_' + '.png')
 
     else:
         for feature in new_features:
@@ -66,7 +66,7 @@ def plot_scatter_charts(df, features, target_column=None, height=5, save=True, p
             sns.pairplot(new_df, height=height, x_vars=feature_name, y_vars=target_column)
 
             if save == True:
-                plt.savefig('charts/' + prefix_name_fig + '_' + feature_name + '.png')
+                plt.savefig('Charts/' + prefix_name_fig + '_' + feature_name + '.png')
 
                 
 
@@ -104,7 +104,7 @@ def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=
         plt.show()
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column_name + '.png')
+            plt.savefig('Charts/' + prefix_name_fig + '_' + column_name + '.png')
 
             
 
@@ -128,26 +128,17 @@ def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=
 
     
 
-def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'lineplot': None}, agg_func={'barplot': 'sum', 'lineplot': 'mean'}, sort=False, figsize=(10,6), save=True, prefix_name_fig='bar_line'):
+def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'pointplot': None}, agg_func={'barplot': 'sum', 'pointplot': 'mean'}, sort=False, figsize=(10,6), save=True, prefix_name_fig='bar_line'):
     """
         Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature
         Aruments --> the df, the target column we are looking at, the columns to loop through and perform mean/sum aggregation,
-                    a dict indication which aggregation functio to do for lineplot and barplot
+                    a dict indication which aggregation functio to do for pointplot and barplot
     """
 
-    def get_right_interval(x):
-        right = x
-        try:
-            right = '<' + str(int(x.right))
-        except:
-            pass
-        return '<' + right
-
-    new_df = deepcopy(df)
     dict_agg = {'sum': np.sum, 'mean': np.mean}
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
     barplot_target_column = target_columns['barplot']
-    lineplot_target_column = target_columns['lineplot']
+    lineplot_target_column = target_columns['pointplot']
 
     for column in plot_columns:
 
@@ -155,7 +146,7 @@ def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'lin
 
         fig, ax1 = plt.subplots(figsize=figsize)
         color = 'tab:green'
-        ax1 = sns.barplot(x=column, y=barplot_target_column, data=new_df, estimator=dict_agg[agg_func['barplot']], palette='summer')
+        ax1 = sns.barplot(x=column, y=barplot_target_column, data=df, estimator=dict_agg[agg_func['barplot']], palette='summer')
         title_column = barplot_target_column.replace('asif_', '') + (' ' + lineplot_target_column.replace('asif_', '') if lineplot_target_column != barplot_target_column else '')
         ax1.set_title(title_column + ' ' + 'by' + ' ' + column_name, fontsize=16)
         ax1.set_xlabel(column_name, fontsize=16)
@@ -165,20 +156,16 @@ def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'lin
         ax2 = ax1.twinx()
         color = 'tab:red'
 
-        if '_bins' in column:
-            new_df[column] = new_df[column].map(get_right_interval)
-
-        ax2 = sns.lineplot(x=column, y=lineplot_target_column, data=new_df, sort=sort, estimator=dict_agg[agg_func['lineplot']], err_style='bars', color=color)
-        ax2.set_ylabel(lineplot_target_column.replace('asif_', '') + ' ' + agg_func['lineplot'], fontsize=16, color=color)
+        ax2 = sns.pointplot(x=column, y=pointplot_target_column, data=df, estimator=dict_agg[agg_func['pointplot']], err_style='bars', color=color)
+        ax2.set_ylabel(pointplot_target_column.replace('asif_', '') + ' ' + agg_func['pointplot'], fontsize=16, color=color)
         ax2.tick_params(axis='y', color=color)
         plt.show()
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column_name + '.png')
+            plt.savefig('Charts/' + prefix_name_fig + '_' + column_name + '.png')
 
-            
 
-def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, percentages=True, currency='€', save=True, prefix_name_fig='pie'):
+def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, percentages=True, currency='€', n_cols=2, figsize=(12, 7), save=True, prefix_name_fig='pie'):
     """
         Plots pie charts for the specified columns, based on a specified aggregation operation, and indicates the absolute figures + proportion if they are set to True
     """
@@ -190,13 +177,15 @@ def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, p
 
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    n_cols = 2
+    n_cols = n_cols
     n_rows = len(plot_columns) // n_cols + len(plot_columns) % n_cols
 
     for i in range(n_rows):
-        fig, ax = plt.subplots(nrows=1, ncols=n_cols, figsize=(12, 7), subplot_kw=dict(aspect="equal"), dpi= 80)
+        fig, ax = plt.subplots(nrows=1, ncols=n_cols, figsize=figsize, subplot_kw=dict(aspect="equal"), dpi= 80)
 
         for j in range(n_cols):
+
+            ax_plot = ax[j] if n_cols > 1 else ax
 
             if i*n_cols+j < len(plot_columns):
                 variable = plot_columns[i*n_cols+j]
@@ -205,21 +194,21 @@ def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, p
                 data = df_pie[df_pie.columns[1]]
                 categories = df_pie[variable]
 
-                wedges, texts, autotexts = ax[j].pie(data, autopct=lambda pct: func(pct, data), textprops=dict(color="w"),colors=plt.cm.Dark2.colors, startangle=140)
+                wedges, texts, autotexts = ax_plot.pie(data, autopct=lambda pct: func(pct, data), textprops=dict(color="w"),colors=plt.cm.Dark2.colors, startangle=140)
 
                 if 'feature' in variable:
                     feature_name = remove_words(variable, feature=('feature', ''), bins=('bins', ''), underscore=('_', ' '))
                     variable = feature_name
 
-                ax[j].legend(wedges, categories, title=variable, loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+                ax_plot.legend(wedges, categories, title=variable, loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
                 plt.setp(autotexts, size=10, weight=700)
-                ax[j].set_title(variable + " : Pie Chart")
+                ax_plot.set_title(variable + " : Pie Chart")
 
                 if save == True:
-                    plt.savefig('charts/' + prefix_name_fig + '_' + variable + '.png')
+                    plt.savefig('Charts/' + prefix_name_fig + '_' + variable + '.png')
 
             else:
-                fig.delaxes(ax[j])
+                fig.delaxes(ax_plot)
 
                 
 
@@ -344,7 +333,7 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
         eval(plot_expression)
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + agg_func + '_' + target_column + '.png')
+            plt.savefig('Charts/' + prefix_name_fig + '_' + agg_func + '_' + target_column + '.png')
 
         return
 
@@ -389,7 +378,7 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
                     ax[j].set_xlabel(variable)
 
                 if save == True:
-                    plt.savefig('charts/' + prefix_name_fig + '_' + agg_func + '_' + variable + '_' + (target_column if isinstance(target_column, str) == True else '') + '.png')
+                    plt.savefig('Charts/' + prefix_name_fig + '_' + agg_func + '_' + variable + '_' + (target_column if isinstance(target_column, str) == True else '') + '.png')
 
             elif n_cols > 1:
                 fig.delaxes(ax[j])

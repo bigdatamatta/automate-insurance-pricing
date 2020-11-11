@@ -89,7 +89,7 @@ def derive_policy_totals(row, start_business_year, extraction_year, column_to_us
 
 
 
-def derive_yearly_amounts(df, start_business_year, extraction_date, main_column_contract_date, contract_end_date='contract_end_date', row_per_each_contract_year=True, add_one_day=False, premium_column_name='asif_written_premium_excl_taxes', number_paid_premim_column_name='written_multiplier'):
+def derive_yearly_amounts(df, start_business_year, extraction_date, main_column_contract_date, contract_end_date='actual_contract_end_date', row_per_each_contract_year=True, add_one_day=False, premium_column_name='asif_written_premium_excl_taxes', number_paid_premim_column_name='written_multiplier'):
     """
         Derives the earned amounts (premium, commission, etc.) for each occurrence year
         Arguments --> the df row, the business start year, the data extraction date, the contract start and end columns names

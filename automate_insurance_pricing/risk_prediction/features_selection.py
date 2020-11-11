@@ -286,6 +286,6 @@ def get_corr_matrice(df, columns, plot_matrice=True, save=True, prefix_name_fig=
         sns.heatmap(features_corr_matrice, annot=True)
 
     if save == True:
-        plt.savefig('charts/' + prefix_name_fig + '.png')
+        plt.savefig('Charts/' + prefix_name_fig + '.png')
 
     return features_corr_matrice

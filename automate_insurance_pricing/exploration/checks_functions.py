@@ -81,7 +81,7 @@ Retreat these lines, then run again this function with the remove argument set t
 
 
 
-def create_unknown_policy(df_portfolio, df_claims, features_analysis, policy_column_name, unknown_row_name):
+def create_unknown_policy(df_portfolio, df_claims, features_analysis, policy_column_name='policy_id', unknown_row_name='UNKNOWN'):
     """ Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies"""
 
     new_df_portfolio, new_df_claims = deepcopy(df_portfolio), deepcopy(df_claims)
