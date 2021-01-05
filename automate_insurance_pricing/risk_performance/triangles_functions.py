@@ -61,7 +61,7 @@ def get_triangle_projections(triangles, average_methods=None, n_periods=None, gr
             for index, value in enumerate(triangles_names)}
 
 
-def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_name_fig='ibnr'):
+def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_name_fig='ibnr', folder='Charts'):
     """
         Plots the development patterns for the desired figures
         Arguments --> the triangles dict gathering triangles of different types of figures (amounts, counts, etc.),
@@ -82,10 +82,9 @@ def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_na
         column_name = new_columns[index].replace('asif_', '').replace('_', ' ')
         dev.plot()
         plt.xlabel('{} Developement in percentage'.format(column_name[0].capitalize() + column_name[1:]))
-        plt.show()
 
         if save == True:
-            plt.savefig('Charts/' + prefix_name_fig + '_' + column_name + '.png')
+            plt.savefig(folder + '/' + prefix_name_fig + '_' + column_name + '.png')
 
 
 def select_triangles(multi_triangles, all_indexes_total=True, columns=None):

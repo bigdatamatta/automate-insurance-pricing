@@ -11,7 +11,7 @@ except:
     from reports.export_functions import *
 
 
-def get_glm_rating_factors(df, glm_coefs, num_features_analysis, transformer=FunctionTransformer(), export_excel=False, glm_file_path=None):
+def get_glm_rating_factors(df, glm_coefs, num_features_analysis, constant_column_name='const', transformer=FunctionTransformer(), export_excel=False, glm_file_path=None):
     """
         Gets the rating factor values for all features values
         Arguments --> the df, the coefs values found by the glm for each feature, the transformer object which corresponds to the link and its inverse functions used,
@@ -23,7 +23,7 @@ def get_glm_rating_factors(df, glm_coefs, num_features_analysis, transformer=Fun
 
     for feature in glm_coefs.index:
 
-        if feature != 'Intercept' and ((feature in df.columns and len(df[feature].unique()) > 2) or feature not in df.columns):
+        if feature != constant_column_name and ((feature in df.columns and len(df[feature].unique()) > 2) or feature not in df.columns):
             glm_coef = glm_coefs[glm_coefs.index==feature][0]
             number_features = feature.count(':') + 1
             features = feature.split(':')
@@ -35,7 +35,6 @@ def get_glm_rating_factors(df, glm_coefs, num_features_analysis, transformer=Fun
             if len(features) > 1:
 
                 for selected_feature in features[1:]:
-                    selected_feature = selected_feature.replace('_scaled', '')
 
                     if selected_feature in num_features_analysis:
                         original_values = df[selected_feature]

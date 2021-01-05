@@ -8,15 +8,15 @@ from datetime import date, timedelta, datetime
 
 
 
-def update_costs_for_year(x, df, policy_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days):
+def update_costs_for_year(x, df, policy_id_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days):
     """Checks if the line should be in the df or if it is a wrong or true duplicate that should be removed"""
 
     row = df.loc[x]
-    policy_id = row[policy_column_name]
+    policy_id = row[policy_id_column_name]
     year_name = main_column_contract_date
     result = 0
     effective_date = row[year_name]
-    effective_dates = df[df[policy_column_name]==policy_id][year_name]
+    effective_dates = df[df[policy_id_column_name]==policy_id][year_name]
 
     # For policy_id with UNKNOWN value, we keep all claims because we cannot link them to a policy but we group them in an UNKNOWN block so that we don't understimate the total cost
     if policy_id != unknown_row_name:
@@ -81,23 +81,23 @@ Retreat these lines, then run again this function with the remove argument set t
 
 
 
-def create_unknown_policy(df_portfolio, df_claims, features_analysis, policy_column_name='policy_id', unknown_row_name='UNKNOWN'):
+def create_unknown_policy(df_portfolio, df_claims, features_analysis, policy_id_column_name='policy_id', unknown_row_name='UNKNOWN'):
     """ Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies"""
 
     new_df_portfolio, new_df_claims = deepcopy(df_portfolio), deepcopy(df_claims)
 
     # Finds the claimants that do not exist in the portfolio data
-    mask = ~new_df_claims[policy_column_name].isin(new_df_portfolio[policy_column_name])
+    mask = ~new_df_claims[policy_id_column_name].isin(new_df_portfolio[policy_id_column_name])
     df_not_existing_policies = new_df_claims[mask]
 
-    new_df_claims.loc[df_not_existing_policies.index, policy_column_name] = unknown_row_name
+    new_df_claims.loc[df_not_existing_policies.index, policy_id_column_name] = unknown_row_name
 
     # Reseting df index just in case to be sure we take the last row using shape
     new_df_portfolio = new_df_portfolio.reset_index(drop=True)
     # Gets the last row values and affect them to a new row
     new_row_df = new_df_portfolio.loc[new_df_portfolio.shape[0]-1]
     new_df_portfolio.loc[new_df_portfolio.shape[0]] = new_row_df
-    new_df_portfolio.loc[new_df_portfolio.shape[0]-1:, [policy_column_name]] = unknown_row_name
+    new_df_portfolio.loc[new_df_portfolio.shape[0]-1:, [policy_id_column_name]] = unknown_row_name
 
     # For each feature, derives the mode or the average and assigns it to the new row (a simple fillna might be faster)
     for feature in features_analysis:
