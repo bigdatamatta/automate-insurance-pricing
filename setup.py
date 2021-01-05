@@ -30,6 +30,7 @@ setuptools.setup(
         'xlrd~=1.2',
         'XlsxWriter~=1.2',
         'xlwings~=0.19',        
+        'docx-mailmerge~=0.5',        
     ],
     classifiers=[
         "Programming Language :: Python",
