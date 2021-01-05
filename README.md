@@ -39,5 +39,9 @@ Below the list of libraries that will automatically be installed with this packa
 * *xlwings~=0.19*
 
 
+## 3.	Warnings
+Reports module is too specific and cannot be reused as it is. Will be re-worked to be more general. 
+
+
 # Contribute
-Anyone willing to make this library more exhaustive and efficient  
+Anyone willing to make this library more exhaustive, more generic and efficient. 
