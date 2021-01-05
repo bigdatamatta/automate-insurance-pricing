@@ -14,23 +14,25 @@ import matplotlib.pyplot as plt
 from copy import deepcopy
 
 
-def display_error_by_param(cv_results, name_score, param):
+def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig='', folder='Charts'):
     param = 'param_' + param
     sns.lineplot(cv_results[param].data, cv_results[name_score])
     fig = plt.gcf()
-    fig.set_size_inches(15, 10)
-    plt.show()
+    fig.set_size_inches(figsize[1], figsize[2])
+
+    if save == True:
+        plt.savefig(folder + '/' + prefix_name_fig + '_' + param + '.png')
     
     
 
-def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None):
+def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig='', folder='Charts'):
     """
         Plots the predicted vs the observed values
         Arguments --> the test target variable values, the predictions made,
                     a boolean indicating if predictions are from a glm models, and the glm fitted model to make tests on pearson / deviance residuals
     """    
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=figsize)
     ax.scatter(y_data, y_predict)
     
     if ols_line == False:
@@ -43,10 +45,13 @@ def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None):
     ax.set_title('Predicted vs Observed')
     ax.set_ylabel('Observed values')
     ax.set_xlabel('Predicted values')
-    plt.show()
-    
+
+    if save == True:
+        plt.savefig(folder + '/predict_observed_' + end_name_fig + '.png')
+
     if model_fit is not None:
-        fig, ax = plt.subplots()
+        
+        fig, ax = plt.subplots(figsize=figsize)
         ax.scatter(y_predict, model_fit.resid_pearson)
         ax.hlines(0, 0, 1)
         ax.set_xlim(0, 1)
@@ -54,36 +59,49 @@ def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None):
         ax.set_ylabel('Pearson Residuals')
         ax.set_xlabel('Fitted values') 
 
-        fig, ax = plt.subplots()
+        if save == True:
+            plt.savefig(folder + '/pearson_residuals_' + end_name_fig + '.png')
+
+
+        fig, ax = plt.subplots(figsize=figsize)
         res_dev_residuals = model_fit.resid_deviance.copy()
         res_dev_residuals_std = stats.zscore(res_dev_residuals)
         ax.hist(res_dev_residuals_std, bins=25)
         ax.set_title('Histogram of standardized deviance residuals')
 
+        if save == True:
+            plt.savefig(folder + '/standard_deviance_residuals_' + end_name_fig + '.png')
+
         graphics.gofplots.qqplot(res_dev_residuals, line='r')
-        
+
+        if save == True:
+            plt.savefig(folder + '/gofplot_' + end_name_fig + '.png')        
         
 
-def display_linear_model_features(model_name, coefs):
+def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig='linear_features_importance', folder='Charts'):
+
     imp_coefs = coefs.sort_values()
     imp_coefs.plot(kind = "barh")
     plt.title("Feature importance using {} Model".format(model_name))
     
+    if save == True:
+        plt.savefig(folder + '/' + prefix_name_fig + '.png')    
     
 
-def plot_models_results(results, names):
+def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig='model_results', folder='Charts'):
     """Plots the model results"""
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=figsize)
     fig.suptitle('Algorithm Comparison')
     ax = fig.add_subplot(111)
     plt.boxplot(results)
     ax.set_xticklabels(names)
-    plt.show()
     
+    if save == True:
+        plt.savefig(folder + '/' + prefix_name_fig + '.png')     
     
 
-def plot_features_importance(X, rfecv, figsize=(16, 14)):
+def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig='rfecv_features_importance', folder='Charts'):
     """ Plots the features selected by a RFE method and their importance """
 
     new_df = pd.DataFrame()
@@ -102,11 +120,13 @@ def plot_features_importance(X, rfecv, figsize=(16, 14)):
     plt.barh(y=new_df['attr'], width=new_df['importance'], color='#1976D2')
     plt.title('RFECV - Feature Importances', fontsize=20, fontweight='bold', pad=20)
     plt.xlabel('Importance', fontsize=14, labelpad=20)
-    plt.show()
+
+    if save == True:
+        plt.savefig(folder + '/' + prefix_name_fig + '.png')  
 
     
 
-def plot_scoring_curve(rfecv, figsize=(16, 9)):
+def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig='rfecv_scoring_curve', folder='Charts'):
     """ Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep"""
 
     plt.figure(figsize=figsize)
@@ -115,11 +135,12 @@ def plot_scoring_curve(rfecv, figsize=(16, 9)):
     plt.ylabel('% Correct Classification', fontsize=14, labelpad=20)
     plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_, color='#303F9F', linewidth=3)
 
-    plt.show()
+    if save == True:
+        plt.savefig(folder + '/' + prefix_name_fig + '.png')  
     
     
 
-def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), **kwargs):
+def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), save=False, prefix_name_fig='rfecv_scoring_curve', folder='Charts', **kwargs):
     """
         Plots a scatter plot
         Arguments --> the data df, the corr matrice (used to get the features pairs), the model,
@@ -170,4 +191,7 @@ def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=
             ma = max(max(xj_test.values), max(mod_predict_test), max(xj_train.values), max(mod_predict_train))
             ax[index1, index2].plot([mi, ma], [mi, ma], "--")
 
+            if save == True:
+                plt.savefig(folder + '/' + prefix_name_fig + '.png')
+                
     return ax

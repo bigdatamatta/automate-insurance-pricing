@@ -17,17 +17,18 @@ except:
     from preprocessing.charts_functions import *
 
 
-def display_scree_plot(pca):
+def display_scree_plot(pca, save=False, prefix_name_fig='pca_scree', folder='Charts'):
     scree = pca.explained_variance_ratio_*100
     plt.bar(np.arange(len(scree))+1, scree)
     plt.plot(np.arange(len(scree))+1, scree.cumsum(), c="red", marker='o')
     plt.xlabel("Inertia axis rank")
     plt.ylabel("Inertia percentage")
     plt.title("Eigen values")
-    plt.show(block=False)
 
+    if save == True:
+        plt.savefig(folder + '/' + prefix_name_fig + '.png')
 
-def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None):
+def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None, figsize=(14,5), save=True, prefix_name_fig='pca_circles', folder='Charts'):
 
     pcs = pca.components_
 
@@ -35,7 +36,7 @@ def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims
 
         if d2 < n_comp:
 
-            fig, ax = plt.subplots(figsize=(7,6))
+            fig, ax = plt.subplots(figsize=figsize)
 
             if lims is not None :
                 xmin, xmax, ymin, ymax = lims
@@ -70,10 +71,11 @@ def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims
             plt.ylabel('F{} ({}%)'.format(d2+1, round(100*pca.explained_variance_ratio_[d2],1)))
 
             plt.title("Correlations circle (F{} et F{})".format(d1+1, d2+1))
-            plt.show(block=False)
 
+            if save == True:
+                plt.savefig(folder + '/' + prefix_name_fig + 'F' + str(d1+1) + 'F' + str(d2+1) + '.png')
 
-def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, illustrative_var=None):
+def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, illustrative_var=None, figsize=(14,5), save=True, prefix_name_fig='factorial_plans', folder='Charts'):
 
     X_projected = pca.features_projected
 
@@ -81,7 +83,7 @@ def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, illu
 
         if d2 < n_comp:
 
-            fig = plt.figure(figsize=(7,6))
+            fig = plt.figure(figsize=figsize)
 
             if illustrative_var is None:
                 plt.scatter(X_projected[:, d1], X_projected[:, d2], alpha=alpha)
@@ -108,8 +110,9 @@ def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, illu
             plt.ylabel('F{} ({}%)'.format(d2+1, round(100*pca.explained_variance_ratio_[d2],1)))
 
             plt.title("Observation projections on F{} and F{}".format(d1+1, d2+1))
-            plt.show(block=False)
-            
+
+            if save == True:
+                plt.savefig(folder + '/' + prefix_name_fig + 'F' + str(d1+1) + 'F' + str(d2+1) + '.png')            
             
 
 def run_pca(df, features, scalerMethod, n_components=6):
@@ -276,16 +279,16 @@ def get_relevant_features(features_corr_matrice, target_column, corr_threshold=N
 
 
 
-def get_corr_matrice(df, columns, plot_matrice=True, save=True, prefix_name_fig='linear_corr_mat'):
+def get_corr_matrice(df, columns, plot_matrice=True, figsize=(16, 9), save=True, prefix_name_fig='linear_corr_mat', folder='Charts'):
     """Produces the corr matrice between the columns specified in the arguments, and plots it"""
 
     features_corr_matrice = df[columns].corr()
 
     if plot_matrice == True:
-        plt.subplots(figsize=(16, 9))
+        plt.subplots(figsize=figsize)
         sns.heatmap(features_corr_matrice, annot=True)
 
     if save == True:
-        plt.savefig('charts/' + prefix_name_fig + '.png')
+        plt.savefig(folder + '/' + prefix_name_fig + '.png')
 
     return features_corr_matrice

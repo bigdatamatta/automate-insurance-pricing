@@ -5,7 +5,14 @@ import math
 
 from copy import deepcopy
 
-def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features, rebase_on='exposure', rebase_to_value=100, plot_chart=True, figsize=(12, 8), save=False, prefix_name_fig='probability_bar_impact'):
+try:
+    from automated_pricing_flow.risk_prediction.charts_functions import *
+    from automated_pricing_flow.preprocessing.charts_functions import *
+except:
+    from risk_prediction.charts_functions import *
+    from preprocessing.charts_functions import *
+    
+def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features, rebase_on='exposure', rebase_to_value=100, plot_chart=True, figsize=(12, 8), save=False, prefix_name_fig='probability_bar_impact', folder='Charts'):
     """
         Compare the dependent mean value for each feature value to the mean on the whole dataset
         Arguments --> the df, the target column, its mean on the whole df, the features on which to perform the analysis,
@@ -30,23 +37,24 @@ def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features
     print(df_compare.keys())
 
     if plot_chart == True:
-        plot_bar_by_charts(df_compare, target_column, columns=features, n_cols=1, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig)  
+        plot_bar_charts(df_compare, target_column, columns=features, n_cols=1, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder)  
         
     return df_compare
 
 
 def get_interquartile_lower_upper(df, target_column):   
-    """Gets thequantiles to see which level should be considered consistent"""
+    """Gets the quantiles to see which level should be considered consistent"""
     
     quantile_25 = df[target_column].quantile(0.25)
     median = df[target_column].quantile(0.5)
     quantile_75 = df[target_column].quantile(0.75)
 
-    interquartile_range = quantile_75 - quantile_25
-    lower_bound = quantile_25 - 1.5 * interquartile_range
-    upper_bound = quantile_75 + 1.5 * interquartile_range   
+    interquartile_range = [quantile_25, quantile_75]
+    interquartile = quantile_75 - quantile_25
+    lower_bound = quantile_25 - 1.5 * interquartile
+    upper_bound = quantile_75 + 1.5 * interquartile   
     
-    return lower_bound, upper_bound
+    return interquartile_range, lower_bound, upper_bound
 
 
 
@@ -62,7 +70,7 @@ def style_df(df, currency='€'):
     return new_df.style.format(formatters)
 
 
-def run_multi_analysis_by_feature(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, guarantees=None, guarantee_column_name='guarantee_impacted', analysis_year_level=None, features=None, triangle=None, style_format=True, currency='€'):
+def run_multi_analysis_by_feature(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, exposure_column_name='exposure', written_premium_column_name='asif_written_premium_excl_taxes', earned_premium_column_name='asif_earned_premium', occurrence_date_column_name='occurrence_date', claims_column_name='asif_total_capped_cost', full_claims_column_name='asif_total_cost', capped_claims_column_name='asif_total_capped_cost', claim_count_column_name='count_claim', guarantees=None, guarantee_column_name='guarantee_impacted', analysis_year_level=None, features=None, parent_features=None, triangle_costs=None, triangle_counts=None, style_format=False, currency='€'):
     """
         Generates the summary tables that displays the portfolio performance by feature
         Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.),
@@ -77,16 +85,17 @@ def run_multi_analysis_by_feature(df_portfolio, df_claims, portfolio_kpis, claim
     """
 
     df_multiple_analysis = {}
-    features = [] if features is None else [features] if isinstance(features, str) == True else features
     new_df_claims = deepcopy(df_claims)
-    
+    parent_features = [] if parent_features is None else [parent_features] if isinstance(parent_features, str) == True else parent_features
+    features = [parent_features + [feature] if len(parent_features) > 0 and feature not in parent_features else feature for feature in features]
+
     if guarantees is not None:
         guarantees = [guarantees] if isinstance(guarantees, str) == True else guarantees
         new_df_claims = df_claims[df_claims[guarantee_column_name].isin(guarantees)]
 
     for feature in features:
-        df_analysis_feature = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, table_for_prediction=False, analysis_year_level=analysis_year_level, portfolio_group_by_columns=feature, triangle=triangle, style_format=style_format, currency=currency)
-
+        df_analysis_feature = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, exposure_column_name, written_premium_column_name, earned_premium_column_name, occurrence_date_column_name, claims_column_name, full_claims_column_name, capped_claims_column_name, claim_count_column_name, table_for_prediction=False, analysis_year_level=analysis_year_level, portfolio_group_by_columns=feature, triangle_costs=triangle_costs, triangle_counts=triangle_counts, style_format=style_format, currency=currency)
+                                            
         if isinstance(feature, list) == True:
             feature = tuple(feature)
 
@@ -96,8 +105,8 @@ def run_multi_analysis_by_feature(df_portfolio, df_claims, portfolio_kpis, claim
 
 
 # In[144]:
-
-def run_all_analysis_by_year(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, row_per_each_contract_year=True, guarantees=None, guarantee_column_name='guarantee_impacted', triangle=None, style_format=True, currency='€', **kwargs):
+                            
+def run_all_analysis_by_year(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, exposure_column_name='exposure', written_premium_column_name='asif_written_premium_excl_taxes', earned_premium_column_name='asif_earned_premium', occurrence_date_column_name='occurrence_date', claims_column_name='asif_total_capped_cost', full_claims_column_name='asif_total_cost', capped_claims_column_name='asif_total_capped_cost', claim_count_column_name='count_claim', guarantees=None, guarantee_column_name='guarantee_impacted', triangle_costs=None, triangle_counts=None, style_format=False, currency='€', **kwargs):
     """
         Generates the summary tables that displays the portfolio performance by occurrence year / inception / effective year
         Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.),
@@ -118,16 +127,16 @@ def run_all_analysis_by_year(df_portfolio, df_claims, portfolio_kpis, claims_kpi
         new_df_claims = df_claims[df_claims[guarantee_column_name].isin(guarantees)]
 
     # Create analysis per occurrence / inception / effective year
-    df_analysis_occurrence_year = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, table_for_prediction=False, analysis_year_level='occurrence', triangle=triangle, style_format=style_format, currency='€', **kwargs)
-    df_analysis_inception_year = df_analysis_effective_year = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, table_for_prediction=False, analysis_year_level='inception', triangle=triangle, style_format=style_format, currency='€', **kwargs)
-
+    df_analysis_occurrence_year = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, exposure_column_name, written_premium_column_name, earned_premium_column_name, occurrence_date_column_name, claims_column_name, full_claims_column_name, capped_claims_column_name, claim_count_column_name, table_for_prediction=False, analysis_year_level='occurrence', triangle_costs=triangle_costs, triangle_counts=triangle_counts, style_format=style_format, currency='€', **kwargs)
+    df_analysis_inception_year = df_analysis_effective_year = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, exposure_column_name, written_premium_column_name, earned_premium_column_name, occurrence_date_column_name, claims_column_name, full_claims_column_name, capped_claims_column_name, claim_count_column_name, table_for_prediction=False, analysis_year_level='inception', triangle_costs=triangle_costs, triangle_counts=triangle_counts, style_format=style_format, currency='€', **kwargs)
+                                                                        
     if row_per_each_contract_year == True:
-        df_analysis_effective_year = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, row_per_each_contract_year=True, table_for_prediction=False, analysis_year_level='effective', triangle=triangle, style_format=style_format, currency='€', **kwargs)
-
+        df_analysis_effective_year = build_table(df_portfolio, new_df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, exposure_column_name, written_premium_column_name, earned_premium_column_name, occurrence_date_column_name, claims_column_name, full_claims_column_name, capped_claims_column_name, claim_count_column_name, table_for_prediction=False, analysis_year_level='effective', triangle_costs=triangle_costs, triangle_counts=triangle_counts, style_format=style_format, currency='€', **kwargs)
+                                               
     return df_analysis_occurrence_year, df_analysis_inception_year, df_analysis_effective_year
 
-
-def build_table(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, row_per_each_contract_year=True, table_for_prediction=True, kpis_list=None, analysis_year_level=None, portfolio_group_by_columns=None, claims_group_by_columns=None, earned_premium_column_name='earned_premium' triangle=None, style_format=False, currency='€', **kwargs):
+                
+def build_table(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, exposure_column_name='exposure', written_premium_column_name='asif_written_premium_excl_taxes', earned_premium_column_name='asif_earned_premium', occurrence_date_column_name='occurrence_date', claims_column_name='asif_total_capped_cost', full_claims_column_name='asif_total_cost', capped_claims_column_name='asif_total_capped_cost', claim_count_column_name='count_claim', table_for_prediction=True, kpis_list=None, analysis_year_level=None, portfolio_group_by_columns=None, claims_group_by_columns=None, triangle_costs=None, triangle_counts=None, rate_increase_params=None, style_format=False, currency='€', **kwargs):
     """
         Creates a summary table displaying the selected KPIs per variable through a groupby aggregate
         Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.),
@@ -137,28 +146,38 @@ def build_table(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_lim
                         the type of year analysis (by occurrence/inception/effective year)
                         and the segmentation, i.e. depending on which variables the KPIs will be analyzed,
                         the IBNR triangle that will be used,
-                        the style format
+                        the rates adjustments to apply to the premiums, it has to be a dictionnary
+                        the style format and currency to use
         Returns --> a df with the variables as indexes and the sums of the KPIs in columns
         This function only sums the KPIs. Can be improved by making the kpis argument a dict with a different operation function for each kpi
     """
 
     new_df_portfolio, new_df_claims = deepcopy(df_portfolio), deepcopy(df_claims)
+    new_df_claims = new_df_claims[new_df_claims[policy_id_column_name].isin(new_df_portfolio[policy_id_column_name])]
+
     new_portfolio_group_by = [] if portfolio_group_by_columns is None else [portfolio_group_by_columns] if isinstance(portfolio_group_by_columns, str) == True else deepcopy(portfolio_group_by_columns)
     new_claims_group_by = [] if claims_group_by_columns is None else [claims_group_by_columns] if isinstance(claims_group_by_columns, str) == True else deepcopy(claims_group_by_columns)
     year_group_by = []
-    ibnr_as_percentage = True
-    df_categorical = new_df_portfolio.select_dtypes('category')
 
-    # Category type not yet well supported by numpy. Potential issues when merging etc. better having it converted
-    if len([col for col in new_portfolio_group_by if col in df_categorical.columns]) > 0:
-        new_df_portfolio[df_categorical.columns] = new_df_portfolio[df_categorical.columns].astype('object')
 
-    df_categorical = new_df_claims.select_dtypes('category')
-    if len([col for col in new_claims_group_by if col in df_categorical.columns]) > 0:
-        new_df_claims[df_categorical.columns] = new_df_claims[df_categorical.columns].astype('object')
+    # Category type not yet well supported by numpy. Potential issues when merging etc. better having it converted to string
+    # portfolio_categorical_columns = new_df_portfolio.select_dtypes('category').columns
+    # if len([col for col in new_portfolio_group_by if col in portfolio_categorical_columns]) > 0:
+    #     new_df_portfolio[portfolio_categorical_columns] = new_df_portfolio[portfolio_categorical_columns].astype('object')
 
-    if len(kwargs) > 0:
-        new_df_portfolio = adjust_rates(new_df_portfolio, start_business_year, extraction_year, categorical_features=df_categorical.columns, **kwargs)
+    # claims_categorical_columns = new_df_claims.select_dtypes('category').columns
+    # if len([col for col in new_claims_group_by if col in claims_categorical_columns]) > 0:
+    #     new_df_claims[claims_categorical_columns] = new_df_claims[claims_categorical_columns].astype('object')
+
+    if rate_increase_params is not None:
+        # It is easier to have all columns that will get rate adjustments converted to string
+        # adjust_columns = [value[0] for value in rate_increase_params.values() if value[0] not in portfolio_categorical_columns]
+        # adjust_columns = adjust_columns if len(adjust_columns) > 1 else adjust_columns[0]
+
+        # new_df_portfolio[adjust_columns] = new_df_portfolio[adjust_columns].astype(str)
+        # new_df_claims[adjust_columns] = new_df_claims[adjust_columns].astype(str)
+
+        new_df_portfolio = adjust_rates(new_df_portfolio, start_business_year, extraction_year, written_premium_column_name, earned_premium_column_name, rate_increase_params)
 
     # If by occurrence a special treatment is required as in the portfolio there is no occurrence date
     # The only analysis possible by occurrence year is to work on the columns named like this 'in_{year}'
@@ -171,33 +190,32 @@ Change the argument to table_for_prediction False if you want to build a risk an
                 return
 
         year_group_by = ['occurrence_year']
-        ibnr_as_percentage = False if len(new_portfolio_group_by+new_claims_group_by) == 0 else True
-        df_policy_claims = prep_data_summary_occurrence_year(new_df_portfolio, new_df_claims, start_business_year, extraction_year, main_column_contract_date, earned_premium_column_name, occurrence_date_column_name, year_group_by, new_portfolio_group_by, new_claims_group_by, claims_kpis)
-
+        df_policy_claims = prep_data_summary_occurrence_year(new_df_portfolio, new_df_claims, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, written_premium_column_name, occurrence_date_column_name, year_group_by, new_portfolio_group_by, new_claims_group_by, claims_kpis)
+                                          
     else:
 
         # Will produce either the full table that will most likely serve for prediction job or a summary table depending on effective/inception year + other variables
         if table_for_prediction == True or analysis_year_level is not None :
-            df_policy_claims, year_group_by = other_prepare_data(new_df_portfolio, new_df_claims, main_column_contract_date, table_for_prediction, analysis_year_level, new_portfolio_group_by, new_claims_group_by, portfolio_kpis, claims_kpis)
-
+            df_policy_claims, year_group_by = other_prepare_data(new_df_portfolio, new_df_claims, policy_id_column_name, main_column_contract_date, row_per_each_contract_year, table_for_prediction, analysis_year_level, new_portfolio_group_by, new_claims_group_by, portfolio_kpis, claims_kpis)
+                                                                    
         # The summary table will be on figures depending on portfolio features and claims attributes but not on a yearly basis
         else:
             if len(new_portfolio_group_by + new_claims_group_by) == 0:
                 print('Indicate at least one variable on which performing the analysis. Either setting the porfolio_group_by or the claims_group_by argument')
                 return
-
-            df_policy_claims = sum_merge_tables(new_df_portfolio, new_df_claims, new_portfolio_group_by, new_claims_group_by, portfolio_kpis, claims_kpis)
+                                            
+            df_policy_claims = sum_merge_tables(new_df_portfolio, new_df_claims, policy_id_column_name, new_portfolio_group_by, new_claims_group_by, portfolio_kpis, claims_kpis)
             df_policy_claims = df_policy_claims.reset_index().set_index(new_portfolio_group_by+new_claims_group_by).drop(columns='Total', errors='ignore')
 
     # Derives the mains kpis such as frequency, average cost and loss ratio
-    df_analysis = produce_df_for_analysis(df_policy_claims, portfolio_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, table_for_prediction=table_for_prediction, triangle=triangle, ibnr_as_percentage=ibnr_as_percentage, portfolio_group_by=new_portfolio_group_by, claims_group_by=new_claims_group_by)
-
+    df_analysis = produce_df_for_analysis(df_policy_claims, analysis_year_level, portfolio_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, exposure_column_name, earned_premium_column_name, full_claims_column_name, capped_claims_column_name, claim_count_column_name, table_for_prediction=table_for_prediction, triangle_costs=triangle_costs, triangle_counts=triangle_counts, portfolio_group_by=new_portfolio_group_by, claims_group_by=new_claims_group_by)
+                                            
     if table_for_prediction == True:
         # Will check the total premiums and claims to see if everything went ok and keep only features + kpis (frequency, average cost, etc.)
         category_columns = df_analysis.select_dtypes('category').columns
         columns_to_fillna = [col for col in df_analysis.columns if col not in category_columns]
         df_analysis[columns_to_fillna] = df_analysis[columns_to_fillna].fillna(0)
-        df_analysis = check_finish_table(df_analysis, df_portfolio, df_claims, kpis_list)
+        df_analysis = check_finish_table(df_analysis, df_portfolio, df_claims, kpis_list, exposure_column_name, earned_premium_column_name, capped_claims_column_name)
 
     df_analysis = df_analysis.drop(columns=claims_kpis, errors='ignore')
 
@@ -207,9 +225,8 @@ Change the argument to table_for_prediction False if you want to build a risk an
 
     return df_analysis
 
-
-
-def adjust_rates(df, start_business_year, extraction_year, written_premium_name='asif_written_premium_excl_taxes', earned_premium_name='asif_earned_premium', categorical_features=[], **kwargs):
+                    
+def adjust_rates(df, start_business_year, extraction_year, written_premium_column_name, earned_premium_column_name, rate_increase_params):
     """
         Increase the rates for specific segments such as customer age, chosen formula etc.
         Arguments --> the portfolio df, the start and extraction dates,
@@ -221,19 +238,13 @@ def adjust_rates(df, start_business_year, extraction_year, written_premium_name=
     
     new_df = deepcopy(df)
             
-    kwargs_values = kwargs.values()
+    rate_increase_params_values = rate_increase_params.values()
     
-    if len(categorical_features) == 0 or categorical_features is None:
-        print('You have not specified any categorical feature in the arguments. If you try to increase rate for a specific categorical variable no change will be made on it.')
-    
-    for value in kwargs_values:
-                    
-        if value[0] in categorical_features:
-            new_df[value[0]] = new_df[value[0]].astype(str)
+    for value in rate_increase_params_values:
 
         mask = new_df[value[0]] == value[1]
-        new_df[written_premium_name] = np.where(mask, new_df[written_premium_name] * (1 + value[2]), new_df[written_premium_name])          
-        new_df[earned_premium_name] = np.where(mask, new_df[earned_premium_name] * (1 + value[2]), new_df[earned_premium_name])  
+        new_df[written_premium_column_name] = np.where(mask, new_df[written_premium_column_name] * (1 + value[2]), new_df[written_premium_column_name])          
+        new_df[earned_premium_column_name] = np.where(mask, new_df[earned_premium_column_name] * (1 + value[2]), new_df[earned_premium_column_name])  
 
         if True in ['written_premium_in_' in col for col in df.columns]:
             for year in range(start_business_year, extraction_year + 1):
@@ -245,8 +256,8 @@ def adjust_rates(df, start_business_year, extraction_year, written_premium_name=
             
     return new_df
 
-
-def prep_data_summary_occurrence_year(df_portfolio, df_claims, start_business_year, extraction_year, main_column_contract_date, earned_premium_column_name, occurrence_date_column_name, year_group_by, portfolio_group_by, claims_group_by, claims_kpis):
+                                    
+def prep_data_summary_occurrence_year(df_portfolio, df_claims, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, written_premium_column_name, occurrence_date_column_name, year_group_by, portfolio_group_by, claims_group_by, claims_kpis):
     """
         Prepares the porfolio and claims df so that they can then be used for a summary risk analysis by occurrence year
         Arguments --> portfolio and claims df
@@ -259,11 +270,10 @@ def prep_data_summary_occurrence_year(df_portfolio, df_claims, start_business_ye
     df_portfolio_sum = pd.DataFrame()
     year_column_name = year_group_by[0]
     merge_on = year_group_by + portfolio_group_by
-    colums_to_remove = [earned_premium_column_name]
 
     # Selects the columns associated for each year (e.g. 'premium_in_{year}') and derive their totals
-    df_portfolio_sum = derive_per_occurrence_year(df_portfolio, start_business_year, extraction_year, main_column_contract_date, columns_to_sum=df_portfolio.columns, year_column_name=year_column_name, df_group_by=portfolio_group_by, style_format=False)
-
+    df_portfolio_sum = derive_per_occurrence_year(df_portfolio, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, written_premium_column_name, df_portfolio.columns, year_column_name, portfolio_group_by)
+                                                    
     # Aggregates the claims data by the occurrence year and the other variables specified in the arguments
     df_claim_sum[year_column_name] = df_claim_sum[occurrence_date_column_name].dt.year
     df_claim_sum = df_claim_sum.groupby(year_group_by+portfolio_group_by+claims_group_by)[claims_kpis].sum().reset_index()
@@ -271,13 +281,10 @@ def prep_data_summary_occurrence_year(df_portfolio, df_claims, start_business_ye
     # Merges portfolio and claims data based on occurrence year and the variables that served to aggregate portfolio and claims
     df_policies_claims = df_portfolio_sum.merge(df_claim_sum, how='left', on=merge_on).set_index(keys=year_group_by+portfolio_group_by+claims_group_by)
 
-    columns_to_keep = [col for col in df_policies_claims.columns if col not in colums_to_remove]
-    df_policies_claims = df_policies_claims[columns_to_keep]
-
     return df_policies_claims
 
-
-def derive_per_occurrence_year(df, start_business_year, extraction_year, main_column_contract_date, row_per_each_contract_year=True, columns_to_sum=None, premium_column_name='asif_written_premium_excl_taxes', year_column_name=None, df_group_by=None, style_format=True, currency='€'):
+                            
+def derive_per_occurrence_year(df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, written_premium_column_name='asif_written_premium_excl_taxes', columns_to_sum=None, year_column_name=None, df_group_by=None, style_format=False, currency='€'):
     """
         This function derives the figures by occurrence year ang generates a summary table
         Arguments --> the df, the columns to sum, the business start and extraction dates, the contract date and claim occurrence columns name,
@@ -322,9 +329,9 @@ def derive_per_occurrence_year(df, start_business_year, extraction_year, main_co
 
     years = range(start_business_year, extraction_year + 1)
 
-    if len(columns_to_sum) == 1 and columns_to_sum[0] == premium_column_name and row_per_each_contract_year == True:
-        df_sum = get_written_premium_occurrence_year(df, main_column_contract_date=main_column_contract_date, years=years, year_column_name=year_column_name, df_group_by=df_group_by, alone=True, style_format=style_format)
-
+    if len(columns_to_sum) == 1 and columns_to_sum[0] == written_premium_column_name and row_per_each_contract_year == True:
+        df_sum = get_written_premium_occurrence_year(df, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, written_premium_column_name, years=years, year_column_name=year_column_name, df_group_by=df_group_by, alone=False, style_format=style_format, currency=currency)
+                                                   
     else:
 
         for year in years:
@@ -335,8 +342,8 @@ def derive_per_occurrence_year(df, start_business_year, extraction_year, main_co
         df_sum = df_sum.reset_index()
 
         # Adds the written premium to the df
-        if premium_column_name in columns_to_sum and row_per_each_contract_year == True:
-            df_written_premium_sum = get_written_premium_occurrence_year(df, main_column_contract_date=main_column_contract_date, years=years, year_column_name=year_column_name, df_group_by=df_group_by, alone=False, style_format=style_format)
+        if written_premium_column_name in columns_to_sum and row_per_each_contract_year == True:
+            df_written_premium_sum = get_written_premium_occurrence_year(df, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, written_premium_column_name, years=years, year_column_name=year_column_name, df_group_by=df_group_by, alone=False, style_format=style_format, currency=currency)                               
             df_sum = pd.concat([df_sum, df_written_premium_sum], axis=1)
 
         df_sum = df_sum.rename(columns={'index': year_column_name})
@@ -350,8 +357,8 @@ def derive_per_occurrence_year(df, start_business_year, extraction_year, main_co
 
     return df_sum
 
-
-def get_written_premium_occurrence_year(df, policy_id_column_name, column_to_sum_name, main_column_contract_date, row_per_each_contract_year=True, unknown_rows_name=None, start_business_year=None, extraction_year=None, =None, years=None, year_column_name=None, df_group_by=None, alone=True, style_format=True, currency='€'):
+                                        
+def get_written_premium_occurrence_year(df, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, written_premium_column_name="asif_written_premium_excl_taxes", start_business_year=None, extraction_year=None, years=None, year_column_name=None, df_group_by=None, alone=None, style_format=False, currency='€'):
     """
         This function derives the right written premium per occurrence year depending on the df format
         Arguments --> the df, the columns name for the policy id, the written premium the contract date and the claim occurrence year,
@@ -377,11 +384,11 @@ def get_written_premium_occurrence_year(df, policy_id_column_name, column_to_sum
     # Effective year for portfolio is equivalent to occurrence year for claims when dealing about written premium
     if row_per_each_contract_year == True:
         new_df[year_column_name] = new_df[main_column_contract_date].dt.year
-        df_unknown_policies = new_df[new_df[column_to_sum_name]==unknown_rows_name]
+        df_unknown_policies = new_df[new_df[written_premium_column_name]==unknown_rows_name]
 
         if df_unknown_policies.shape[0] > 0:
 
-            new_df.loc[df_unknown_policies.index, column_to_sum_name] = 0
+            new_df.loc[df_unknown_policies.index, written_premium_column_name] = 0
 
             if years is None:
                 if start_business_year is None or extraction_year is None:
@@ -400,17 +407,17 @@ def get_written_premium_occurrence_year(df, policy_id_column_name, column_to_sum
                     new_df.loc[new_df.shape[0]-1, year_column_name] = year
 
         if alone == True:
-            df_written_premium_sum = new_df.groupby(year_group_by+df_group_by)[column_to_sum_name].sum().to_frame()
+            df_written_premium_sum = new_df.groupby(year_group_by+df_group_by)[written_premium_column_name].sum().to_frame()
         else:
-            df_written_premium_sum = new_df.groupby(year_group_by+df_group_by)[column_to_sum_name].sum().to_frame().reset_index().drop(columns=year_group_by+df_group_by)
+            df_written_premium_sum = new_df.groupby(year_group_by+df_group_by)[written_premium_column_name].sum().to_frame().reset_index().drop(columns=year_group_by+df_group_by)
 
     # There is no effective date column, so the database is at policy level
     else:
-        df_written_premium_sum = derive_per_occurrence_year(df, start_business_year, extraction_year, main_column_contract_date, columns_to_sum=column_to_sum_name, df_group_by= df_group_by)
-
+        df_written_premium_sum = derive_per_occurrence_year(df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, written_premium_column_name, df_group_by= df_group_by)
+                                                            
     # This will do some style formatting to the final df
     if style_format == True:
-        return df_written_premium_sum.fillna(0).applymap('{:,.0f}'.format)
+        return df_written_premium_sum.fillna(0).applymap('{:,.0f}' + ' ' + currency.format)
 
     return df_written_premium_sum
 
@@ -437,7 +444,6 @@ def other_prepare_data(df_portfolio, df_claims, policy_id_column_name, main_colu
 
         # The analysis will be on inception year but data has rows per yearly contract, not per full contrat length
         if analysis_year_level == 'inception' and row_per_each_contract_year == True:
-            sum_separately = False
             analysis_year_level = 'effective'
 
             # Firsly, sorts by the effective date in order to retrieve the latest contract amendment date by removing the other previous duplicates
@@ -480,19 +486,19 @@ def other_prepare_data(df_portfolio, df_claims, policy_id_column_name, main_colu
     portfolio_group_by = policy_group_by + year_group_by + portfolio_group_by
 
     # Makes the portolio-claims merge and derives the total figures
-    df_policies_claims = sum_merge_tables(df_portfolio, df_claims, portfolio_group_by, claims_group_by, portfolio_kpis, claims_kpis, df_no_dupl=df_portfolio_nodupl_policy)
+    df_policies_claims = sum_merge_tables(df_portfolio, df_claims, policy_id_column_name, portfolio_group_by, claims_group_by, portfolio_kpis, claims_kpis, df_portfolio_nodupl_policy)
 
     return df_policies_claims, year_group_by
 
 
-def sum_merge_tables(df1, df2, df1_group_by, df2_group_by, df1_kpis, df2_kpis, df_no_dupl=None):
+def sum_merge_tables(df1, df2, policy_id_column_name, df1_group_by, df2_group_by, df1_kpis, df2_kpis, df_no_dupl=None):
     """
         Sums separately two dfs and merge them
         Arguments --> the two 2 dfs to sum and merge, the variables to aggregate on, the kpis to derive,
                     a df that contains the portfolio features. This df will be used when it is the full data for risk prediction that must be obtained
         Returns --> A merged df with the kpis summed adequatly
     """
-
+    
     # Figures must be calculated on portfolio and claims separately, then merging them on the same intersection variables (i.e. the portfolio features) used for the aggregation
     # Here, the analysis is not done by features but only by claims attributes. The portfolio kpis like exposure, premium are the same, they don't vary depending on claims attributes.
     if df1_group_by is None or len(df1_group_by) == 0:
@@ -519,13 +525,13 @@ def sum_merge_tables(df1, df2, df1_group_by, df2_group_by, df1_kpis, df2_kpis, d
 
     return df_merged
 
-
-def check_finish_table(df_analysis, df_portfolio, df_claims, kpis_list, exposure_name='exposure', earned_premium_name='asif_earned_premium', claims_name='asif_total_cost_excl_LL'):
+                        
+def check_finish_table(df_analysis, df_portfolio, df_claims, kpis_list, exposure_column_name, earned_premium_column_name, claims_column_name):
     """ Check if the final table produced is consistent by looking at the totals premiums and claims"""
     
-    initial_premium_sum, initial_cost_sum = df_portfolio[earned_premium_name].sum(), df_claims[claims_name].sum()
+    initial_premium_sum, initial_cost_sum = df_portfolio[earned_premium_column_name].sum(), df_claims[claims_column_name].sum()
 
-    new_premium_sum, new_cost_sum = df_analysis[earned_premium_name].sum(), df_analysis[claims_name].sum()
+    new_premium_sum, new_cost_sum = df_analysis[earned_premium_column_name].sum(), df_analysis[claims_column_name].sum()
     diff_premium, diff_claims = new_premium_sum - initial_premium_sum, new_cost_sum - initial_cost_sum
     
     if math.floor(abs(diff_premium)) == 0 and math.floor(abs(diff_claims)) == 0:
@@ -541,15 +547,15 @@ The original data has {0} earned premium whereas we now have {1}, i.e. {2} premi
     features_analysis = [col for col in df_analysis.columns if 'feature' in col]
     
     if kpis_list is None:
-        kpis_list = [exposure_name, 'projected_capped_cost', 'claim_occurred', 'number_claims', 'frequency', 'average_cost', 'pure_premium_excl_LL', 'pure_premium_incl_LL', 'projected_capped_loss_ratio', 'projected_full_loss_ratio']
+        kpis_list = [exposure_column_name, 'projected_capped_cost', 'claim_occurred', 'number_claims', 'frequency', 'average_cost', 'pure_premium_capped_claims', 'pure_premium_full_claims', 'projected_capped_loss_ratio', 'projected_full_loss_ratio']
         
     columns_to_keep = features_analysis + [col for col in df_analysis.columns if col in kpis_list]   
     df_analysis = df_analysis[columns_to_keep]
     
     return df_analysis
 
-
-def produce_df_for_analysis(df, portfolio_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, exposure_column_name='exposure', earned_premium_column_name='asif_earned_premium', claim_column_name='asif_total_cost', asif_claim_column_name='asif_total_cost_excl_LL', claim_count_column_name='count_claim', table_for_prediction=True, triangle=None, ibnr_as_percentage=True, portfolio_group_by=None, claims_group_by=None):
+    
+def produce_df_for_analysis(df, analysis_year_level, portfolio_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, exposure_column_name, earned_premium_column_name, full_claims_column_name, capped_claims_column_name, claim_count_column_name, table_for_prediction, triangle_costs, triangle_counts, portfolio_group_by, claims_group_by):
     """
         Creates the final dfs that will be used for the predictions
         Arguments --> the final portfolio df,
@@ -561,48 +567,52 @@ def produce_df_for_analysis(df, portfolio_kpis, claims_limit, LL_loading, curren
                     the dict also contains a main key which is the merged table on the whole set ignoring the group_by
     """   
     
-    projected_capped_cost = df[asif_claim_column_name]
+    projected_capped_cost = df[capped_claims_column_name]
     count_claims = df[claim_count_column_name]
 
-    # It creates a summary table with more kpis to display
-    if table_for_prediction == False:
-        
-        try:
-            cost_ibnr = triangle[asif_claim_column_name]['full_triangle']['IBNR']
-            count_ibnr = triangle[claim_count_column_name]['full_triangle']['IBNR'] 
+    try:
+        cost_ibnr = triangle_costs.iloc[:, -1]
+        count_ibnr = triangle_counts.iloc[:, -1]
+        cost_ibnr_loading,  count_ibnr_loading= 0, 0
 
-            ibnr_cost_loading = cost_ibnr.sum() / df[asif_claim_column_name].sum()
-            ibnr_count_loading = count_ibnr.sum() / df[claim_count_column_name].sum()           
+        if analysis_year_level == 'occurrence' and len(portfolio_group_by) == 0 and len(claims_group_by) == 0:
 
             length_diff = df.shape[0] - len(cost_ibnr)
 
             # This can happen for example in an analysis by occurrence year where the first claim occurrs the year after the business started
-            if ibnr_as_percentage == False and length_diff > 0:
+            if length_diff > 0:
                 cost_ibnr, count_ibnr = list(cost_ibnr), list(count_ibnr)
                 [cost_ibnr.insert(0, 0) for i in range(0, length_diff)]
                 [count_ibnr.insert(0, 0) for i in range(0, length_diff)]     
 
-        except:
-            cost_ibnr, count_ibnr, ibnr_cost_loading, ibnr_count_loading = 0, 0, 0, 0
+        else:
+            cost_ibnr_loading = cost_ibnr.sum() / df[capped_claims_column_name].sum()
+            count_ibnr_loading = count_ibnr.sum() / df[df[capped_claims_column_name] > 0].count()                
+
+    except:
+        cost_ibnr, count_ibnr, cost_ibnr_loading,  count_ibnr_loading= 0, 0, 0, 0
+
+    # Creates the dependant variables that we will try to predict       
+    
+    projected_capped_cost = projected_capped_cost + (cost_ibnr_loading * projected_capped_cost if cost_ibnr_loading > 0 else cost_ibnr)
+    count_claims = count_claims + (count_ibnr_loading * projected_capped_cost if count_ibnr_loading > 0 else count_ibnr)
+    df[capped_claims_column_name] = projected_capped_cost
+    df[claim_count_column_name] = count_claims 
+
+    # It creates a summary table with more kpis to display
+    if table_for_prediction == False:
         
         # If aggregated by both portfolio features and claims attributes, no total is displayed as it does not make sense (exposure, premiums are the same all along the rows and will be summed multiple times). Only costs can be summed by claims attributes such as the guarantee impacted.
         if (len(portfolio_group_by) > 0 and len(claims_group_by) == 0) or (len(portfolio_group_by) == 0 and len(claims_group_by) == 1) or (df.index.name is not None and 'year' in df.index.name):
             df = derive_totals_analysis(df, portfolio_kpis, portfolio_group_by, claims_group_by)
-            projected_capped_cost, count_claims = df[asif_claim_column_name], df[claim_count_column_name]
+            projected_capped_cost, count_claims = df[capped_claims_column_name], df[claim_count_column_name]
 
             if isinstance(cost_ibnr, list) == True:
                 cost_ibnr.insert(len(cost_ibnr), sum(cost_ibnr))
                 count_ibnr.insert(len(count_ibnr), sum(count_ibnr))
 
-        final_cost_ibnr = cost_ibnr if ibnr_as_percentage == False else projected_capped_cost * ibnr_cost_loading        
-        final_count_ibnr = count_ibnr if ibnr_as_percentage == False else count_claims * ibnr_count_loading
-
-        # Creates the dependant variables that we will try to predict       
-        projected_capped_cost = projected_capped_cost + final_cost_ibnr
-        count_claims = count_claims + final_count_ibnr
-
-        df['observed_full_loss_ratio'] = df[claim_column_name] / df[earned_premium_column_name]
-        df['observed_capped_loss_ratio'] = df[asif_claim_column_name] / df[earned_premium_column_name]
+        df['observed_full_loss_ratio'] = df[full_claims_column_name] / df[earned_premium_column_name]
+        df['observed_capped_loss_ratio'] = df[capped_claims_column_name] / df[earned_premium_column_name]
     
     else:        
         df['claim_occurred'] = np.where(count_claims > 0, 1, 0)
@@ -617,9 +627,9 @@ def produce_df_for_analysis(df, portfolio_kpis, claims_limit, LL_loading, curren
 
     df['frequency'] = count_claims / df[exposure_column_name] 
     df['average_cost'] = projected_capped_cost / count_claims
-    df['pure_premium_excl_LL'] = projected_capped_cost / df[exposure_column_name]
-    df['pure_premium_incl_LL'] = df['pure_premium_excl_LL'] * (1 + LL_loading)    
-    df['proposed_gwp_excl_taxes'] = df['pure_premium_incl_LL'] / target_LR_new_comm     
+    df['pure_premium_capped_claims'] = projected_capped_cost / df[exposure_column_name]
+    df['pure_premium_full_claims'] = df['pure_premium_capped_claims'] * (1 + LL_loading)    
+    df['proposed_gwp_excl_taxes'] = df['pure_premium_full_claims'] / target_LR_new_comm     
     
     return df
 

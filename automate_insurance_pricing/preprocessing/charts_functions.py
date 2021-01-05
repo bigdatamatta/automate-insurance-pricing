@@ -15,7 +15,7 @@ except:
     from standard_functions import *
     
 
-def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig='ibnr'):
+def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig='ibnr', title=None, folder='Charts'):
     """
         Helps to see at which values are located the outliers
         Arguments --> df without outliers, df with outliers, the lenght of the two df
@@ -32,10 +32,12 @@ def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_ful
 
         column = remove_words(column, feature=('feature', ''), bins=('bins', ''), underscore=('_', ' '))
         plt.ylabel(column)
-        plt.show()
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column + '.png')
+            plt.savefig(folder + '/' + prefix_name_fig + '_' + column + '.png')
+
+        if title is not None:
+            plt.title(title)
 
     plot_columns = [columns] if isinstance(columns, str) == True else columns
 
@@ -44,7 +46,7 @@ def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_ful
         
         
 
-def plot_scatter_charts(df, features, target_column=None, height=5, save=True, prefix_name_fig='scatter'):
+def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, save=True, prefix_name_fig='scatter', title=None, folder='Charts'):
     """
         Plots a scatter plot between the target column and the features
         Arguments --> the df, the dependant variable, the features,
@@ -53,24 +55,29 @@ def plot_scatter_charts(df, features, target_column=None, height=5, save=True, p
 
     new_features = [features] if isinstance(features, str) == True else features
 
+    if new_features is not None and hue is not None and isinstance(hue, str) == True :
+        new_features = [col for col in new_features if col != hue]
+
     if target_column is None:
         for i,j,v in features:
-            sns.pairplot(df, height=6, x_vars=i, y_vars=j)
-            plt.savefig('charts/' + prefix_name_fig + '_' + '.png')
+            sns.pairplot(df, hue=hue, height=6, x_vars=i, y_vars=j)
+            plt.savefig(folder + '/' + prefix_name_fig + '_' + '.png')
 
     else:
         for feature in new_features:
             feature_name = remove_words(feature, feature=('feature', ''), bins=('bins', ''), underscore=('_', ' '))
             new_df = df.rename(columns={feature: feature_name})
 
-            sns.pairplot(new_df, height=height, x_vars=feature_name, y_vars=target_column)
+            sns.pairplot(new_df, hue=hue, height=height, vars=[feature_name, target_column])
 
             if save == True:
-                plt.savefig('charts/' + prefix_name_fig + '_' + feature_name + '.png')
+                plt.savefig(folder + '/' + prefix_name_fig + '_' + feature_name + '.png')
 
+    if title is not None:
+        plt.title(title)
                 
 
-def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=True, prefix_name_fig='diverging_bars'):
+def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=True, prefix_name_fig='diverging_bars', folder='Charts'):
     """
         Plots the target column variance mean values depending on the features
         Arguments --> the df, the dependant variable, the features,
@@ -98,17 +105,16 @@ def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=
                          verticalalignment='center', fontdict={'color':'red' if x < 0 else 'green', 'size':14})
 
         plt.yticks(new_df.index, new_df[column], fontsize=12)
-        plt.title('Diverging Text Bars of {0} by {1}'.format(target_column_name, column_name), fontdict={'size':20})
+        plt.title('Impact of {0} on {1}'.format(column_name, target_column_name), fontdict={'size':20})
         plt.grid(linestyle='--', alpha=0.5)
         plt.xlim(-2.5, 2.5)
-        plt.show()
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column_name + '.png')
+            plt.savefig(folder + '/' + prefix_name_fig + '_' + column_name + '.png')
 
             
 
-def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=1, figsize=(16, 10), save=True, prefix_name_fig='joypy'):
+def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=1, figsize=(16, 10), save=True, prefix_name_fig='joypy', folder='Charts'):
     """
         Plots in a fashion and easy way the target variable distributions depending on the features
         Arguments --> the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
@@ -122,32 +128,30 @@ def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=
         new_df[target_column] = transformer.transform(new_df[target_column])
 
     plot_expression = "joypy.joyplot(df, column=target_column, by=variable, ylim='own', ax=ax[j] if n_cols > 1 else ax)"
-    title="ax.set_title('Joy Plot of {0} by {1}'.format(target_column, variable), fontsize=22)"
-
-    run_multiple_plots(new_df, plot_expression, target_column, list_variables=num_columns, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, title=title)
+    plot_params = {
+        'title': "plt.title('{0} by {1}'.format(target_column, variable))",
+        'x_label': "plt.xlabel(target_column)",
+    }
+     
+    run_multiple_plots(new_df, plot_expression, target_column, list_variables=num_columns, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder, **plot_params)
 
     
 
-def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'lineplot': None}, agg_func={'barplot': 'sum', 'lineplot': 'mean'}, sort=False, figsize=(10,6), save=True, prefix_name_fig='bar_line'):
+def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'pointplot': None}, agg_func={'barplot': 'sum', 'pointplot': 'mean'}, hue=None, sort=False, figsize=(10,6), save=True, prefix_name_fig='bar_line', folder='Charts'):
     """
         Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature
         Aruments --> the df, the target column we are looking at, the columns to loop through and perform mean/sum aggregation,
-                    a dict indication which aggregation functio to do for lineplot and barplot
+                    a dict indication which aggregation functio to do for pointplot and barplot
     """
 
-    def get_right_interval(x):
-        right = x
-        try:
-            right = '<' + str(int(x.right))
-        except:
-            pass
-        return '<' + right
-
-    new_df = deepcopy(df)
     dict_agg = {'sum': np.sum, 'mean': np.mean}
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
+
+    if plot_columns is not None and hue is not None and isinstance(hue, str) == True :
+        plot_columns = [col for col in plot_columns if col != hue]
+
     barplot_target_column = target_columns['barplot']
-    lineplot_target_column = target_columns['lineplot']
+    pointplot_target_column = target_columns['pointplot']
 
     for column in plot_columns:
 
@@ -155,30 +159,27 @@ def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'lin
 
         fig, ax1 = plt.subplots(figsize=figsize)
         color = 'tab:green'
-        ax1 = sns.barplot(x=column, y=barplot_target_column, data=new_df, estimator=dict_agg[agg_func['barplot']], palette='summer')
-        title_column = barplot_target_column.replace('asif_', '') + (' ' + lineplot_target_column.replace('asif_', '') if lineplot_target_column != barplot_target_column else '')
-        ax1.set_title(title_column + ' ' + 'by' + ' ' + column_name, fontsize=16)
-        ax1.set_xlabel(column_name, fontsize=16)
+        ax1 = sns.barplot(x=column, y=barplot_target_column, data=df, hue=hue, estimator=dict_agg[agg_func['barplot']], palette='summer')
+        title_column = (barplot_target_column.replace('asif_', '')  if pointplot_target_column == barplot_target_column else 'chart') + ' ' + 'by' + ' ' + column_name
+        ax1.set_title(title_column, fontsize=16)
+        ax1.set_xlabel('', fontsize=16)
         ax1.set_ylabel(barplot_target_column.replace('asif_', '') + ' ' + agg_func['barplot'], fontsize=16, color=color)
         ax1.tick_params(axis='y')
+        ax1.legend(loc='upper left')
 
         ax2 = ax1.twinx()
         color = 'tab:red'
 
-        if '_bins' in column:
-            new_df[column] = new_df[column].map(get_right_interval)
-
-        ax2 = sns.lineplot(x=column, y=lineplot_target_column, data=new_df, sort=sort, estimator=dict_agg[agg_func['lineplot']], err_style='bars', color=color)
-        ax2.set_ylabel(lineplot_target_column.replace('asif_', '') + ' ' + agg_func['lineplot'], fontsize=16, color=color)
+        ax2 = sns.pointplot(x=column, y=pointplot_target_column, data=df, hue=hue, estimator=dict_agg[agg_func['pointplot']], err_style='bars', color=color)
+        ax2.set_ylabel(pointplot_target_column.replace('asif_', '') + ' ' + agg_func['pointplot'], fontsize=16, color=color)
         ax2.tick_params(axis='y', color=color)
-        plt.show()
+        ax2.legend(loc='best')
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column_name + '.png')
+            plt.savefig(folder + '/' + prefix_name_fig + '_' + column_name + '.png')
 
-            
 
-def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, percentages=True, currency='€', save=True, prefix_name_fig='pie'):
+def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, percentages=True, n_cols=2, figsize=(12, 7), chart_title_first_part=None, currency='€', save=True, prefix_name_fig='pie', folder='Charts'):
     """
         Plots pie charts for the specified columns, based on a specified aggregation operation, and indicates the absolute figures + proportion if they are set to True
     """
@@ -190,13 +191,15 @@ def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, p
 
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    n_cols = 2
+    n_cols = n_cols
     n_rows = len(plot_columns) // n_cols + len(plot_columns) % n_cols
 
     for i in range(n_rows):
-        fig, ax = plt.subplots(nrows=1, ncols=n_cols, figsize=(12, 7), subplot_kw=dict(aspect="equal"), dpi= 80)
+        fig, ax = plt.subplots(nrows=1, ncols=n_cols, figsize=figsize, subplot_kw=dict(aspect="equal"), dpi= 80)
 
         for j in range(n_cols):
+
+            ax_plot = ax[j] if n_cols > 1 else ax
 
             if i*n_cols+j < len(plot_columns):
                 variable = plot_columns[i*n_cols+j]
@@ -205,25 +208,25 @@ def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, p
                 data = df_pie[df_pie.columns[1]]
                 categories = df_pie[variable]
 
-                wedges, texts, autotexts = ax[j].pie(data, autopct=lambda pct: func(pct, data), textprops=dict(color="w"),colors=plt.cm.Dark2.colors, startangle=140)
+                wedges, texts, autotexts = ax_plot.pie(data, autopct=lambda pct: func(pct, data), textprops=dict(color="w"),colors=plt.cm.Dark2.colors, startangle=140)
 
                 if 'feature' in variable:
                     feature_name = remove_words(variable, feature=('feature', ''), bins=('bins', ''), underscore=('_', ' '))
                     variable = feature_name
 
-                ax[j].legend(wedges, categories, title=variable, loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+                ax_plot.legend(wedges, categories, title=variable, loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
                 plt.setp(autotexts, size=10, weight=700)
-                ax[j].set_title(variable + " : Pie Chart")
+                ax_plot.set_title(variable + " : Pie Chart" if chart_title_first_part is None else chart_title_first_part + ' ' + feature_name)
 
                 if save == True:
-                    plt.savefig('charts/' + prefix_name_fig + '_' + variable + '.png')
+                    plt.savefig(folder + '/' + prefix_name_fig + '_' + variable + '.png')
 
             else:
-                fig.delaxes(ax[j])
+                fig.delaxes(ax_plot)
 
                 
 
-def plot_violin_charts(df, target_column, transformer=None, columns=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='violin'):
+def plot_violin_charts(df, target_column, transformer=None, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='violin', folder='Charts'):
     """
         Plots target variable distribution depending on the features specified in arguments
         Arguments --> the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
@@ -231,23 +234,26 @@ def plot_violin_charts(df, target_column, transformer=None, columns=None, n_cols
     """
 
     new_df = deepcopy(df)
-    num_columns = None if columns is None else [columns] if isinstance(columns, str) == True else deepcopy(columns)
+    num_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
+
+    if num_columns is not None and hue is not None and isinstance(hue, str) == True :
+        num_columns = [col for col in num_columns if col != hue]
 
     if transformer is not None:
         new_df[target_column] = transformer.transform(new_df[target_column])
 
     if num_columns is None:
-        plot_expression = "sns.violinplot(x=target_column, data=df)"
+        plot_expression = "sns.violinplot(x=target_column, data=df, hue=hue)"
         title="ax.set_title(target_column + ' distribution')"
     else:
-        plot_expression = "sns.violinplot(x=target_column, y=variable, data=df, ax=ax[j] if n_cols > 1 else ax)"
-        title="ax.set_title(target_column + ' distribution by {}'.format(variable))"
+        plot_expression = "sns.violinplot(x=target_column, y=variable, data=df, hue=hue, ax=ax[j] if n_cols > 1 else ax)"
+        title="ax.set_title(target_column + ' distribution by ' + variable)"
 
-    run_multiple_plots(new_df, plot_expression, target_column, list_variables=num_columns, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, title=title)
+    run_multiple_plots(new_df, plot_expression, target_column, list_variables=num_columns, hue=hue, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder, title=title)
 
     
 
-def plot_hist_charts(df, columns=None, transformer=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='histo'):
+def plot_hist_charts(df, columns=None, transformer=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='histo', folder='Charts'):
     """
         Plots histograms of the values of the columns specified in the arguments
         Arguments --> the df, the variables to plot, thee transformer to use (e.g. a log normal transformation),
@@ -261,11 +267,13 @@ def plot_hist_charts(df, columns=None, transformer=None, n_cols=2, figsize=(8, 5
         new_df[num_columns] = transformer.transform(new_df[num_columns])
 
     plot_expression = "sns.distplot(df[variable], ax=ax[j] if n_cols > 1 else ax)"
-    run_multiple_plots(new_df, plot_expression, list_variables=num_columns, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig)
+    title="ax.set_title(variable + ' distribution')"
+
+    run_multiple_plots(new_df, plot_expression, list_variables=num_columns, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder, title=title)
 
     
 
-def plot_count_charts(df, columns=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='count'):
+def plot_count_charts(df, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='count', folder='Charts'):
     """
         Plots distribution for categorical columns
         Arguments --> the df, the variables to plot,
@@ -274,12 +282,18 @@ def plot_count_charts(df, columns=None, n_cols=2, figsize=(8, 5), save=False, pr
 
     new_df = deepcopy(df)
     num_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
-    plot_expression = "sns.countplot(x=variable, data=df, ax=ax[j] if n_cols > 1 else ax)"
-    run_multiple_plots(new_df, plot_expression, list_variables=num_columns, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig)
+
+    if num_columns is not None and hue is not None and isinstance(hue, str) == True :
+        num_columns = [col for col in num_columns if col != hue]
+
+    plot_expression = "sns.countplot(x=variable, hue=hue, data=df, ax=ax[j] if n_cols > 1 else ax)"
+    title="ax.set_title(variable + ' distribution')"
+
+    run_multiple_plots(new_df, plot_expression, list_variables=num_columns, hue=hue, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder, title=title)
 
     
 
-def plot_line_charts(df, target_column, transformer=None, num_features=None, cat_features=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='line'):
+def plot_line_charts(df, target_column, transformer=None, num_features=None, cat_features=None, hue=None, n_cols=2, figsize=(8, 5), save=False, folder='Charts', title=None):
     """
         Plots either a line curve for continous features or a bar plot for categorical features for the target column depending on the features
         Arguments --> the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
@@ -288,34 +302,48 @@ def plot_line_charts(df, target_column, transformer=None, num_features=None, cat
     """
 
     new_df = deepcopy(df)
-    num_columns = new_df.select_dtypes(include='number').columns
     new_num_features = [num_features] if isinstance(num_features, str) == True else deepcopy(num_features)
     cat_new_features = [cat_features] if isinstance(cat_features, str) == True else deepcopy(cat_features)
+
+    if new_num_features is not None and hue is not None and isinstance(hue, str) == True :
+        new_num_features = [col for col in new_num_features if col != hue]
+
+    if cat_new_features is not None and hue is not None and isinstance(hue, str) == True :
+        cat_new_features = [col for col in cat_new_features if col != hue]
 
     if transformer is not None:
         new_df[target_column] = transformer.transform(new_df[target_column])
 
-    lineplot_plot_expression = "sns.lineplot(x=variable, y=target_column, data=df[columns_graph], ax=ax[j] if n_cols > 1 else ax)"
-    barplot_expression = "sns.barplot(x=variable, y=target_column, data=df[columns_graph], ax=ax[j] if n_cols > 1 else ax)"
+    lineplot_plot_expression = "sns.lineplot(x=variable, y=target_column, data=df[columns_graph], hue=hue, ax=ax[j] if n_cols > 1 else ax)"
+    barplot_expression = "sns.barplot(x=variable, y=target_column, data=df[columns_graph], hue=hue, ax=ax[j] if n_cols > 1 else ax)"
 
-    run_multiple_plots(new_df, lineplot_plot_expression, target_column, new_num_features, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig='lineplot')
-    run_multiple_plots(new_df, barplot_expression, target_column, cat_new_features, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig='barplot')
+    if title is not None:
+        title="ax.set_title('{0}')".format(title)
+
+    run_multiple_plots(new_df, lineplot_plot_expression, target_column, new_num_features, hue=hue, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig='lineplot', folder=folder, title=title)
+    run_multiple_plots(new_df, barplot_expression, target_column, cat_new_features, hue=hue, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig='barplot', folder=folder, title=title)
 
     
 
-def plot_bar_by_charts(df, target_column, columns=None, agg_func='mean', n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='bar'):
+def plot_bar_charts(df, target_column, columns=None, agg_func='mean', hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='bar', folder='Charts', title=None):
     """
         Makes bar plot of the features specified by the user as list, or as name if only one feature
     """
 
     new_df = deepcopy(df)
     num_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
-    plot_expression = "sns.barplot(x=variable, y=target_column, data=df, estimator=agg_func_eval, ax=ax[j] if n_cols > 1 else ax)"
-    run_multiple_plots(new_df, plot_expression, target_column, list_variables=num_columns, agg_func=agg_func, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig)
 
-    
+    if num_columns is not None and hue is not None and isinstance(hue, str) == True :
+        num_columns = [col for col in num_columns if col != hue] 
 
-def run_multiple_plots(df, plot_expression, target_column=None, list_variables=None, group_by=False, agg_func=None, n_cols=None, figsize=(8, 5), save=False, prefix_name_fig=None, **kwargs):
+    plot_expression = "sns.barplot(x=variable, y=target_column, data=df, hue=hue, estimator=agg_func_eval, ax=ax[j] if n_cols > 1 else ax)"
+    if title is not None:
+        title="ax.set_title('{0}')".format(title)
+
+    run_multiple_plots(new_df, plot_expression, target_column, list_variables=num_columns, hue=hue, agg_func=agg_func, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder, title=title)
+
+
+def run_multiple_plots(df, plot_expression, target_column=None, list_variables=None, hue=None, group_by=False, agg_func=None, n_cols=None, figsize=(8, 5), save=False, prefix_name_fig='', folder='Charts', **kwargs):
     """
         Plots multiple charts
         Arguments --> the df, the expression that will be evaluated to plot the right chart,
@@ -331,20 +359,24 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
     target_column, agg_func, prefix_name_fig = target_column if target_column is not None else '', agg_func if agg_func is not None else '', prefix_name_fig if prefix_name_fig is not None else ''
     agg_func_eval = np.sum if agg_func == 'sum' else np.mean
 
+    target_column_name = remove_words(target_column, underscore=('_', ' '), asif_prefix=('asif', ''))
+
     if list_variables is None and isinstance(target_column, str) == True:
         fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
         variable = None
         
-        target_column_name = remove_words(target_column, underscore=('_', ' '))
         df = df.rename(columns={target_column: target_column_name})
         
         target_column = target_column_name
         columns_graph = [target_column]
         
         eval(plot_expression)
-
+            
+        for param in kwargs.keys():
+            eval(kwargs[param])
+                        
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + agg_func + '_' + target_column + '.png')
+            plt.savefig(folder + '/' + prefix_name_fig + '_' + target_column + '.png')
 
         return
 
@@ -379,17 +411,19 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
                     eval(plot_expression)
 
                 df = deepcopy(df_backup)
-
-                if 'title' in kwargs.keys():
-                    eval(kwargs['title'])
+                
+                for param in kwargs.keys():
+                    eval(kwargs[param])
 
                 if n_cols == 1 and hasattr(ax, 'set_xlabel') == True:
                     ax.set_xlabel(variable)
+                    ax.set_ylabel(target_column_name)
                 elif n_cols > 1 and hasattr(ax[j], 'set_xlabel') == True:
                     ax[j].set_xlabel(variable)
+                    ax.set_ylabel(target_column_name)
 
                 if save == True:
-                    plt.savefig('charts/' + prefix_name_fig + '_' + agg_func + '_' + variable + '_' + (target_column if isinstance(target_column, str) == True else '') + '.png')
+                    plt.savefig(folder + '/' + prefix_name_fig  + '_' + variable + '_' + (target_column if isinstance(target_column, str) == True else '') + '.png')
 
             elif n_cols > 1:
                 fig.delaxes(ax[j])

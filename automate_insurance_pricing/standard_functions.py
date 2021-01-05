@@ -29,15 +29,17 @@ def get_first_letters(x, number_ok, number_ko, size):
 
 
 
-def get_list_from_list(init_list, list_to_be, is_in_list=True):
-    """ Generates a list from a initial one. init_list is the one we loop through and list_to_be is the
-        one within the element must also be. list_to_be serves as a check on the element, i.e. should the element
-        be taken or not.
+def get_list_from_list(init_list, list_to_check, is_in_list=True):
+    """ Generates a list from a initial one. 
+        Arguments --> init_list is the one we loop through, 
+        list_to_check is the list that gathers the items to take or to remove,
+        is_in_list is the boolean indicating if items from list_to_check must be removed or kept from the initial list
+        Returns --> the new list
     """
-    if isinstance(list_to_be, str) == True:
-        list_to_keep = [element for element in init_list if list_to_be in element] if is_in_list == True else [element for element in init_list if list_to_be not in element]
+    if isinstance(list_to_check, str) == True:
+        list_to_keep = [element for element in init_list if list_to_check in element] if is_in_list == True else [element for element in init_list if list_to_check not in element]
     else:
-        list_to_keep = [element for element in init_list if element in list_to_be] if is_in_list == True else [element for element in init_list if element not in list_to_be]
+        list_to_keep = [element for element in init_list if element in list_to_check] if is_in_list == True else [element for element in init_list if element not in list_to_check]
 
     return list_to_keep
 

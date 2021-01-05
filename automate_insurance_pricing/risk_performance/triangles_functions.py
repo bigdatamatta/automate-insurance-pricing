@@ -7,6 +7,18 @@ import matplotlib.pyplot as plt
 
 
 
+def add_ibnr(row, ibnr_rates, extraction_year, claims_column_name='asif_total_capped_cost', occurrence_date_column_name='occurrence_date'):
+
+    claim_year = row[occurrence_date_column_name].year
+
+    try:
+        rates_index = int(extraction_year - claim_year)
+    except:
+        rates_index = 0
+
+    return row[claims_column_name] * (1 + ibnr_rates[rates_index]) 
+
+
 def get_triangle_projections(triangles, average_methods=None, n_periods=None, grain='OYDY'):
     """
         Generates the main kpis such as ultimate loss, ibnr, loss development factors
@@ -49,7 +61,7 @@ def get_triangle_projections(triangles, average_methods=None, n_periods=None, gr
             for index, value in enumerate(triangles_names)}
 
 
-def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_name_fig='ibnr'):
+def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_name_fig='ibnr', folder='Charts'):
     """
         Plots the development patterns for the desired figures
         Arguments --> the triangles dict gathering triangles of different types of figures (amounts, counts, etc.),
@@ -70,10 +82,9 @@ def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_na
         column_name = new_columns[index].replace('asif_', '').replace('_', ' ')
         dev.plot()
         plt.xlabel('{} Developement in percentage'.format(column_name[0].capitalize() + column_name[1:]))
-        plt.show()
 
         if save == True:
-            plt.savefig('charts/' + prefix_name_fig + '_' + column_name + '.png')
+            plt.savefig(folder + '/' + prefix_name_fig + '_' + column_name + '.png')
 
 
 def select_triangles(multi_triangles, all_indexes_total=True, columns=None):
