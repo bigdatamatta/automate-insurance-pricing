@@ -9,10 +9,7 @@ import joypy as joypy
 
 from copy import deepcopy
 
-try:
-    from automated_pricing_flow.standard_functions import *
-except:
-    from standard_functions import *
+from automate_insurance_pricing.standard_functions import *
     
 
 def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig='ibnr', title=None, folder='Charts'):

@@ -13,10 +13,7 @@ import random
 
 from timeit import default_timer as timer
 
-try:
-    from automated_pricing_flow.risk_prediction.charts_functions import *
-except:
-    from risk_prediction.charts_functions import *
+from automate_insurance_pricing.risk_prediction.charts_functions import *
 
 
 def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=None, scoring=None, cv=5, file_path=None):

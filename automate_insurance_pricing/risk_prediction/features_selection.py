@@ -9,12 +9,8 @@ import matplotlib.pyplot as plt
 
 from copy import deepcopy
 
-try:
-    from automated_pricing_flow.risk_prediction.charts_functions import *
-    from automated_pricing_flow.preprocessing.charts_functions import *
-except:
-    from risk_prediction.charts_functions import *
-    from preprocessing.charts_functions import *
+from automate_insurance_pricing.risk_prediction.charts_functions import *
+from automate_insurance_pricing.preprocessing.charts_functions import *
 
 
 def display_scree_plot(pca, save=False, prefix_name_fig='pca_scree', folder='Charts'):

@@ -5,10 +5,7 @@ from sklearn.preprocessing import FunctionTransformer
 
 from timeit import default_timer as timer
 
-try:
-    from automated_pricing_flow.reports.export_functions import *
-except:
-    from reports.export_functions import *
+from automate_insurance_pricing.reports.export_functions import *
 
 
 def get_glm_rating_factors(df, glm_coefs, num_features_analysis, constant_column_name='const', transformer=FunctionTransformer(), export_excel=False, glm_file_path=None):

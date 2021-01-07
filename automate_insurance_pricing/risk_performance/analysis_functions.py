@@ -5,12 +5,8 @@ import math
 
 from copy import deepcopy
 
-try:
-    from automated_pricing_flow.risk_prediction.charts_functions import *
-    from automated_pricing_flow.preprocessing.charts_functions import *
-except:
-    from risk_prediction.charts_functions import *
-    from preprocessing.charts_functions import *
+from automate_insurance_pricing.risk_prediction.charts_functions import *
+from automate_insurance_pricing.preprocessing.charts_functions import *
     
 def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features, rebase_on='exposure', rebase_to_value=100, plot_chart=True, figsize=(12, 8), save=False, prefix_name_fig='probability_bar_impact', folder='Charts'):
     """
