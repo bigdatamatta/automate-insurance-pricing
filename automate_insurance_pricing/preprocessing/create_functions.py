@@ -8,10 +8,7 @@ from calendar import isleap
 import math
 import random
 
-try:
-    from automated_pricing_flow.standard_functions import *
-except:
-    from standard_functions import *
+from automate_insurance_pricing.standard_functions import *
 
 
 def resample_data(X_train, y_train, upsample=True, replace=True, proportion_neg_over_pos=0.3, random_state=42):
@@ -57,7 +54,7 @@ def create_bins(df_portfolio, cut_func='pd.cut', column_to_use=None, bins=5, df_
         Returns --> Nothing, it directly changes the df arguments
     """
 
-    portfolio_new_column = eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, right=right) if cut_func == 'cut' else eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels)
+    portfolio_new_column = eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, right=right) if cut_func == 'pd.cut' else eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels)
 
     if df_claims is not None:
         if cut_func == 'pd.qcut':
