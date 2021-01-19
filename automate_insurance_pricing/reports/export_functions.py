@@ -2,10 +2,7 @@ import pandas as pd
 
 import openpyxl
 
-try:
-    from automated_pricing_flow.standard_functions import *
-except:
-    from standard_functions import *
+from automate_insurance_pricing.standard_functions import *
 
 def export_to_excel(features_coefs, features, glm_file_path):
     """ Exports to excel the rating factors of the feature defined in the arguments (either one feature or a list of several ones)"""
