@@ -12,7 +12,7 @@ from copy import deepcopy
 from automate_insurance_pricing.standard_functions import *
     
 
-def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig='ibnr', title=None, folder='Charts'):
+def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig=None, title=None, folder='Charts'):
     """
         Helps to see at which values are located the outliers
         Arguments --> df without outliers, df with outliers, the lenght of the two df
@@ -43,7 +43,7 @@ def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_ful
         
         
 
-def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, save=True, prefix_name_fig='scatter', title=None, folder='Charts'):
+def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, save=True, prefix_name_fig=None, title=None, folder='Charts'):
     """
         Plots a scatter plot between the target column and the features
         Arguments --> the df, the dependant variable, the features,
@@ -74,7 +74,7 @@ def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, sa
         plt.title(title)
                 
 
-def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=True, prefix_name_fig='diverging_bars', folder='Charts'):
+def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=True, prefix_name_fig=None, folder='Charts'):
     """
         Plots the target column variance mean values depending on the features
         Arguments --> the df, the dependant variable, the features,
@@ -111,7 +111,7 @@ def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=
 
             
 
-def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=1, figsize=(16, 10), save=True, prefix_name_fig='joypy', folder='Charts'):
+def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=1, figsize=(16, 10), save=True, prefix_name_fig=None, folder='Charts'):
     """
         Plots in a fashion and easy way the target variable distributions depending on the features
         Arguments --> the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
@@ -134,7 +134,7 @@ def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=
 
     
 
-def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'pointplot': None}, agg_func={'barplot': 'sum', 'pointplot': 'mean'}, hue=None, sort=False, figsize=(10,6), save=True, prefix_name_fig='bar_line', folder='Charts'):
+def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'pointplot': None}, agg_func={'barplot': 'sum', 'pointplot': 'mean'}, hue=None, sort=False, figsize=(10,6), save=True, prefix_name_fig=None, folder='Charts'):
     """
         Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature
         Aruments --> the df, the target column we are looking at, the columns to loop through and perform mean/sum aggregation,
@@ -176,7 +176,7 @@ def plot_bar_line_charts(df, columns=None, target_columns={'barplot': None, 'poi
             plt.savefig(folder + '/' + prefix_name_fig + '_' + column_name + '.png')
 
 
-def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, percentages=True, n_cols=2, figsize=(12, 7), chart_title_first_part=None, currency='€', save=True, prefix_name_fig='pie', folder='Charts'):
+def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, percentages=True, n_cols=2, figsize=(12, 7), chart_title_first_part=None, currency='€', save=True, prefix_name_fig=None, folder='Charts'):
     """
         Plots pie charts for the specified columns, based on a specified aggregation operation, and indicates the absolute figures + proportion if they are set to True
     """
@@ -223,7 +223,7 @@ def plot_pie_charts(df, columns=None, agg_func='count', absolute_figures=True, p
 
                 
 
-def plot_violin_charts(df, target_column, transformer=None, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='violin', folder='Charts'):
+def plot_violin_charts(df, target_column, transformer=None, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder='Charts'):
     """
         Plots target variable distribution depending on the features specified in arguments
         Arguments --> the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
@@ -270,7 +270,7 @@ def plot_hist_charts(df, columns=None, transformer=None, n_cols=2, figsize=(8, 5
 
     
 
-def plot_count_charts(df, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='count', folder='Charts'):
+def plot_count_charts(df, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder='Charts'):
     """
         Plots distribution for categorical columns
         Arguments --> the df, the variables to plot,
@@ -322,7 +322,7 @@ def plot_line_charts(df, target_column, transformer=None, num_features=None, cat
 
     
 
-def plot_bar_charts(df, target_column, columns=None, agg_func='mean', hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='bar', folder='Charts', title=None):
+def plot_bar_charts(df, target_column, columns=None, agg_func='mean', hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder='Charts', title=None):
     """
         Makes bar plot of the features specified by the user as list, or as name if only one feature
     """
@@ -334,13 +334,15 @@ def plot_bar_charts(df, target_column, columns=None, agg_func='mean', hue=None, 
         num_columns = [col for col in num_columns if col != hue] 
 
     plot_expression = "sns.barplot(x=variable, y=target_column, data=df, hue=hue, estimator=agg_func_eval, ax=ax[j] if n_cols > 1 else ax)"
-    if title is not None:
-        title="ax.set_title('{0}')".format(title)
+    
+    if title is None:
+        title="ax.set_title('{0}')".format(target_column) if len(num_columns) == 1 else "ax.set_title('{0}' by variable')".format(target_column) 
+    else:
+        title="ax.set_title('{0}')".format(title) 
 
     run_multiple_plots(new_df, plot_expression, target_column, list_variables=num_columns, hue=hue, agg_func=agg_func, n_cols=n_cols, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder, title=title)
 
-
-def run_multiple_plots(df, plot_expression, target_column=None, list_variables=None, hue=None, group_by=False, agg_func=None, n_cols=None, figsize=(8, 5), save=False, prefix_name_fig='', folder='Charts', **kwargs):
+def run_multiple_plots(df, plot_expression, target_column=None, list_variables=None, hue=None, group_by=False, agg_func=None, n_cols=None, figsize=(8, 5), save=False, prefix_name_fig=None, folder='Charts', **kwargs):
     """
         Plots multiple charts
         Arguments --> the df, the expression that will be evaluated to plot the right chart,
@@ -353,7 +355,7 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
     if target_column is None and list_variables is None:
         return
 
-    target_column, agg_func, prefix_name_fig = target_column if target_column is not None else '', agg_func if agg_func is not None else '', prefix_name_fig if prefix_name_fig is not None else ''
+    target_column, agg_func, prefix_name_fig = target_column if target_column is not None else '', agg_func if agg_func is not None else '', prefix_name_fig + '_' if prefix_name_fig is not None else ''
     agg_func_eval = np.sum if agg_func == 'sum' else np.mean
 
     target_column_name = remove_words(target_column, underscore=('_', ' '), asif_prefix=('asif', ''))
@@ -368,12 +370,15 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
         columns_graph = [target_column]
         
         eval(plot_expression)
-            
+        
         for param in kwargs.keys():
-            eval(kwargs[param])
+            try:
+                eval(kwargs[param])
+            except:
+                continue
                         
         if save == True:
-            plt.savefig(folder + '/' + prefix_name_fig + '_' + target_column + '.png')
+            plt.savefig(folder + '/' + prefix_name_fig + target_column + '.png')
 
         return
 
@@ -410,7 +415,10 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
                 df = deepcopy(df_backup)
                 
                 for param in kwargs.keys():
-                    eval(kwargs[param])
+                    try:
+                        eval(kwargs[param])
+                    except:
+                        continue
 
                 if n_cols == 1 and hasattr(ax, 'set_xlabel') == True:
                     ax.set_xlabel(variable)
@@ -420,10 +428,10 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
                     ax.set_ylabel(target_column_name)
 
                 if save == True:
-                    plt.savefig(folder + '/' + prefix_name_fig  + '_' + variable + '_' + (target_column if isinstance(target_column, str) == True else '') + '.png')
+                    plt.savefig(folder + '/' + prefix_name_fig + variable + '_' + (target_column if isinstance(target_column, str) == True else '') + '.png')
 
             elif n_cols > 1:
-                fig.delaxes(ax[j])
+                fig.delaxes(ax[j])   
                 
                 
 

@@ -45,7 +45,7 @@ def create_year_month(row, date_to_use):
 
 
 
-def create_bins(df_portfolio, cut_func='pd.cut', column_to_use=None, bins=5, df_claims=None, bins_labels=None, right=False):
+def create_bins(df_portfolio, cut_func='pd.cut', column_to_use=None, bins=5, df_claims=None, bins_labels=None, right=False, duplicates='raise'):
 
     """
         Gathers feature values within bins
@@ -54,7 +54,7 @@ def create_bins(df_portfolio, cut_func='pd.cut', column_to_use=None, bins=5, df_
         Returns --> Nothing, it directly changes the df arguments
     """
 
-    portfolio_new_column = eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, right=right) if cut_func == 'pd.cut' else eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels)
+    portfolio_new_column = eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, right=right, duplicates=duplicates) if cut_func == 'pd.cut' else eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, duplicates=duplicates)
 
     if df_claims is not None:
         if cut_func == 'pd.qcut':
@@ -65,7 +65,7 @@ def create_bins(df_portfolio, cut_func='pd.cut', column_to_use=None, bins=5, df_
             right_bins.insert(0, min_left), right_bins.sort()
             bins = right_bins
 
-        claims_new_column = pd.cut(df_claims[column_to_use], bins=bins, labels=bins_labels, right=right)
+        claims_new_column = pd.cut(df_claims[column_to_use], bins=bins, labels=bins_labels, right=right, duplicates=duplicates)
 
         return portfolio_new_column, claims_new_column
     

@@ -8,7 +8,7 @@ from copy import deepcopy
 from automate_insurance_pricing.risk_prediction.charts_functions import *
 from automate_insurance_pricing.preprocessing.charts_functions import *
     
-def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features, rebase_on='exposure', rebase_to_value=100, plot_chart=True, figsize=(12, 8), save=False, prefix_name_fig='probability_bar_impact', folder='Charts'):
+def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features, rebase_on='exposure', rebase_to_value=100, plot_chart=True, figsize=(12, 8), save=False, prefix_name_fig=None, folder='Charts', title=None):
     """
         Compare the dependent mean value for each feature value to the mean on the whole dataset
         Arguments --> the df, the target column, its mean on the whole df, the features on which to perform the analysis,
@@ -33,7 +33,7 @@ def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features
     print(df_compare.keys())
 
     if plot_chart == True:
-        plot_bar_charts(df_compare, target_column, columns=features, n_cols=1, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder)  
+        plot_bar_charts2(df_compare, target_column, columns=features, n_cols=1, figsize=figsize, save=save, prefix_name_fig=prefix_name_fig, folder=folder, title=title)  
         
     return df_compare
 

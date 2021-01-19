@@ -14,14 +14,15 @@ import matplotlib.pyplot as plt
 from copy import deepcopy
 
 
-def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig='', folder='Charts'):
+def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig=None, folder='Charts'):
     param = 'param_' + param
     sns.lineplot(cv_results[param].data, cv_results[name_score])
     fig = plt.gcf()
     fig.set_size_inches(figsize[1], figsize[2])
+    prefix_name_fig = prefix_name_fig + '_' if prefix_name_fig is not None else ''
 
     if save == True:
-        plt.savefig(folder + '/' + prefix_name_fig + '_' + param + '.png')
+        plt.savefig(folder + '/' + prefix_name_fig + param + '.png')
     
     
 
