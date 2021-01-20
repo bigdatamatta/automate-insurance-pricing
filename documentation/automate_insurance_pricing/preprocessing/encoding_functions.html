@@ -36,8 +36,8 @@ from datetime import date, timedelta, datetime
 
 def min_max_scale(df, features, min_max_scaler):
     &#34;&#34;&#34;
-        Makes a min-max scaling method on the features
-        Arguments --&gt; The df and the list of features to rescale
+        Makes a min-max scaling method on the features   
+        Arguments --&gt; The dataframe, the list of features to rescale and the scaler   
         Returns --&gt; a new df, copy of the original df but with the features scaled
     &#34;&#34;&#34;
 
@@ -51,9 +51,9 @@ def min_max_scale(df, features, min_max_scaler):
 
 def hot_encode(df, features, features_hot_encoded, encoder):
     &#34;&#34;&#34;
-        Hot encodes the features
-        Arguments --&gt; df, features to encode, the names of the new features created and the encoder
-        Returns --&gt; A new df with features hot encoded, i.e. with new binary variables
+        Hot encodes the features   
+        Arguments --&gt; the dataframe, the features to encode, the names to give to the new features encoded and the encoder   
+        Returns --&gt; A new df with features hot encoded
     &#34;&#34;&#34;
 
     data_encoded = pd.DataFrame(encoder.fit_transform(df[features].astype(&#39;str&#39;)), columns=features_hot_encoded)
@@ -72,10 +72,9 @@ def hot_encode(df, features, features_hot_encoded, encoder):
 
 def label_encode(df, features, encoder, sort_features=None):
     &#34;&#34;&#34;
-        Label encodes the features
-        Arguments --&gt; the df, the features to encode, the list storing the features and their encoded versions names
-                    if the column values need to be sorted before being encoded (ordinal feature)
-                    and which suffixe name to give to the newly created column
+        Label encodes the features   
+        Arguments --&gt; the dataframe, the features to encode, the encoder   
+            a boolean specifyin if the column values need to be sorted before being encoded (ordinal feature)
         Returns --&gt; A new df, copy of the original df but with features label encoded
     &#34;&#34;&#34;
 
@@ -113,18 +112,18 @@ def label_encode(df, features, encoder, sort_features=None):
 <span>def <span class="ident">hot_encode</span></span>(<span>df, features, features_hot_encoded, encoder)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Hot encodes the features
-Arguments &ndash;&gt; df, features to encode, the names of the new features created and the encoder
-Returns &ndash;&gt; A new df with features hot encoded, i.e. with new binary variables</p></div>
+<div class="desc"><p>Hot encodes the features <br>
+Arguments &ndash;&gt; the dataframe, the features to encode, the names to give to the new features encoded and the encoder <br>
+Returns &ndash;&gt; A new df with features hot encoded</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def hot_encode(df, features, features_hot_encoded, encoder):
     &#34;&#34;&#34;
-        Hot encodes the features
-        Arguments --&gt; df, features to encode, the names of the new features created and the encoder
-        Returns --&gt; A new df with features hot encoded, i.e. with new binary variables
+        Hot encodes the features   
+        Arguments --&gt; the dataframe, the features to encode, the names to give to the new features encoded and the encoder   
+        Returns --&gt; A new df with features hot encoded
     &#34;&#34;&#34;
 
     data_encoded = pd.DataFrame(encoder.fit_transform(df[features].astype(&#39;str&#39;)), columns=features_hot_encoded)
@@ -145,10 +144,9 @@ Returns &ndash;&gt; A new df with features hot encoded, i.e. with new binary var
 <span>def <span class="ident">label_encode</span></span>(<span>df, features, encoder, sort_features=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Label encodes the features
-Arguments &ndash;&gt; the df, the features to encode, the list storing the features and their encoded versions names
-if the column values need to be sorted before being encoded (ordinal feature)
-and which suffixe name to give to the newly created column
+<div class="desc"><p>Label encodes the features <br>
+Arguments &ndash;&gt; the dataframe, the features to encode, the encoder <br>
+a boolean specifyin if the column values need to be sorted before being encoded (ordinal feature)
 Returns &ndash;&gt; A new df, copy of the original df but with features label encoded</p></div>
 <details class="source">
 <summary>
@@ -156,10 +154,9 @@ Returns &ndash;&gt; A new df, copy of the original df but with features label en
 </summary>
 <pre><code class="python">def label_encode(df, features, encoder, sort_features=None):
     &#34;&#34;&#34;
-        Label encodes the features
-        Arguments --&gt; the df, the features to encode, the list storing the features and their encoded versions names
-                    if the column values need to be sorted before being encoded (ordinal feature)
-                    and which suffixe name to give to the newly created column
+        Label encodes the features   
+        Arguments --&gt; the dataframe, the features to encode, the encoder   
+            a boolean specifyin if the column values need to be sorted before being encoded (ordinal feature)
         Returns --&gt; A new df, copy of the original df but with features label encoded
     &#34;&#34;&#34;
 
@@ -190,8 +187,8 @@ Returns &ndash;&gt; A new df, copy of the original df but with features label en
 <span>def <span class="ident">min_max_scale</span></span>(<span>df, features, min_max_scaler)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Makes a min-max scaling method on the features
-Arguments &ndash;&gt; The df and the list of features to rescale
+<div class="desc"><p>Makes a min-max scaling method on the features <br>
+Arguments &ndash;&gt; The dataframe, the list of features to rescale and the scaler <br>
 Returns &ndash;&gt; a new df, copy of the original df but with the features scaled</p></div>
 <details class="source">
 <summary>
@@ -199,8 +196,8 @@ Returns &ndash;&gt; a new df, copy of the original df but with the features scal
 </summary>
 <pre><code class="python">def min_max_scale(df, features, min_max_scaler):
     &#34;&#34;&#34;
-        Makes a min-max scaling method on the features
-        Arguments --&gt; The df and the list of features to rescale
+        Makes a min-max scaling method on the features   
+        Arguments --&gt; The dataframe, the list of features to rescale and the scaler   
         Returns --&gt; a new df, copy of the original df but with the features scaled
     &#34;&#34;&#34;
 

@@ -2,9 +2,9 @@ import pandas as pd
 
 
 def derive_termination_rate_year(df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, column_to_sum_name):
-    """Derives the contracts termination rates per year \n \
-        Arguments --> the dataframe, the business starting year, the extraction year \n \
-            the contracts start date and policy ids and the cancellation columns names \n \
+    """Derives the contracts termination rates per year   
+        Arguments --> the dataframe, the business starting year, the extraction year   
+            the contracts start date and policy ids and the cancellation columns names   
         Returns --> a dictionnary with the termination rates per year and the overall one
     """
 
@@ -39,7 +39,7 @@ def derive_termination_rate_year(df, start_business_year, extraction_year, main_
 
 def create_df_unique_values(df, features):
     """
-        Gets the unique values of features and the number of these unique values (mainly useful for categorical feature) \n \
+        Gets the unique values of features and the number of these unique values (mainly useful for categorical feature)   
         Arguments --> the dataframe and the list of features (either a list or a string)
         Returns --> A new df with features and number of unique values for each
     """

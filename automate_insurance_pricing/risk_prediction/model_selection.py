@@ -18,10 +18,10 @@ from automate_insurance_pricing.risk_prediction.charts_functions import *
 
 def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=None, scoring=None, file_path=None):
     """
-        Objective function for the bayesian hyperparameters search with hyperopt module \n \
-        Arguments --> the hyperparameters to try, the independent and dependent variables, \n \
-            the algorithmn model to work on, its objective function and the scoring method to evaluate which params give the best model \n \
-            If a scoring method is indicated it will overwrite the objective function \n \
+        Objective function for the bayesian hyperparameters search with hyperopt module   
+        Arguments --> the hyperparameters to try, the independent and dependent variables,   
+            the algorithmn model to work on, its objective function and the scoring method to evaluate which params give the best model   
+            If a scoring method is indicated it will overwrite the objective function   
             the file path where the results will be saved
         Returns --> a dict storing the hyperopt trials (loss and status) and the params
     """
@@ -45,12 +45,12 @@ def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=
 
 def run_random_search(X_train, y_train, model, param_grid, n_iter=10, cv=5, scoring='neg_root_mean_squared_error', random_state=42, file_path=None, **params):
     """
-        Runs a Randomized hyperparameters search thanks to scikit learn method \n \
-        Arguments --> the features/target variable, \n \
-            the model and params to fine tune, the number of iterations and folds for cross validations \n \
-            the scoring method to select the best params, the random state to reproduce the same results \n \
-            the file path where the results will be saved \n \
-            and the keyword arguments for the model itself \n \
+        Runs a Randomized hyperparameters search thanks to scikit learn method   
+        Arguments --> the features/target variable,   
+            the model and params to fine tune, the number of iterations and folds for cross validations   
+            the scoring method to select the best params, the random state to reproduce the same results   
+            the file path where the results will be saved   
+            and the keyword arguments for the model itself   
         Returns --> the final params results
     """
 
@@ -104,13 +104,13 @@ def run_random_search(X_train, y_train, model, param_grid, n_iter=10, cv=5, scor
 
 def run_multiple_models(X_train, y_train, models, y_transformer=None, scoring='accuracy', n_splits=5, plot_results=True, random_state=42):
     """
-        Runs multiple models to compare their results \n \
-        Arguments --> The features, the target variable, the models to run, \n \
-            the transformer if the target variable has been transformed (e.g. a log transformation), \n \
-            the scoring measure to use to compare the algorithms, \n \
-            the number of folds for the cross validation, \n \
-            a boolean indicating if a plot of the result will be displayed, \n \
-            a random state to reproduce the same results \n \
+        Runs multiple models to compare their results   
+        Arguments --> The features, the target variable, the models to run,   
+            the transformer if the target variable has been transformed (e.g. a log transformation),   
+            the scoring measure to use to compare the algorithms,   
+            the number of folds for the cross validation,   
+            a boolean indicating if a plot of the result will be displayed,   
+            a random state to reproduce the same results   
         Returns --> the results of the models
     """
     results = []

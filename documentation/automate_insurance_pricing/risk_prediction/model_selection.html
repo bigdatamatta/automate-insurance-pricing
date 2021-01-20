@@ -44,14 +44,14 @@ from timeit import default_timer as timer
 from automate_insurance_pricing.risk_prediction.charts_functions import *
 
 
-def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=None, scoring=None, cv=5, file_path=None):
+def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=None, scoring=None, file_path=None):
     &#34;&#34;&#34;
-        Objective function for the bayesian hyperparameters search with hyperopt module
-        Arguments --&gt; the hyperparameters to try, the independent and dependent variables,
-                    the algorithmn model to work on,
-                    its objective function and the scoring method to evaluate which params give the best model
-                    If a scoring method is indicated it will overwrite the objective function
-        Returns --&gt; the dict necessary for the hyperopt trial (loss and status) and the params
+        Objective function for the bayesian hyperparameters search with hyperopt module   
+        Arguments --&gt; the hyperparameters to try, the independent and dependent variables,   
+            the algorithmn model to work on, its objective function and the scoring method to evaluate which params give the best model   
+            If a scoring method is indicated it will overwrite the objective function   
+            the file path where the results will be saved
+        Returns --&gt; a dict storing the hyperopt trials (loss and status) and the params
     &#34;&#34;&#34;
 
     params[&#39;subsample&#39;] = params[&#39;boosting_type&#39;].get(&#39;subsample&#39;, 1.0)
@@ -73,12 +73,13 @@ def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=
 
 def run_random_search(X_train, y_train, model, param_grid, n_iter=10, cv=5, scoring=&#39;neg_root_mean_squared_error&#39;, random_state=42, file_path=None, **params):
     &#34;&#34;&#34;
-        Runs a Randomized hyperparameters search thanks to scikit learn method
-        Arguments --&gt; the features/target variable in train and test sets,
-                    the model to fine tune, the metrics to compare models through the prediction process,
-                    the arguments for the randomized search, i.e. the number of iterations,
-                    the scoring method to select the best params, the random state to reproduce the same results,
-                    and keyword args for the model itself
+        Runs a Randomized hyperparameters search thanks to scikit learn method   
+        Arguments --&gt; the features/target variable,   
+            the model and params to fine tune, the number of iterations and folds for cross validations   
+            the scoring method to select the best params, the random state to reproduce the same results   
+            the file path where the results will be saved   
+            and the keyword arguments for the model itself   
+        Returns --&gt; the final params results
     &#34;&#34;&#34;
 
     rscv = RandomizedSearchCV(model(**params), param_grid, n_iter=n_iter, cv=cv, scoring=scoring, refit=True, random_state=random_state)
@@ -131,13 +132,13 @@ def run_random_search(X_train, y_train, model, param_grid, n_iter=10, cv=5, scor
 
 def run_multiple_models(X_train, y_train, models, y_transformer=None, scoring=&#39;accuracy&#39;, n_splits=5, plot_results=True, random_state=42):
     &#34;&#34;&#34;
-        Runs multiple models to compare their results
-        Arguments --&gt; The features, the target variables, the models to run,
-                    the transformer if the target variable has been transformed (e.g. a log transformation),
-                    the scoring measure to use to compare the algorithms,
-                    the number of folds for the cross validation,
-                    a boolean indicating if a plot of the result will be displayed,
-                    a random state to reproduce the same results
+        Runs multiple models to compare their results   
+        Arguments --&gt; The features, the target variable, the models to run,   
+            the transformer if the target variable has been transformed (e.g. a log transformation),   
+            the scoring measure to use to compare the algorithms,   
+            the number of folds for the cross validation,   
+            a boolean indicating if a plot of the result will be displayed,   
+            a random state to reproduce the same results   
         Returns --&gt; the results of the models
     &#34;&#34;&#34;
     results = []
@@ -163,12 +164,15 @@ def run_multiple_models(X_train, y_train, models, y_transformer=None, scoring=&#
 
 
 def get_mape(y_true, y_pred):
+    &#34;&#34;&#34; Derives the mean absolute percentage error between the actual and predicted value&#34;&#34;&#34;
+
     y_true, y_pred = np.array(y_true), np.array(y_pred)
     return np.mean(np.where(y_true != 0, np.abs((y_true - y_pred) / y_true) * 100, 0))
 
 
 
 def mean_percentage_error(y_true, y_pred):
+    &#34;&#34;&#34; Derives the mean percentage error between the actual and predicted value&#34;&#34;&#34;
 
     y_true, y_pred = np.array(y_true), np.array(y_pred)
     nil_y_error = ((y_true - y_pred) / y_true)[y_true!=0]
@@ -187,38 +191,40 @@ def mean_percentage_error(y_true, y_pred):
 <span>def <span class="ident">get_mape</span></span>(<span>y_true, y_pred)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Derives the mean absolute percentage error between the actual and predicted value</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_mape(y_true, y_pred):
+    &#34;&#34;&#34; Derives the mean absolute percentage error between the actual and predicted value&#34;&#34;&#34;
+
     y_true, y_pred = np.array(y_true), np.array(y_pred)
     return np.mean(np.where(y_true != 0, np.abs((y_true - y_pred) / y_true) * 100, 0))</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.risk_prediction.model_selection.hyperopt_obj_func"><code class="name flex">
-<span>def <span class="ident">hyperopt_obj_func</span></span>(<span>params, X_train=None, y_train=None, model=None, objective=None, scoring=None, cv=5, file_path=None)</span>
+<span>def <span class="ident">hyperopt_obj_func</span></span>(<span>params, X_train=None, y_train=None, model=None, objective=None, scoring=None, file_path=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Objective function for the bayesian hyperparameters search with hyperopt module
-Arguments &ndash;&gt; the hyperparameters to try, the independent and dependent variables,
-the algorithmn model to work on,
-its objective function and the scoring method to evaluate which params give the best model
-If a scoring method is indicated it will overwrite the objective function
-Returns &ndash;&gt; the dict necessary for the hyperopt trial (loss and status) and the params</p></div>
+<div class="desc"><p>Objective function for the bayesian hyperparameters search with hyperopt module <br>
+Arguments &ndash;&gt; the hyperparameters to try, the independent and dependent variables, <br>
+the algorithmn model to work on, its objective function and the scoring method to evaluate which params give the best model <br>
+If a scoring method is indicated it will overwrite the objective function <br>
+the file path where the results will be saved
+Returns &ndash;&gt; a dict storing the hyperopt trials (loss and status) and the params</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=None, scoring=None, cv=5, file_path=None):
+<pre><code class="python">def hyperopt_obj_func(params, X_train=None, y_train=None, model=None, objective=None, scoring=None, file_path=None):
     &#34;&#34;&#34;
-        Objective function for the bayesian hyperparameters search with hyperopt module
-        Arguments --&gt; the hyperparameters to try, the independent and dependent variables,
-                    the algorithmn model to work on,
-                    its objective function and the scoring method to evaluate which params give the best model
-                    If a scoring method is indicated it will overwrite the objective function
-        Returns --&gt; the dict necessary for the hyperopt trial (loss and status) and the params
+        Objective function for the bayesian hyperparameters search with hyperopt module   
+        Arguments --&gt; the hyperparameters to try, the independent and dependent variables,   
+            the algorithmn model to work on, its objective function and the scoring method to evaluate which params give the best model   
+            If a scoring method is indicated it will overwrite the objective function   
+            the file path where the results will be saved
+        Returns --&gt; a dict storing the hyperopt trials (loss and status) and the params
     &#34;&#34;&#34;
 
     params[&#39;subsample&#39;] = params[&#39;boosting_type&#39;].get(&#39;subsample&#39;, 1.0)
@@ -242,12 +248,13 @@ Returns &ndash;&gt; the dict necessary for the hyperopt trial (loss and status) 
 <span>def <span class="ident">mean_percentage_error</span></span>(<span>y_true, y_pred)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Derives the mean percentage error between the actual and predicted value</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def mean_percentage_error(y_true, y_pred):
+    &#34;&#34;&#34; Derives the mean percentage error between the actual and predicted value&#34;&#34;&#34;
 
     y_true, y_pred = np.array(y_true), np.array(y_pred)
     nil_y_error = ((y_true - y_pred) / y_true)[y_true!=0]
@@ -259,13 +266,13 @@ Returns &ndash;&gt; the dict necessary for the hyperopt trial (loss and status) 
 <span>def <span class="ident">run_multiple_models</span></span>(<span>X_train, y_train, models, y_transformer=None, scoring='accuracy', n_splits=5, plot_results=True, random_state=42)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Runs multiple models to compare their results
-Arguments &ndash;&gt; The features, the target variables, the models to run,
-the transformer if the target variable has been transformed (e.g. a log transformation),
-the scoring measure to use to compare the algorithms,
-the number of folds for the cross validation,
-a boolean indicating if a plot of the result will be displayed,
-a random state to reproduce the same results
+<div class="desc"><p>Runs multiple models to compare their results <br>
+Arguments &ndash;&gt; The features, the target variable, the models to run, <br>
+the transformer if the target variable has been transformed (e.g. a log transformation), <br>
+the scoring measure to use to compare the algorithms, <br>
+the number of folds for the cross validation, <br>
+a boolean indicating if a plot of the result will be displayed, <br>
+a random state to reproduce the same results <br>
 Returns &ndash;&gt; the results of the models</p></div>
 <details class="source">
 <summary>
@@ -273,13 +280,13 @@ Returns &ndash;&gt; the results of the models</p></div>
 </summary>
 <pre><code class="python">def run_multiple_models(X_train, y_train, models, y_transformer=None, scoring=&#39;accuracy&#39;, n_splits=5, plot_results=True, random_state=42):
     &#34;&#34;&#34;
-        Runs multiple models to compare their results
-        Arguments --&gt; The features, the target variables, the models to run,
-                    the transformer if the target variable has been transformed (e.g. a log transformation),
-                    the scoring measure to use to compare the algorithms,
-                    the number of folds for the cross validation,
-                    a boolean indicating if a plot of the result will be displayed,
-                    a random state to reproduce the same results
+        Runs multiple models to compare their results   
+        Arguments --&gt; The features, the target variable, the models to run,   
+            the transformer if the target variable has been transformed (e.g. a log transformation),   
+            the scoring measure to use to compare the algorithms,   
+            the number of folds for the cross validation,   
+            a boolean indicating if a plot of the result will be displayed,   
+            a random state to reproduce the same results   
         Returns --&gt; the results of the models
     &#34;&#34;&#34;
     results = []
@@ -307,24 +314,26 @@ Returns &ndash;&gt; the results of the models</p></div>
 <span>def <span class="ident">run_random_search</span></span>(<span>X_train, y_train, model, param_grid, n_iter=10, cv=5, scoring='neg_root_mean_squared_error', random_state=42, file_path=None, **params)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Runs a Randomized hyperparameters search thanks to scikit learn method
-Arguments &ndash;&gt; the features/target variable in train and test sets,
-the model to fine tune, the metrics to compare models through the prediction process,
-the arguments for the randomized search, i.e. the number of iterations,
-the scoring method to select the best params, the random state to reproduce the same results,
-and keyword args for the model itself</p></div>
+<div class="desc"><p>Runs a Randomized hyperparameters search thanks to scikit learn method <br>
+Arguments &ndash;&gt; the features/target variable, <br>
+the model and params to fine tune, the number of iterations and folds for cross validations <br>
+the scoring method to select the best params, the random state to reproduce the same results <br>
+the file path where the results will be saved <br>
+and the keyword arguments for the model itself <br>
+Returns &ndash;&gt; the final params results</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_random_search(X_train, y_train, model, param_grid, n_iter=10, cv=5, scoring=&#39;neg_root_mean_squared_error&#39;, random_state=42, file_path=None, **params):
     &#34;&#34;&#34;
-        Runs a Randomized hyperparameters search thanks to scikit learn method
-        Arguments --&gt; the features/target variable in train and test sets,
-                    the model to fine tune, the metrics to compare models through the prediction process,
-                    the arguments for the randomized search, i.e. the number of iterations,
-                    the scoring method to select the best params, the random state to reproduce the same results,
-                    and keyword args for the model itself
+        Runs a Randomized hyperparameters search thanks to scikit learn method   
+        Arguments --&gt; the features/target variable,   
+            the model and params to fine tune, the number of iterations and folds for cross validations   
+            the scoring method to select the best params, the random state to reproduce the same results   
+            the file path where the results will be saved   
+            and the keyword arguments for the model itself   
+        Returns --&gt; the final params results
     &#34;&#34;&#34;
 
     rscv = RandomizedSearchCV(model(**params), param_grid, n_iter=n_iter, cv=cv, scoring=scoring, refit=True, random_state=random_state)

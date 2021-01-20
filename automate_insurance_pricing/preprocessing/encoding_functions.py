@@ -8,8 +8,8 @@ from datetime import date, timedelta, datetime
 
 def min_max_scale(df, features, min_max_scaler):
     """
-        Makes a min-max scaling method on the features \n \
-        Arguments --> The dataframe, the list of features to rescale and the scaler \n \
+        Makes a min-max scaling method on the features   
+        Arguments --> The dataframe, the list of features to rescale and the scaler   
         Returns --> a new df, copy of the original df but with the features scaled
     """
 
@@ -23,8 +23,8 @@ def min_max_scale(df, features, min_max_scaler):
 
 def hot_encode(df, features, features_hot_encoded, encoder):
     """
-        Hot encodes the features \n \
-        Arguments --> the dataframe, the features to encode, the names to give to the new features encoded and the encoder \n \
+        Hot encodes the features   
+        Arguments --> the dataframe, the features to encode, the names to give to the new features encoded and the encoder   
         Returns --> A new df with features hot encoded
     """
 
@@ -44,8 +44,8 @@ def hot_encode(df, features, features_hot_encoded, encoder):
 
 def label_encode(df, features, encoder, sort_features=None):
     """
-        Label encodes the features \n \
-        Arguments --> the dataframe, the features to encode, the encoder \n \
+        Label encodes the features   
+        Arguments --> the dataframe, the features to encode, the encoder   
             a boolean specifyin if the column values need to be sorted before being encoded (ordinal feature)
         Returns --> A new df, copy of the original df but with features label encoded
     """

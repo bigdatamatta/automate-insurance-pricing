@@ -5,7 +5,7 @@ import openpyxl
 from automate_insurance_pricing.standard_functions import *
 
 def export_glm_coefs_to_excel(features_coefs, features, glm_file_path):
-    """ Exports to excel the glm rating factors of the features (either a list or a string) \n \
+    """ Exports to excel the glm rating factors of the features (either a list or a string)   
         Arguments --> The features coefficients, the features, and the file path used for the export
     """
 

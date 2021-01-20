@@ -10,12 +10,12 @@ from automate_insurance_pricing.preprocessing.charts_functions import *
     
 def compare_to_mean_by_feature(df_analysis, target_column, mean_target, features, rebase_on='exposure', rebase_to_value=100, plot_chart=True, figsize=(12, 8), save=False, prefix_name_fig=None, folder='Charts', title=None):
     """
-        Compare the dependent mean value for each feature modality to the mean on the whole dataset \n \
-        Arguments --> the df, the target column, its mean on the whole df, the features on which to perform the analysis, \n \
-            the column name that must be used to derive the target variable mean on a subset matching the feature modality, e.g. if we need to derive frequencies then we need first to derive the total exposure concerned by the modality, \n \
-            (this column can be set to False, in that case, we just get the mean thanks to a group by) \n \
-            the value to rebase the figures, by default it is in base 100, \n \
-            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart \n \
+        Compare the dependent mean value for each feature modality to the mean on the whole dataset   
+        Arguments --> the df, the target column, its mean on the whole df, the features on which to perform the analysis,   
+            the column name that must be used to derive the target variable mean on a subset matching the feature modality, e.g. if we need to derive frequencies then we need first to derive the total exposure concerned by the modality,   
+            (this column can be set to False, in that case, we just get the mean thanks to a group by)   
+            the value to rebase the figures, by default it is in base 100,   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
         Returns --> a dictionnary where the keys are the features names and the values the comparison tables
     """
     
@@ -69,20 +69,20 @@ def style_df(df, currency='€'):
 
 def run_multi_analysis_by_feature(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, exposure_column_name='exposure', written_premium_column_name='asif_written_premium_excl_taxes', earned_premium_column_name='asif_earned_premium', occurrence_date_column_name='occurrence_date', claims_column_name='asif_total_capped_cost', full_claims_column_name='asif_total_cost', capped_claims_column_name='asif_total_capped_cost', claim_count_column_name='count_claim', guarantees=None, guarantee_column_name='guarantee_impacted', analysis_year_level=None, features=None, parent_features=None, triangle_costs=None, triangle_counts=None, style_format=False, currency='€'):
     """
-        Generates the summary tables that displays the portfolio performance by feature \n \
-        Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.), \n \
-            the capped claims threshold, the LL loading, \n \
-            the current and new commission rates and the entailed new target loss ratio \n \
-            the start and end years of the study, \n \
-            the contract start and policy columns names \n \
-            the name given to rows identified as potentially wrong with missing information \n \
-            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row \n \
-            the exposure, written premium, earned premium, claims occurrence dates, full claims, capped claims and the claims number columns names \n \
-            the list of guarantees we want to look at the performance and the column name indicating the type of guarantee involved, \n \
-            the type of year analysis (by occurrence/inception/effective year) \n \
-            the segmentation, i.e. on which features the analysis will be performed, and features for a higher level of segmentation (typically the formula as most analysis will be relevant only for a specific formula and not overall) \n \
-            the claims amounts and counts triangles that will be used, \n \
-            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true) \n \
+        Generates the summary tables that displays the portfolio performance by feature   
+        Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.),   
+            the capped claims threshold, the LL loading,   
+            the current and new commission rates and the entailed new target loss ratio   
+            the start and end years of the study,   
+            the contract start and policy columns names   
+            the name given to rows identified as potentially wrong with missing information   
+            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row   
+            the exposure, written premium, earned premium, claims occurrence dates, full claims, capped claims and the claims number columns names   
+            the list of guarantees we want to look at the performance and the column name indicating the type of guarantee involved,   
+            the type of year analysis (by occurrence/inception/effective year)   
+            the segmentation, i.e. on which features the analysis will be performed, and features for a higher level of segmentation (typically the formula as most analysis will be relevant only for a specific formula and not overall)   
+            the claims amounts and counts triangles that will be used,   
+            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true)   
         Returns --> a dictionnary with the features names as keys and the performance summary tables as values
     """
 
@@ -111,18 +111,18 @@ def run_multi_analysis_by_feature(df_portfolio, df_claims, portfolio_kpis, claim
 def run_all_analysis_by_year(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, exposure_column_name='exposure', written_premium_column_name='asif_written_premium_excl_taxes', earned_premium_column_name='asif_earned_premium', occurrence_date_column_name='occurrence_date', claims_column_name='asif_total_capped_cost', full_claims_column_name='asif_total_cost', capped_claims_column_name='asif_total_capped_cost', claim_count_column_name='count_claim', guarantees=None, guarantee_column_name='guarantee_impacted', triangle_costs=None, triangle_counts=None, style_format=False, currency='€', **kwargs):
     """
         Generates the summary tables that displays the portfolio performance by occurrence year / inception / effective year
-        Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.), \n \
-            the capped claims threshold, the LL loading, \n \
-            the current and new commission rates and the entailed new target loss ratio \n \
-            the start and end years of the study, \n \
-            the contract start and policy columns names \n \
-            the name given to rows identified as potentially wrong with missing information \n \
-            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row \n \
-            the exposure, written premium, earned premium, claims occurrence dates, full claims, capped claims and the claims number columns names \n \
-            the list of guarantees we want to look at the performance and the column name indicating the type of guarantee involved, \n \
-            the segmentation, i.e. on which features the analysis will be performed \n \
-            the claims amounts and counts triangles that will be used, \n \
-            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true) \n \
+        Arguments --> portfolio and claims df to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.),   
+            the capped claims threshold, the LL loading,   
+            the current and new commission rates and the entailed new target loss ratio   
+            the start and end years of the study,   
+            the contract start and policy columns names   
+            the name given to rows identified as potentially wrong with missing information   
+            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row   
+            the exposure, written premium, earned premium, claims occurrence dates, full claims, capped claims and the claims number columns names   
+            the list of guarantees we want to look at the performance and the column name indicating the type of guarantee involved,   
+            the segmentation, i.e. on which features the analysis will be performed   
+            the claims amounts and counts triangles that will be used,   
+            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true)   
         Returns --> three summary tables for each analysis by year
     """
 
@@ -144,23 +144,23 @@ def run_all_analysis_by_year(df_portfolio, df_claims, portfolio_kpis, claims_kpi
                 
 def build_table(df_portfolio, df_claims, portfolio_kpis, claims_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, exposure_column_name='exposure', written_premium_column_name='asif_written_premium_excl_taxes', earned_premium_column_name='asif_earned_premium', occurrence_date_column_name='occurrence_date', full_claims_column_name='asif_total_cost', capped_claims_column_name='asif_total_capped_cost', claim_count_column_name='count_claim', table_for_prediction=True, kpis_list=None, analysis_year_level=None, portfolio_group_by_columns=None, claims_group_by_columns=None, triangle_costs=None, triangle_counts=None, rate_increase_params=None, style_format=False, currency='€', **kwargs):
     """
-        Creates a summary profitability table or builds the data set ready for risk modelling  \n \
-        Arguments --> portfolio and claims dataframes to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.), \n \
-            the capped claims threshold, the LL loading, \n \
-            the current and new commission rates and the entailed new target loss ratio \n \
-            the start and end years of the study, \n \
-            the contract start and policy columns names \n \
-            the name given to rows identified as potentially wrong with missing information \n \
-            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row \n \
-            the exposure, written premium, earned premium, claims occurrence dates, full claims, capped claims and the claims number columns names \n \
-            a boolean indicating if it must produce a summary profitability table or if we are building the database for risk prediction, \n \
-            the kpis names, this argument will be used only when creating the dataset for modelling and to perform a sense check ensuring no data has been lost. Must be left as None for profitability analysis. \n \
-            the type of year analysis (by occurrence/inception/effective year) \n \
-            the segmentation, i.e. on which features the analysis will be performed, and features for a higher level of segmentation (typically the formula as most analysis will be relevant only for a specific formula and not overall) \n \
-            the claims amounts and counts triangles that will be used, \n \
-            the rates adjustments to apply to the premiums, it must be a dictionnary with features modalities as keys and adjustments as values \n \
-            example: rates_increases = {'[25-35)': 0.2, 'London’: 0.1}, this will increase all insured age between 25 et 35 by 20% and all insured located in London by 10% \n \
-            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true) \n \
+        Creates a summary profitability table or builds the data set ready for risk modelling    
+        Arguments --> portfolio and claims dataframes to work on, the portfolio and claims kpis (exposure, premiums, costs, etc.),   
+            the capped claims threshold, the LL loading,   
+            the current and new commission rates and the entailed new target loss ratio   
+            the start and end years of the study,   
+            the contract start and policy columns names   
+            the name given to rows identified as potentially wrong with missing information   
+            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row   
+            the exposure, written premium, earned premium, claims occurrence dates, full claims, capped claims and the claims number columns names   
+            a boolean indicating if it must produce a summary profitability table or if we are building the database for risk prediction,   
+            the kpis names, this argument will be used only when creating the dataset for modelling and to perform a sense check ensuring no data has been lost. Must be left as None for profitability analysis.   
+            the type of year analysis (by occurrence/inception/effective year)   
+            the segmentation, i.e. on which features the analysis will be performed, and features for a higher level of segmentation (typically the formula as most analysis will be relevant only for a specific formula and not overall)   
+            the claims amounts and counts triangles that will be used,   
+            the rates adjustments to apply to the premiums, it must be a dictionnary with features modalities as keys and adjustments as values   
+            example: rates_increases = {'[25-35)': 0.2, 'London’: 0.1}, this will increase all insured age between 25 et 35 by 20% and all insured located in London by 10%   
+            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true)   
         Returns --> either a summary profitability table or the full dataset ready for risk prediction works 
     """
 
@@ -240,11 +240,11 @@ Change the argument to table_for_prediction False if you want to build a risk an
                     
 def adjust_rates(df, start_business_year, extraction_year, written_premium_column_name, earned_premium_column_name, rate_increase_params):
     """
-        Increase the rates for specific segments such as customer age, chosen formula etc. \n \
-        Arguments --> the portfolio df, the start and extraction dates, \n \
-            the written and earned premiums columns names \n \
-            the rates adjustments to apply to the premiums, it must be a dictionnary with features modalities as keys and adjustments as values \n \
-            example: rates_increases = {'[25-35)': 0.2, 'London’: 0.1}, this will increase all insured age between 25 et 35 by 20% and all insured located in London by 10% \n \
+        Increase the rates for specific segments such as customer age, chosen formula etc.   
+        Arguments --> the portfolio df, the start and extraction dates,   
+            the written and earned premiums columns names   
+            the rates adjustments to apply to the premiums, it must be a dictionnary with features modalities as keys and adjustments as values   
+            example: rates_increases = {'[25-35)': 0.2, 'London’: 0.1}, this will increase all insured age between 25 et 35 by 20% and all insured located in London by 10%   
         Returns --> a new df with the updated rates
     
     """
@@ -272,16 +272,16 @@ def adjust_rates(df, start_business_year, extraction_year, written_premium_colum
                                     
 def prep_data_summary_occurrence_year(df_portfolio, df_claims, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, unknown_rows_name, row_per_each_contract_year, written_premium_column_name, occurrence_date_column_name, year_group_by, portfolio_group_by, claims_group_by, claims_kpis):
     """
-        Prepares the porfolio and claims dataframes so that they can then be used for a summary risk analysis by occurrence year \n \
-        Arguments --> portfolio and claims dataframes, the business start and data extraction years \n \
-            the contract start and policy columns names \n \
-            the name given to rows identified as potentially wrong with missing information \n \
-            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row \n \
-            the written premium and the claims occurrence dates columns names \n \
-            the name of the column associated to the occurrence year \n \
-            the segmentation, i.e. on which features the analysis will be performed \n \
-            the claims attributes if the profitability results must be done on specific claims characteristics \n \
-            the claims kpis, e.g. capped costs, inflated amounts, etc. \n \
+        Prepares the porfolio and claims dataframes so that they can then be used for a summary risk analysis by occurrence year   
+        Arguments --> portfolio and claims dataframes, the business start and data extraction years   
+            the contract start and policy columns names   
+            the name given to rows identified as potentially wrong with missing information   
+            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row   
+            the written premium and the claims occurrence dates columns names   
+            the name of the column associated to the occurrence year   
+            the segmentation, i.e. on which features the analysis will be performed   
+            the claims attributes if the profitability results must be done on specific claims characteristics   
+            the claims kpis, e.g. capped costs, inflated amounts, etc.   
         Returns --> a merged policies-claims df
     """
 
@@ -305,14 +305,14 @@ def prep_data_summary_occurrence_year(df_portfolio, df_claims, start_business_ye
                             
 def derive_per_occurrence_year(df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, written_premium_column_name='asif_written_premium_excl_taxes', columns_to_sum=None, year_column_name=None, df_group_by=None, style_format=False, currency='€'):
     """
-        This function derives the figures by occurrence year and generates a summary table \n \
-        Arguments --> the df, the columns to sum, the business start and extraction years, the contract start date and claim occurrence columns name, \n \
-            the contract start and policy columns names \n \
-            the name given to rows identified as potentially wrong with missing information \n \
-            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row \n \
-            the written premium column name and the list of columns to sum per occurrence year (e.g. earned premium, exposure) \n \
-            the column name to get the year and the segmentation used, i.e. on which features the analysis will be performed \n \
-            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true) \n \            
+        This function derives the figures by occurrence year and generates a summary table   
+        Arguments --> the df, the columns to sum, the business start and extraction years, the contract start date and claim occurrence columns name,   
+            the contract start and policy columns names   
+            the name given to rows identified as potentially wrong with missing information   
+            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row   
+            the written premium column name and the list of columns to sum per occurrence year (e.g. earned premium, exposure)   
+            the column name to get the year and the segmentation used, i.e. on which features the analysis will be performed   
+            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true)               
         Returns --> a summary table that will display the totals per occurrence year
     """
 
@@ -381,17 +381,17 @@ def derive_per_occurrence_year(df, start_business_year, extraction_year, main_co
                                         
 def get_written_premium_occurrence_year(df, main_column_contract_date, policy_id_column_name='policy_id', unknown_rows_name='UNKNOWN', row_per_each_contract_year=True, written_premium_column_name="asif_written_premium_excl_taxes", start_business_year=None, extraction_year=None, years=None, year_column_name=None, df_group_by=None, alone=None, style_format=False, currency='€'):
     """
-        This function derives the right written premium per occurrence year depending on the df format \n \
-        Arguments --> the df, the columns names for the policy id, the written premium the contract date and the claim occurrence year, \n \
-            the contract start and policy columns names \n \
-            the name given to rows identified as potentially wrong with missing information \n \
-            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row \n \
-            the written premium column name and the list of columns to sum per occurrence year (e.g. earned premium, exposure) \n \
-            the business starting year and the extraction year, \n \
-            the list of years (alternative to specifying start and extraction year), \n \
-            the column name to get the year and the segmentation used, i.e. on which features the analysis will be performed \n \
-            if alone set to True, means only written premium will be derived, i.e. the function has been used as stand-alone (instead of being called from a parent function doing other jobs), \n \
-            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true) \n \                    
+        This function derives the right written premium per occurrence year depending on the df format   
+        Arguments --> the df, the columns names for the policy id, the written premium the contract date and the claim occurrence year,   
+            the contract start and policy columns names   
+            the name given to rows identified as potentially wrong with missing information   
+            a boolean indicating if the data is aggregated at policy level or if each yearly contract is represented by a new row   
+            the written premium column name and the list of columns to sum per occurrence year (e.g. earned premium, exposure)   
+            the business starting year and the extraction year,   
+            the list of years (alternative to specifying start and extraction year),   
+            the column name to get the year and the segmentation used, i.e. on which features the analysis will be performed   
+            if alone set to True, means only written premium will be derived, i.e. the function has been used as stand-alone (instead of being called from a parent function doing other jobs),   
+            the style format (produces a prettier table if set to true ) and currency used (only if style format set to true)                       
         Returns --> a summary table of the written premium per year. The shape of the df will be different if it used within a parent function and needs to be coupled to another summary table
     """
 
@@ -447,12 +447,12 @@ def get_written_premium_occurrence_year(df, main_column_contract_date, policy_id
 
 def other_prepare_data(df_portfolio, df_claims, policy_id_column_name, main_column_contract_date, row_per_each_contract_year, table_for_prediction, analysis_year_level, portfolio_group_by, claims_group_by, portfolio_kpis, claims_kpis):
     """
-        Prepares the porfolio and claims df so that they can then be used to create either a profitability table or the data set for risk modelling \n \
-        Arguments --> portfolio and claims df, the policy id, and contract date columns names \n \
-            a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment \n \
-            a boolean indicating if the result from this function will be used to produce a summary profitability table or if we are building the database for risk prediction, \n \
-            the lists of the variables used to make the aggregations: year, portfolio features, claims attributes \n \
-            the list of the kpis used in the sommations: portfolio figures like earned premiums, claims figures like costs \n \
+        Prepares the porfolio and claims df so that they can then be used to create either a profitability table or the data set for risk modelling   
+        Arguments --> portfolio and claims df, the policy id, and contract date columns names   
+            a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment   
+            a boolean indicating if the result from this function will be used to produce a summary profitability table or if we are building the database for risk prediction,   
+            the lists of the variables used to make the aggregations: year, portfolio features, claims attributes   
+            the list of the kpis used in the sommations: portfolio figures like earned premiums, claims figures like costs   
         Returns --> a merged policies-claims df
     """
 
@@ -516,10 +516,10 @@ def other_prepare_data(df_portfolio, df_claims, policy_id_column_name, main_colu
 
 def sum_merge_tables(df1, df2, policy_id_column_name, df1_group_by, df2_group_by, df1_kpis, df2_kpis, df_no_dupl=None):
     """
-        Sums separately two dataframes and merge them \n \
-        Arguments --> the two 2 dataframes to sum and merge, the policy id column name \n \
-            the variables to aggregate on in the two dfs, the kpis to derive in the two dfs \n \
-            a df that contains the portfolio features and no policy duplicates. This df will be used when it is the full data for risk prediction that must be obtained \n \
+        Sums separately two dataframes and merge them   
+        Arguments --> the two 2 dataframes to sum and merge, the policy id column name   
+            the variables to aggregate on in the two dfs, the kpis to derive in the two dfs   
+            a df that contains the portfolio features and no policy duplicates. This df will be used when it is the full data for risk prediction that must be obtained   
         Returns --> A merged df with the kpis summed adequatly
     """
     
@@ -551,9 +551,9 @@ def sum_merge_tables(df1, df2, policy_id_column_name, df1_group_by, df2_group_by
 
                         
 def check_finish_table(df_analysis, df_portfolio, df_claims, kpis_list, exposure_column_name, earned_premium_column_name, claims_column_name):
-    """ Check if the final table produced is consistent by looking at the totals premiums and claims and defines the final kpis to display \n \
-        Arguments --> the dataframe on which we perform the checks, the two dataframes portfolio and claims used to check the initial totals \n \
-            the list of kpis to check the totals, the exposure, earned premium and claims columns names \n \
+    """ Check if the final table produced is consistent by looking at the totals premiums and claims and defines the final kpis to display   
+        Arguments --> the dataframe on which we perform the checks, the two dataframes portfolio and claims used to check the initial totals   
+            the list of kpis to check the totals, the exposure, earned premium and claims columns names   
         Returns --> the initial table but with only the necessary kpis 
     """
     
@@ -586,16 +586,16 @@ The original data has {0} earned premium whereas we now have {1}, i.e. {2} premi
 def produce_df_for_analysis(df, analysis_year_level, portfolio_kpis, claims_limit, LL_loading, current_comm, new_comm, target_LR_new_comm, exposure_column_name, earned_premium_column_name, full_claims_column_name, capped_claims_column_name, claim_count_column_name, table_for_prediction, triangle_costs, triangle_counts, portfolio_group_by, claims_group_by):
     """
         Derives the main kpis (e.g. the ones that will be displayed in the profitability table or that will be modelled)
-        Arguments --> the dataframe with policies and claims merged \n \
-            the type of year analysis (by occurrence/inception/effective year) \n \
+        Arguments --> the dataframe with policies and claims merged   
+            the type of year analysis (by occurrence/inception/effective year)   
             the portfolio and claims kpis columns names (exposure, earned premium, inflated claims amounts etc.)
-            the capped claims threshold, the LL loading, \n \
-            the current and new commission rates and the entailed new target loss ratio \n \
-            the exposure, earned premium, full claims, capped claims and the claims number columns names \n \
-            a boolean indicating if it must produce a summary profitability table or if we are building the database for risk prediction, \n \
-            the claims amounts and counts triangles that will be used, \n \
-            the segmentation, i.e. on which features the analysis will be performed \n \
-            the claims attributes (only if the parent function must create a profitability result) if the profitability results must be done on specific claims characteristics \n \
+            the capped claims threshold, the LL loading,   
+            the current and new commission rates and the entailed new target loss ratio   
+            the exposure, earned premium, full claims, capped claims and the claims number columns names   
+            a boolean indicating if it must produce a summary profitability table or if we are building the database for risk prediction,   
+            the claims amounts and counts triangles that will be used,   
+            the segmentation, i.e. on which features the analysis will be performed   
+            the claims attributes (only if the parent function must create a profitability result) if the profitability results must be done on specific claims characteristics   
         Returns --> a df with the KPIs (frequency, projected loss ratios, etc.) derived 
     """   
     
@@ -667,10 +667,10 @@ def produce_df_for_analysis(df, analysis_year_level, portfolio_kpis, claims_limi
 
 
 def derive_totals_analysis(df, portfolio_kpis, portfolio_group_by, claims_group_by):
-    """ Derives the totals amounts from a summary table \n \
-        Arguments --> the dataframe, the kpis on which the total sums must be derived \n \
-            the segmentation, i.e. on which features the analysis will be performed \n \
-            the claims attributes if the profitability results must be done on specific claims characteristics \n \
+    """ Derives the totals amounts from a summary table   
+        Arguments --> the dataframe, the kpis on which the total sums must be derived   
+            the segmentation, i.e. on which features the analysis will be performed   
+            the claims attributes if the profitability results must be done on specific claims characteristics   
         Returns --> the modified df with an additional row corresponding to the totals
     """
 

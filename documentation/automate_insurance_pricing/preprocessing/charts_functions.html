@@ -40,12 +40,12 @@ from copy import deepcopy
 from automate_insurance_pricing.standard_functions import *
     
 
-def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig=None, title=None, folder=&#39;Charts&#39;):
+def plot_with_vs_without_outliers(df_without, df_with, columns=None, save=True, prefix_name_fig=None, title=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Helps to see at which values are located the outliers
-        Arguments --&gt; df without outliers, df with outliers, the lenght of the two df
-                        and the list of features (or the name for only one feature)
-        Returns --&gt; line plots with overlapped lines showing feature values with and without outliers
+        Helps to see at which values are located the outliers   
+        Arguments --&gt; df without outliers, df with outliers, and the list of features (or the name for only one feature)   
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
+        Returns --&gt; line plots with overlapped lines showing feature values with and without outliers   
     &#34;&#34;&#34;
 
     def plot_line(column):
@@ -59,7 +59,8 @@ def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_ful
         plt.ylabel(column)
 
         if save == True:
-            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + column + &#39;.png&#39;)
+            prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + column + &#39;.png&#39;)
 
         if title is not None:
             plt.title(title)
@@ -73,18 +74,19 @@ def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_ful
 
 def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, save=True, prefix_name_fig=None, title=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots a scatter plot between the target column and the features
-        Arguments --&gt; the df, the dependant variable, the features,
-                    the figure size, and the indication to save or not and with which prefix
+        Plots a scatter plot either between the features or between a dependent variable and the features   
+        Arguments --&gt; the df, the features (either a list or a string), the dependant variable,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_features = [features] if isinstance(features, str) == True else features
 
-    if new_features is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         new_features = [col for col in new_features if col != hue]
 
     if target_column is None:
-        for i,j,v in features:
+        for i,j,v in new_features:
             sns.pairplot(df, hue=hue, height=6, x_vars=i, y_vars=j)
             plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + &#39;.png&#39;)
 
@@ -96,6 +98,7 @@ def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, sa
             sns.pairplot(new_df, hue=hue, height=height, vars=[feature_name, target_column])
 
             if save == True:
+                prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
                 plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + feature_name + &#39;.png&#39;)
 
     if title is not None:
@@ -104,9 +107,9 @@ def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, sa
 
 def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the target column variance mean values depending on the features
-        Arguments --&gt; the df, the dependant variable, the features,
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots the explanation importance of the features   
+        Arguments --&gt; the df, the dependant variable, the features (either a list or a string),   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
@@ -135,15 +138,17 @@ def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=
         plt.xlim(-2.5, 2.5)
 
         if save == True:
-            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + column_name + &#39;.png&#39;)
+            prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + column_name + &#39;.png&#39;)
 
             
 
 def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=1, figsize=(16, 10), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots in a fashion and easy way the target variable distributions depending on the features
-        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-                    the features, the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots in a fashion and easy way the target variable distributions depending on the features   
+        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),   
+            the features (either a list or a string), the number of charts to display side by side, the figure size,   
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -162,17 +167,19 @@ def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=
 
     
 
-def plot_bar_line_charts(df, columns=None, target_columns={&#39;barplot&#39;: None, &#39;pointplot&#39;: None}, agg_func={&#39;barplot&#39;: &#39;sum&#39;, &#39;pointplot&#39;: &#39;mean&#39;}, hue=None, sort=False, figsize=(10,6), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
+def plot_bar_line_charts(df, columns=None, target_columns={&#39;barplot&#39;: None, &#39;pointplot&#39;: None}, agg_func={&#39;barplot&#39;: &#39;sum&#39;, &#39;pointplot&#39;: &#39;mean&#39;}, hue=None, figsize=(10,6), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature
-        Aruments --&gt; the df, the target column we are looking at, the columns to loop through and perform mean/sum aggregation,
-                    a dict indication which aggregation functio to do for pointplot and barplot
+        Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature   
+        Aruments --&gt; the df, the features (either a list or a string), a dictionary indicating the target variables for the bar chart and the point one,   
+            a dictionary indicating which aggregration function to use for each of the chart,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     dict_agg = {&#39;sum&#39;: np.sum, &#39;mean&#39;: np.mean}
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    if plot_columns is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         plot_columns = [col for col in plot_columns if col != hue]
 
     barplot_target_column = target_columns[&#39;barplot&#39;]
@@ -201,12 +208,15 @@ def plot_bar_line_charts(df, columns=None, target_columns={&#39;barplot&#39;: No
         ax2.legend(loc=&#39;best&#39;)
 
         if save == True:
-            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + column_name + &#39;.png&#39;)
+            prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + column_name + &#39;.png&#39;)
 
 
 def plot_pie_charts(df, columns=None, agg_func=&#39;count&#39;, absolute_figures=True, percentages=True, n_cols=2, figsize=(12, 7), chart_title_first_part=None, currency=&#39;€&#39;, save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots pie charts for the specified columns, based on a specified aggregation operation, and indicates the absolute figures + proportion if they are set to True
+        Plots a pie charts 
+        Arguments --&gt; the dataframe, the features (either a list or a string), the aggregate function to use, booleans indicating if absolute figures and proportions must be displayed   
+            the number of charts by row to display, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
     &#34;&#34;&#34;
 
     def func(pct, allvals):
@@ -244,7 +254,8 @@ def plot_pie_charts(df, columns=None, agg_func=&#39;count&#39;, absolute_figures
                 ax_plot.set_title(variable + &#34; : Pie Chart&#34; if chart_title_first_part is None else chart_title_first_part + &#39; &#39; + feature_name)
 
                 if save == True:
-                    plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + variable + &#39;.png&#39;)
+                    prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+                    plt.savefig(folder + &#39;/&#39; + prefix_name_fig + variable + &#39;.png&#39;)
 
             else:
                 fig.delaxes(ax_plot)
@@ -253,9 +264,11 @@ def plot_pie_charts(df, columns=None, agg_func=&#39;count&#39;, absolute_figures
 
 def plot_violin_charts(df, target_column, transformer=None, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots target variable distribution depending on the features specified in arguments
-        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-                the features, the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots a violing chart (i.e. the distribution) of the target variable depending on the features specified in arguments   
+        Arguments --&gt; the dataframe, the dependant variable, the target variable transformer (e.g. a log normal transformation),   
+            the features (either a list or a string), the number of charts to display side by side,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -280,9 +293,10 @@ def plot_violin_charts(df, target_column, transformer=None, columns=None, hue=No
 
 def plot_hist_charts(df, columns=None, transformer=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=&#39;histo&#39;, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots histograms of the values of the columns specified in the arguments
-        Arguments --&gt; the df, the variables to plot, thee transformer to use (e.g. a log normal transformation),
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots histograms of the variables  
+        Arguments --&gt; the dataframe, the variables to plot (either a list or a string), thee transformer to use (e.g. a log normal transformation),   
+            the number of charts to display side by side,   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -301,14 +315,16 @@ def plot_hist_charts(df, columns=None, transformer=None, n_cols=2, figsize=(8, 5
 def plot_count_charts(df, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
         Plots distribution for categorical columns
-        Arguments --&gt; the df, the variables to plot,
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Arguments --&gt; the dataframe, the variables to plot (either a list or a string),   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
     num_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    if num_columns is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         num_columns = [col for col in num_columns if col != hue]
 
     plot_expression = &#34;sns.countplot(x=variable, hue=hue, data=df, ax=ax[j] if n_cols &gt; 1 else ax)&#34;
@@ -320,10 +336,12 @@ def plot_count_charts(df, columns=None, hue=None, n_cols=2, figsize=(8, 5), save
 
 def plot_line_charts(df, target_column, transformer=None, num_features=None, cat_features=None, hue=None, n_cols=2, figsize=(8, 5), save=False, folder=&#39;Charts&#39;, title=None):
     &#34;&#34;&#34;
-        Plots either a line curve for continous features or a bar plot for categorical features for the target column depending on the features
-        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-                    the numerical and categorical features,
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots either a line curve for continous features or a bar plot for categorical features for the target column depending on the features   
+        Arguments --&gt; the dataframe, the dependant variable, the target variable transformer (e.g. a log normal transformation),   
+            the numerical and categorical features (either None or a list or a string),   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart               
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -353,12 +371,17 @@ def plot_line_charts(df, target_column, transformer=None, num_features=None, cat
 def plot_bar_charts(df, target_column, columns=None, agg_func=&#39;mean&#39;, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;, title=None):
     &#34;&#34;&#34;
         Makes bar plot of the features specified by the user as list, or as name if only one feature
+        Arguments --&gt; the dataframe, the dependant variable, the features (either a list or a string),   
+            the aggregate function to use,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart                       
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
     num_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    if num_columns is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         num_columns = [col for col in num_columns if col != hue] 
 
     plot_expression = &#34;sns.barplot(x=variable, y=target_column, data=df, hue=hue, estimator=agg_func_eval, ax=ax[j] if n_cols &gt; 1 else ax)&#34;
@@ -372,10 +395,14 @@ def plot_bar_charts(df, target_column, columns=None, agg_func=&#39;mean&#39;, hu
 
 def run_multiple_plots(df, plot_expression, target_column=None, list_variables=None, hue=None, group_by=False, agg_func=None, n_cols=None, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;, **kwargs):
     &#34;&#34;&#34;
-        Plots multiple charts
-        Arguments --&gt; the df, the expression that will be evaluated to plot the right chart,
-                    the target column (y axis), the variables (x axis), a boolean indicating if a aggregation must be done,
-                    the aggregation function, the number of axes for the plot, the figure size, if it will be saved and with which prefix name
+        Plots multiple charts (on a same type of chart) depending on the variables   
+        Arguments --&gt; the dataframe, the expression that will be evaluated to plot the right chart (this one is coming from a parent chart function),   
+            the target variable, the independant variables (either None or a list or a string),   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            a boolean indicating if a aggregation must be done, the aggregate function to use,   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
+            the kwargs for additional charts params like a title, axes names, etc.
     &#34;&#34;&#34;
 
     df_backup = deepcopy(df)
@@ -465,7 +492,7 @@ def run_multiple_plots(df, plot_expression, target_column=None, list_variables=N
 
 def plot_unique_values(df):
     &#34;&#34;&#34;
-        Displays histogram with number of values in x-axis and number of features concerned on y-axis
+        Displays histogram (for all features of the dataframe) with number of values in x-axis and number of features concerned on y-axis
     &#34;&#34;&#34;
 
     if len(df) &gt;0:
@@ -490,7 +517,12 @@ def plot_unique_values(df):
 <span>def <span class="ident">plot_bar_charts</span></span>(<span>df, target_column, columns=None, agg_func='mean', hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder='Charts', title=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Makes bar plot of the features specified by the user as list, or as name if only one feature</p></div>
+<div class="desc"><p>Makes bar plot of the features specified by the user as list, or as name if only one feature
+Arguments &ndash;&gt; the dataframe, the dependant variable, the features (either a list or a string), <br>
+the aggregate function to use, <br>
+the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts) <br>
+the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -498,12 +530,17 @@ def plot_unique_values(df):
 <pre><code class="python">def plot_bar_charts(df, target_column, columns=None, agg_func=&#39;mean&#39;, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;, title=None):
     &#34;&#34;&#34;
         Makes bar plot of the features specified by the user as list, or as name if only one feature
+        Arguments --&gt; the dataframe, the dependant variable, the features (either a list or a string),   
+            the aggregate function to use,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart                       
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
     num_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    if num_columns is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         num_columns = [col for col in num_columns if col != hue] 
 
     plot_expression = &#34;sns.barplot(x=variable, y=target_column, data=df, hue=hue, estimator=agg_func_eval, ax=ax[j] if n_cols &gt; 1 else ax)&#34;
@@ -517,27 +554,31 @@ def plot_unique_values(df):
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.charts_functions.plot_bar_line_charts"><code class="name flex">
-<span>def <span class="ident">plot_bar_line_charts</span></span>(<span>df, columns=None, target_columns={'barplot': None, 'pointplot': None}, agg_func={'barplot': 'sum', 'pointplot': 'mean'}, hue=None, sort=False, figsize=(10, 6), save=True, prefix_name_fig=None, folder='Charts')</span>
+<span>def <span class="ident">plot_bar_line_charts</span></span>(<span>df, columns=None, target_columns={'barplot': None, 'pointplot': None}, agg_func={'barplot': 'sum', 'pointplot': 'mean'}, hue=None, figsize=(10, 6), save=True, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature
-Aruments &ndash;&gt; the df, the target column we are looking at, the columns to loop through and perform mean/sum aggregation,
-a dict indication which aggregation functio to do for pointplot and barplot</p></div>
+<div class="desc"><p>Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature <br>
+Aruments &ndash;&gt; the df, the features (either a list or a string), a dictionary indicating the target variables for the bar chart and the point one, <br>
+a dictionary indicating which aggregration function to use for each of the chart, <br>
+the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts) <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def plot_bar_line_charts(df, columns=None, target_columns={&#39;barplot&#39;: None, &#39;pointplot&#39;: None}, agg_func={&#39;barplot&#39;: &#39;sum&#39;, &#39;pointplot&#39;: &#39;mean&#39;}, hue=None, sort=False, figsize=(10,6), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
+<pre><code class="python">def plot_bar_line_charts(df, columns=None, target_columns={&#39;barplot&#39;: None, &#39;pointplot&#39;: None}, agg_func={&#39;barplot&#39;: &#39;sum&#39;, &#39;pointplot&#39;: &#39;mean&#39;}, hue=None, figsize=(10,6), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature
-        Aruments --&gt; the df, the target column we are looking at, the columns to loop through and perform mean/sum aggregation,
-                    a dict indication which aggregation functio to do for pointplot and barplot
+        Combines in a same chart a bar and a line plot. Useful to compare volume vs average by feature   
+        Aruments --&gt; the df, the features (either a list or a string), a dictionary indicating the target variables for the bar chart and the point one,   
+            a dictionary indicating which aggregration function to use for each of the chart,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     dict_agg = {&#39;sum&#39;: np.sum, &#39;mean&#39;: np.mean}
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    if plot_columns is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         plot_columns = [col for col in plot_columns if col != hue]
 
     barplot_target_column = target_columns[&#39;barplot&#39;]
@@ -566,7 +607,8 @@ a dict indication which aggregation functio to do for pointplot and barplot</p><
         ax2.legend(loc=&#39;best&#39;)
 
         if save == True:
-            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + column_name + &#39;.png&#39;)</code></pre>
+            prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + column_name + &#39;.png&#39;)</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.charts_functions.plot_count_charts"><code class="name flex">
@@ -574,8 +616,10 @@ a dict indication which aggregation functio to do for pointplot and barplot</p><
 </code></dt>
 <dd>
 <div class="desc"><p>Plots distribution for categorical columns
-Arguments &ndash;&gt; the df, the variables to plot,
-the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix</p></div>
+Arguments &ndash;&gt; the dataframe, the variables to plot (either a list or a string), <br>
+the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts) <br>
+the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -583,14 +627,16 @@ the number of charts to display side by side, the figure size, and the indicatio
 <pre><code class="python">def plot_count_charts(df, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
         Plots distribution for categorical columns
-        Arguments --&gt; the df, the variables to plot,
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Arguments --&gt; the dataframe, the variables to plot (either a list or a string),   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
     num_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
 
-    if num_columns is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         num_columns = [col for col in num_columns if col != hue]
 
     plot_expression = &#34;sns.countplot(x=variable, hue=hue, data=df, ax=ax[j] if n_cols &gt; 1 else ax)&#34;
@@ -603,18 +649,20 @@ the number of charts to display side by side, the figure size, and the indicatio
 <span>def <span class="ident">plot_hist_charts</span></span>(<span>df, columns=None, transformer=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig='histo', folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots histograms of the values of the columns specified in the arguments
-Arguments &ndash;&gt; the df, the variables to plot, thee transformer to use (e.g. a log normal transformation),
-the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix</p></div>
+<div class="desc"><p>Plots histograms of the variables<br>
+Arguments &ndash;&gt; the dataframe, the variables to plot (either a list or a string), thee transformer to use (e.g. a log normal transformation), <br>
+the number of charts to display side by side, <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_hist_charts(df, columns=None, transformer=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=&#39;histo&#39;, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots histograms of the values of the columns specified in the arguments
-        Arguments --&gt; the df, the variables to plot, thee transformer to use (e.g. a log normal transformation),
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots histograms of the variables  
+        Arguments --&gt; the dataframe, the variables to plot (either a list or a string), thee transformer to use (e.g. a log normal transformation),   
+            the number of charts to display side by side,   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -633,18 +681,20 @@ the number of charts to display side by side, the figure size, and the indicatio
 <span>def <span class="ident">plot_joypy_charts</span></span>(<span>df, target_column, transformer=None, columns=None, n_cols=1, figsize=(16, 10), save=True, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots in a fashion and easy way the target variable distributions depending on the features
-Arguments &ndash;&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-the features, the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix</p></div>
+<div class="desc"><p>Plots in a fashion and easy way the target variable distributions depending on the features <br>
+Arguments &ndash;&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation), <br>
+the features (either a list or a string), the number of charts to display side by side, the figure size, <br>
+a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_joypy_charts(df, target_column, transformer=None, columns=None, n_cols=1, figsize=(16, 10), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots in a fashion and easy way the target variable distributions depending on the features
-        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-                    the features, the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots in a fashion and easy way the target variable distributions depending on the features   
+        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),   
+            the features (either a list or a string), the number of charts to display side by side, the figure size,   
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -666,20 +716,24 @@ the features, the number of charts to display side by side, the figure size, and
 <span>def <span class="ident">plot_line_charts</span></span>(<span>df, target_column, transformer=None, num_features=None, cat_features=None, hue=None, n_cols=2, figsize=(8, 5), save=False, folder='Charts', title=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots either a line curve for continous features or a bar plot for categorical features for the target column depending on the features
-Arguments &ndash;&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-the numerical and categorical features,
-the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix</p></div>
+<div class="desc"><p>Plots either a line curve for continous features or a bar plot for categorical features for the target column depending on the features <br>
+Arguments &ndash;&gt; the dataframe, the dependant variable, the target variable transformer (e.g. a log normal transformation), <br>
+the numerical and categorical features (either None or a list or a string), <br>
+the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts) <br>
+the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_line_charts(df, target_column, transformer=None, num_features=None, cat_features=None, hue=None, n_cols=2, figsize=(8, 5), save=False, folder=&#39;Charts&#39;, title=None):
     &#34;&#34;&#34;
-        Plots either a line curve for continous features or a bar plot for categorical features for the target column depending on the features
-        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-                    the numerical and categorical features,
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots either a line curve for continous features or a bar plot for categorical features for the target column depending on the features   
+        Arguments --&gt; the dataframe, the dependant variable, the target variable transformer (e.g. a log normal transformation),   
+            the numerical and categorical features (either None or a list or a string),   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart               
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -709,14 +763,18 @@ the number of charts to display side by side, the figure size, and the indicatio
 <span>def <span class="ident">plot_pie_charts</span></span>(<span>df, columns=None, agg_func='count', absolute_figures=True, percentages=True, n_cols=2, figsize=(12, 7), chart_title_first_part=None, currency='€', save=True, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots pie charts for the specified columns, based on a specified aggregation operation, and indicates the absolute figures + proportion if they are set to True</p></div>
+<div class="desc"><p>Plots a pie charts
+Arguments &ndash;&gt; the dataframe, the features (either a list or a string), the aggregate function to use, booleans indicating if absolute figures and proportions must be displayed <br>
+the number of charts by row to display, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_pie_charts(df, columns=None, agg_func=&#39;count&#39;, absolute_figures=True, percentages=True, n_cols=2, figsize=(12, 7), chart_title_first_part=None, currency=&#39;€&#39;, save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots pie charts for the specified columns, based on a specified aggregation operation, and indicates the absolute figures + proportion if they are set to True
+        Plots a pie charts 
+        Arguments --&gt; the dataframe, the features (either a list or a string), the aggregate function to use, booleans indicating if absolute figures and proportions must be displayed   
+            the number of charts by row to display, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
     &#34;&#34;&#34;
 
     def func(pct, allvals):
@@ -754,7 +812,8 @@ the number of charts to display side by side, the figure size, and the indicatio
                 ax_plot.set_title(variable + &#34; : Pie Chart&#34; if chart_title_first_part is None else chart_title_first_part + &#39; &#39; + feature_name)
 
                 if save == True:
-                    plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + variable + &#39;.png&#39;)
+                    prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+                    plt.savefig(folder + &#39;/&#39; + prefix_name_fig + variable + &#39;.png&#39;)
 
             else:
                 fig.delaxes(ax_plot)</code></pre>
@@ -764,27 +823,29 @@ the number of charts to display side by side, the figure size, and the indicatio
 <span>def <span class="ident">plot_scatter_charts</span></span>(<span>df, features, target_column=None, hue=None, height=5, save=True, prefix_name_fig=None, title=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots a scatter plot between the target column and the features
-Arguments &ndash;&gt; the df, the dependant variable, the features,
-the figure size, and the indication to save or not and with which prefix</p></div>
+<div class="desc"><p>Plots a scatter plot either between the features or between a dependent variable and the features <br>
+Arguments &ndash;&gt; the df, the features (either a list or a string), the dependant variable, <br>
+the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts) <br>
+a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_scatter_charts(df, features, target_column=None, hue=None, height=5, save=True, prefix_name_fig=None, title=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots a scatter plot between the target column and the features
-        Arguments --&gt; the df, the dependant variable, the features,
-                    the figure size, and the indication to save or not and with which prefix
+        Plots a scatter plot either between the features or between a dependent variable and the features   
+        Arguments --&gt; the df, the features (either a list or a string), the dependant variable,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_features = [features] if isinstance(features, str) == True else features
 
-    if new_features is not None and hue is not None and isinstance(hue, str) == True :
+    if hue is not None and isinstance(hue, str) == True :
         new_features = [col for col in new_features if col != hue]
 
     if target_column is None:
-        for i,j,v in features:
+        for i,j,v in new_features:
             sns.pairplot(df, hue=hue, height=6, x_vars=i, y_vars=j)
             plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + &#39;.png&#39;)
 
@@ -796,6 +857,7 @@ the figure size, and the indication to save or not and with which prefix</p></di
             sns.pairplot(new_df, hue=hue, height=height, vars=[feature_name, target_column])
 
             if save == True:
+                prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
                 plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + feature_name + &#39;.png&#39;)
 
     if title is not None:
@@ -806,18 +868,18 @@ the figure size, and the indication to save or not and with which prefix</p></di
 <span>def <span class="ident">plot_text_bars_chars</span></span>(<span>df, target_column, columns=None, figsize=(14, 14), save=True, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the target column variance mean values depending on the features
-Arguments &ndash;&gt; the df, the dependant variable, the features,
-the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix</p></div>
+<div class="desc"><p>Plots the explanation importance of the features <br>
+Arguments &ndash;&gt; the df, the dependant variable, the features (either a list or a string), <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_text_bars_chars(df, target_column, columns=None, figsize=(14,14), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the target column variance mean values depending on the features
-        Arguments --&gt; the df, the dependant variable, the features,
-                    the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots the explanation importance of the features   
+        Arguments --&gt; the df, the dependant variable, the features (either a list or a string),   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     plot_columns = [columns] if isinstance(columns, str) == True else deepcopy(columns)
@@ -846,21 +908,22 @@ the number of charts to display side by side, the figure size, and the indicatio
         plt.xlim(-2.5, 2.5)
 
         if save == True:
-            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + column_name + &#39;.png&#39;)</code></pre>
+            prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + column_name + &#39;.png&#39;)</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.charts_functions.plot_unique_values"><code class="name flex">
 <span>def <span class="ident">plot_unique_values</span></span>(<span>df)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Displays histogram with number of values in x-axis and number of features concerned on y-axis</p></div>
+<div class="desc"><p>Displays histogram (for all features of the dataframe) with number of values in x-axis and number of features concerned on y-axis</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_unique_values(df):
     &#34;&#34;&#34;
-        Displays histogram with number of values in x-axis and number of features concerned on y-axis
+        Displays histogram (for all features of the dataframe) with number of values in x-axis and number of features concerned on y-axis
     &#34;&#34;&#34;
 
     if len(df) &gt;0:
@@ -878,18 +941,22 @@ the number of charts to display side by side, the figure size, and the indicatio
 <span>def <span class="ident">plot_violin_charts</span></span>(<span>df, target_column, transformer=None, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots target variable distribution depending on the features specified in arguments
-Arguments &ndash;&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-the features, the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix</p></div>
+<div class="desc"><p>Plots a violing chart (i.e. the distribution) of the target variable depending on the features specified in arguments <br>
+Arguments &ndash;&gt; the dataframe, the dependant variable, the target variable transformer (e.g. a log normal transformation), <br>
+the features (either a list or a string), the number of charts to display side by side, <br>
+the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts) <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_violin_charts(df, target_column, transformer=None, columns=None, hue=None, n_cols=2, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots target variable distribution depending on the features specified in arguments
-        Arguments --&gt; the df, the dependant variable, the target variable transformer (e.g. a log normal transformation),
-                the features, the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix
+        Plots a violing chart (i.e. the distribution) of the target variable depending on the features specified in arguments   
+        Arguments --&gt; the dataframe, the dependant variable, the target variable transformer (e.g. a log normal transformation),   
+            the features (either a list or a string), the number of charts to display side by side,   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -912,23 +979,23 @@ the features, the number of charts to display side by side, the figure size, and
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.charts_functions.plot_with_vs_without_outliers"><code class="name flex">
-<span>def <span class="ident">plot_with_vs_without_outliers</span></span>(<span>df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig=None, title=None, folder='Charts')</span>
+<span>def <span class="ident">plot_with_vs_without_outliers</span></span>(<span>df_without, df_with, columns=None, save=True, prefix_name_fig=None, title=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helps to see at which values are located the outliers
-Arguments &ndash;&gt; df without outliers, df with outliers, the lenght of the two df
-and the list of features (or the name for only one feature)
+<div class="desc"><p>Helps to see at which values are located the outliers <br>
+Arguments &ndash;&gt; df without outliers, df with outliers, and the list of features (or the name for only one feature) <br>
+a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart <br>
 Returns &ndash;&gt; line plots with overlapped lines showing feature values with and without outliers</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def plot_with_vs_without_outliers(df_without, df_with, df_without_length, df_full_length, columns=None, save=True, prefix_name_fig=None, title=None, folder=&#39;Charts&#39;):
+<pre><code class="python">def plot_with_vs_without_outliers(df_without, df_with, columns=None, save=True, prefix_name_fig=None, title=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Helps to see at which values are located the outliers
-        Arguments --&gt; df without outliers, df with outliers, the lenght of the two df
-                        and the list of features (or the name for only one feature)
-        Returns --&gt; line plots with overlapped lines showing feature values with and without outliers
+        Helps to see at which values are located the outliers   
+        Arguments --&gt; df without outliers, df with outliers, and the list of features (or the name for only one feature)   
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart   
+        Returns --&gt; line plots with overlapped lines showing feature values with and without outliers   
     &#34;&#34;&#34;
 
     def plot_line(column):
@@ -942,7 +1009,8 @@ Returns &ndash;&gt; line plots with overlapped lines showing feature values with
         plt.ylabel(column)
 
         if save == True:
-            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;_&#39; + column + &#39;.png&#39;)
+            prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+            plt.savefig(folder + &#39;/&#39; + prefix_name_fig + column + &#39;.png&#39;)
 
         if title is not None:
             plt.title(title)
@@ -957,20 +1025,28 @@ Returns &ndash;&gt; line plots with overlapped lines showing feature values with
 <span>def <span class="ident">run_multiple_plots</span></span>(<span>df, plot_expression, target_column=None, list_variables=None, hue=None, group_by=False, agg_func=None, n_cols=None, figsize=(8, 5), save=False, prefix_name_fig=None, folder='Charts', **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots multiple charts
-Arguments &ndash;&gt; the df, the expression that will be evaluated to plot the right chart,
-the target column (y axis), the variables (x axis), a boolean indicating if a aggregation must be done,
-the aggregation function, the number of axes for the plot, the figure size, if it will be saved and with which prefix name</p></div>
+<div class="desc"><p>Plots multiple charts (on a same type of chart) depending on the variables <br>
+Arguments &ndash;&gt; the dataframe, the expression that will be evaluated to plot the right chart (this one is coming from a parent chart function), <br>
+the target variable, the independant variables (either None or a list or a string), <br>
+the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts) <br>
+a boolean indicating if a aggregation must be done, the aggregate function to use, <br>
+the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart <br>
+the kwargs for additional charts params like a title, axes names, etc.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_multiple_plots(df, plot_expression, target_column=None, list_variables=None, hue=None, group_by=False, agg_func=None, n_cols=None, figsize=(8, 5), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;, **kwargs):
     &#34;&#34;&#34;
-        Plots multiple charts
-        Arguments --&gt; the df, the expression that will be evaluated to plot the right chart,
-                    the target column (y axis), the variables (x axis), a boolean indicating if a aggregation must be done,
-                    the aggregation function, the number of axes for the plot, the figure size, if it will be saved and with which prefix name
+        Plots multiple charts (on a same type of chart) depending on the variables   
+        Arguments --&gt; the dataframe, the expression that will be evaluated to plot the right chart (this one is coming from a parent chart function),   
+            the target variable, the independant variables (either None or a list or a string),   
+            the variable to split the data with (for example if the variable has two modalities, then there will be two overlapped charts)   
+            a boolean indicating if a aggregation must be done, the aggregate function to use,   
+            the number of charts to display side by side, the figure size, and the indication to save or not and with which prefix   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
+            the kwargs for additional charts params like a title, axes names, etc.
     &#34;&#34;&#34;
 
     df_backup = deepcopy(df)

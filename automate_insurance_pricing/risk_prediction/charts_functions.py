@@ -29,10 +29,10 @@ def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save
 
 def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig='', folder='Charts'):
     """
-        Plots the predicted vs the observed values \n \
-        Arguments --> the test target variable values, the predictions, \n \
-            a boolean indicating if predictions are from a ols model, \n \ 
-            and the glm fitted model to make tests on pearson / deviance residuals \n \
+        Plots the predicted vs the observed values   
+        Arguments --> the test target variable values, the predictions,   
+            a boolean indicating if predictions are from a ols model,    
+            and the glm fitted model to make tests on pearson / deviance residuals   
             the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart
     """    
 
@@ -85,7 +85,7 @@ def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, f
         
 
 def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=None, folder='Charts'):
-    """ Plots a feature importance \n \
+    """ Plots a feature importance   
         Arguments --> the model name, the coefs obtained, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     """
 
@@ -99,7 +99,7 @@ def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig
     
 
 def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=None, folder='Charts'):
-    """Compare the models plotting their results in a boxplot \n \
+    """Compare the models plotting their results in a boxplot   
         Arguments --> the model results, their names, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     """
 
@@ -115,7 +115,7 @@ def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_nam
     
 
 def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=None, folder='Charts'):
-    """ Plots the importance features selected by a RFE method \n \
+    """ Plots the importance features selected by a RFE method   
         Arguments --> the features, the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     """
 
@@ -163,7 +163,7 @@ def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=
     """
         Plots a scatter plot for all pair of features
         Arguments --> the dataframe, the corr matrice (used to get the features pairs), the model,
-            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
             and kwargs which shoud mainly correspond to the model params
     """
 

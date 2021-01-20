@@ -14,10 +14,10 @@ def addYears(d, years):
 
 def remove_words(word, **kwargs):
     """
-        Replaces part of the word by another value \n \
-        Arguments --> the word that has parts to be replaced, \n \
-            the kwargs represent the parts of the word to replace and the value to use instead, \n \ 
-            for example (first_replace=('variable', 'feature')) will make the function replace the word variable by feature \n \
+        Replaces part of the word by another value  
+        Arguments --> the word that has parts to be replaced,   
+            the kwargs represent the parts of the word to replace and the value to use instead,    
+            for example (first_replace=('variable', 'feature')) will make the function replace the word variable by feature   
         Returns --> the new word with the desired parts replaced
     """
 
@@ -28,10 +28,10 @@ def remove_words(word, **kwargs):
 
 
 def get_list_from_list(init_list, list_to_check, is_in_list=True):
-    """ Generates a list from a initial one \n \
-        Arguments --> init_list is the one we loop through, \n \
-            list_to_check is the list that gathers the items to take or to remove, \n \
-            is_in_list is the boolean indicating if items from list_to_check must be removed or kept from the initial list \n \
+    """ Generates a list from a initial one   
+        Arguments --> init_list is the one we loop through,   
+            list_to_check is the list that gathers the items to take or to remove,   
+            is_in_list is the boolean indicating if items from list_to_check must be removed or kept from the initial list   
         Returns --> the new list
     """
     if isinstance(list_to_check, str) == True:
