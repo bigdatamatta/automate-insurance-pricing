@@ -8,8 +8,8 @@ from datetime import date, timedelta, datetime
 
 def min_max_scale(df, features, min_max_scaler):
     """
-        Makes a min-max scaling method on the features
-        Arguments --> The df and the list of features to rescale
+        Makes a min-max scaling method on the features \n \
+        Arguments --> The dataframe, the list of features to rescale and the scaler \n \
         Returns --> a new df, copy of the original df but with the features scaled
     """
 
@@ -23,9 +23,9 @@ def min_max_scale(df, features, min_max_scaler):
 
 def hot_encode(df, features, features_hot_encoded, encoder):
     """
-        Hot encodes the features
-        Arguments --> df, features to encode, the names of the new features created and the encoder
-        Returns --> A new df with features hot encoded, i.e. with new binary variables
+        Hot encodes the features \n \
+        Arguments --> the dataframe, the features to encode, the names to give to the new features encoded and the encoder \n \
+        Returns --> A new df with features hot encoded
     """
 
     data_encoded = pd.DataFrame(encoder.fit_transform(df[features].astype('str')), columns=features_hot_encoded)
@@ -44,10 +44,9 @@ def hot_encode(df, features, features_hot_encoded, encoder):
 
 def label_encode(df, features, encoder, sort_features=None):
     """
-        Label encodes the features
-        Arguments --> the df, the features to encode, the list storing the features and their encoded versions names
-                    if the column values need to be sorted before being encoded (ordinal feature)
-                    and which suffixe name to give to the newly created column
+        Label encodes the features \n \
+        Arguments --> the dataframe, the features to encode, the encoder \n \
+            a boolean specifyin if the column values need to be sorted before being encoded (ordinal feature)
         Returns --> A new df, copy of the original df but with features label encoded
     """
 
