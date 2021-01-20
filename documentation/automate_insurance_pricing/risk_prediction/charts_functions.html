@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>automate_insurance_pricing.risk_prediction.charts_functions API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>automate_insurance_pricing.risk_prediction.charts_functions</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import pandas as pd
+import numpy as np
+
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from scipy import stats
+from statsmodels import graphics
+import statsmodels.api as sm
+from statsmodels.graphics.api import abline_plot
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from copy import deepcopy
+
+
+def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    param = &#39;param_&#39; + param
+    sns.lineplot(cv_results[param].data, cv_results[name_score])
+    fig = plt.gcf()
+    fig.set_size_inches(figsize[1], figsize[2])
+    prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + param + &#39;.png&#39;)
+    
+    
+
+def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig=&#39;&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;
+        Plots the predicted vs the observed values
+        Arguments --&gt; the test target variable values, the predictions made,
+                    a boolean indicating if predictions are from a glm models, and the glm fitted model to make tests on pearson / deviance residuals
+    &#34;&#34;&#34;    
+
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.scatter(y_data, y_predict)
+    
+    if ols_line == False:
+        ax.plot([y_data.min(), y_data.max()], [y_data.min(), y_data.max()], &#39;k--&#39;, lw=4)
+
+    else:
+        line_fit = sm.OLS(y_data, sm.add_constant(y_predict, prepend=True)).fit()
+        abline_plot(model_results=line_fit, ax=ax)
+
+    ax.set_title(&#39;Predicted vs Observed&#39;)
+    ax.set_ylabel(&#39;Observed values&#39;)
+    ax.set_xlabel(&#39;Predicted values&#39;)
+
+    if save == True:
+        plt.savefig(folder + &#39;/predict_observed_&#39; + end_name_fig + &#39;.png&#39;)
+
+    if model_fit is not None:
+        
+        fig, ax = plt.subplots(figsize=figsize)
+        ax.scatter(y_predict, model_fit.resid_pearson)
+        ax.hlines(0, 0, 1)
+        ax.set_xlim(0, 1)
+        ax.set_title(&#39;Residual Dependence Plot&#39;)
+        ax.set_ylabel(&#39;Pearson Residuals&#39;)
+        ax.set_xlabel(&#39;Fitted values&#39;) 
+
+        if save == True:
+            plt.savefig(folder + &#39;/pearson_residuals_&#39; + end_name_fig + &#39;.png&#39;)
+
+
+        fig, ax = plt.subplots(figsize=figsize)
+        res_dev_residuals = model_fit.resid_deviance.copy()
+        res_dev_residuals_std = stats.zscore(res_dev_residuals)
+        ax.hist(res_dev_residuals_std, bins=25)
+        ax.set_title(&#39;Histogram of standardized deviance residuals&#39;)
+
+        if save == True:
+            plt.savefig(folder + &#39;/standard_deviance_residuals_&#39; + end_name_fig + &#39;.png&#39;)
+
+        graphics.gofplots.qqplot(res_dev_residuals, line=&#39;r&#39;)
+
+        if save == True:
+            plt.savefig(folder + &#39;/gofplot_&#39; + end_name_fig + &#39;.png&#39;)        
+        
+
+def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=&#39;linear_features_importance&#39;, folder=&#39;Charts&#39;):
+
+    imp_coefs = coefs.sort_values()
+    imp_coefs.plot(kind = &#34;barh&#34;)
+    plt.title(&#34;Feature importance using {} Model&#34;.format(model_name))
+    
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)    
+    
+
+def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=&#39;model_results&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;Plots the model results&#34;&#34;&#34;
+
+    fig = plt.figure(figsize=figsize)
+    fig.suptitle(&#39;Algorithm Comparison&#39;)
+    ax = fig.add_subplot(111)
+    plt.boxplot(results)
+    ax.set_xticklabels(names)
+    
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)     
+    
+
+def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=&#39;rfecv_features_importance&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the features selected by a RFE method and their importance &#34;&#34;&#34;
+
+    new_df = pd.DataFrame()
+    new_X = deepcopy(X)
+
+    if len(rfecv.estimator_.feature_importances_) != X.shape[1]:
+        new_X = X.drop(columns=X.columns[np.where(rfecv.support_ == False)[0]])
+
+    new_df[&#39;attr&#39;] = new_X.columns
+
+    new_df[&#39;importance&#39;] = rfecv.estimator_.feature_importances_
+
+    new_df = new_df.sort_values(by=&#39;importance&#39;, ascending=False)
+
+    plt.figure(figsize=figsize)
+    plt.barh(y=new_df[&#39;attr&#39;], width=new_df[&#39;importance&#39;], color=&#39;#1976D2&#39;)
+    plt.title(&#39;RFECV - Feature Importances&#39;, fontsize=20, fontweight=&#39;bold&#39;, pad=20)
+    plt.xlabel(&#39;Importance&#39;, fontsize=14, labelpad=20)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  
+
+    
+
+def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep&#34;&#34;&#34;
+
+    plt.figure(figsize=figsize)
+    plt.title(&#39;Recursive Feature Elimination with Cross-Validation&#39;, fontsize=18, fontweight=&#39;bold&#39;, pad=20)
+    plt.xlabel(&#39;Number of features selected&#39;, fontsize=14, labelpad=20)
+    plt.ylabel(&#39;% Correct Classification&#39;, fontsize=14, labelpad=20)
+    plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_, color=&#39;#303F9F&#39;, linewidth=3)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  
+    
+    
+
+def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;, **kwargs):
+    &#34;&#34;&#34;
+        Plots a scatter plot
+        Arguments --&gt; the data df, the corr matrice (used to get the features pairs), the model,
+                    the figure size, args, and kwargs which shoud mainly correspond to the model params
+    &#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    features_number = len(corr_matrice.columns)
+
+    fig, ax = plt.subplots(features_number, features_number, figsize=figsize)
+
+    if model is None:
+        model = LinearRegression
+
+    # Takes the first feature that we will be used to predict the other features
+    # Will do it for each of the features
+    for index1, feature1 in enumerate(corr_matrice.index):
+        xi = df[feature1].to_frame()
+
+        # Takes another feature. This feature is the one that will be predicted thanks to the first feature
+        # Each feature will be predicted thanks to the selected model and the first feature from the parent loop
+        for index2, feature2 in enumerate(corr_matrice.columns):
+            xj = df[feature2].to_frame()
+            corr_coefs_list = []
+
+            xi_train, xi_test, xj_train, xj_test = train_test_split(xi, xj, test_size=0.5)
+
+            # xj test will be predicted from xi and the model trained on the train set
+            model.fit(xi_train, xj_train.values.ravel())
+            mod_predict_test = model.predict(xi_test)
+
+            # xj train will be predicted from xi and the model trained on the test set
+            model.fit(xi_test, xj_test.values.ravel())
+            mod_predict_train = model.predict(xi_train)
+
+            # Plots in the same graph the xj prediction against true xj from the test set, and from the train set
+            ax[index1, index2].plot(xj_test, mod_predict_test, &#34;.&#34;)
+            ax[index1, index2].plot(xj_train, mod_predict_train, &#34;.&#34;)
+
+            if index2 == 0:
+                ax[index1, index2].set_ylabel(feature1)
+
+            if index1 == features_number-1:
+                ax[index1, index2].set_xlabel(feature2)
+
+            # Plots the affine curve y=x starting, and set the x-axis from the min value to the max value of the features values
+            mi = min(min(xj_test.values), min(mod_predict_test), min(xj_train.values), min(mod_predict_train))
+            ma = max(max(xj_test.values), max(mod_predict_test), max(xj_train.values), max(mod_predict_train))
+            ax[index1, index2].plot([mi, ma], [mi, ma], &#34;--&#34;)
+
+            if save == True:
+                plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
+                
+    return ax</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="automate_insurance_pricing.risk_prediction.charts_functions.display_error_by_param"><code class="name flex">
+<span>def <span class="ident">display_error_by_param</span></span>(<span>cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig=None, folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    param = &#39;param_&#39; + param
+    sns.lineplot(cv_results[param].data, cv_results[name_score])
+    fig = plt.gcf()
+    fig.set_size_inches(figsize[1], figsize[2])
+    prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + param + &#39;.png&#39;)</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.charts_functions.display_linear_model_features"><code class="name flex">
+<span>def <span class="ident">display_linear_model_features</span></span>(<span>model_name, coefs, save=False, prefix_name_fig='linear_features_importance', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=&#39;linear_features_importance&#39;, folder=&#39;Charts&#39;):
+
+    imp_coefs = coefs.sort_values()
+    imp_coefs.plot(kind = &#34;barh&#34;)
+    plt.title(&#34;Feature importance using {} Model&#34;.format(model_name))
+    
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)    </code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.charts_functions.pairplot_cross_val"><code class="name flex">
+<span>def <span class="ident">pairplot_cross_val</span></span>(<span>df=None, features_corr_matrice=None, model=None, figsize=(10, 10), save=False, prefix_name_fig='rfecv_scoring_curve', folder='Charts', **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plots a scatter plot
+Arguments &ndash;&gt; the data df, the corr matrice (used to get the features pairs), the model,
+the figure size, args, and kwargs which shoud mainly correspond to the model params</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;, **kwargs):
+    &#34;&#34;&#34;
+        Plots a scatter plot
+        Arguments --&gt; the data df, the corr matrice (used to get the features pairs), the model,
+                    the figure size, args, and kwargs which shoud mainly correspond to the model params
+    &#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    features_number = len(corr_matrice.columns)
+
+    fig, ax = plt.subplots(features_number, features_number, figsize=figsize)
+
+    if model is None:
+        model = LinearRegression
+
+    # Takes the first feature that we will be used to predict the other features
+    # Will do it for each of the features
+    for index1, feature1 in enumerate(corr_matrice.index):
+        xi = df[feature1].to_frame()
+
+        # Takes another feature. This feature is the one that will be predicted thanks to the first feature
+        # Each feature will be predicted thanks to the selected model and the first feature from the parent loop
+        for index2, feature2 in enumerate(corr_matrice.columns):
+            xj = df[feature2].to_frame()
+            corr_coefs_list = []
+
+            xi_train, xi_test, xj_train, xj_test = train_test_split(xi, xj, test_size=0.5)
+
+            # xj test will be predicted from xi and the model trained on the train set
+            model.fit(xi_train, xj_train.values.ravel())
+            mod_predict_test = model.predict(xi_test)
+
+            # xj train will be predicted from xi and the model trained on the test set
+            model.fit(xi_test, xj_test.values.ravel())
+            mod_predict_train = model.predict(xi_train)
+
+            # Plots in the same graph the xj prediction against true xj from the test set, and from the train set
+            ax[index1, index2].plot(xj_test, mod_predict_test, &#34;.&#34;)
+            ax[index1, index2].plot(xj_train, mod_predict_train, &#34;.&#34;)
+
+            if index2 == 0:
+                ax[index1, index2].set_ylabel(feature1)
+
+            if index1 == features_number-1:
+                ax[index1, index2].set_xlabel(feature2)
+
+            # Plots the affine curve y=x starting, and set the x-axis from the min value to the max value of the features values
+            mi = min(min(xj_test.values), min(mod_predict_test), min(xj_train.values), min(mod_predict_train))
+            ma = max(max(xj_test.values), max(mod_predict_test), max(xj_train.values), max(mod_predict_train))
+            ax[index1, index2].plot([mi, ma], [mi, ma], &#34;--&#34;)
+
+            if save == True:
+                plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
+                
+    return ax</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.charts_functions.plot_features_importance"><code class="name flex">
+<span>def <span class="ident">plot_features_importance</span></span>(<span>X, rfecv, figsize=(16, 14), save=False, prefix_name_fig='rfecv_features_importance', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plots the features selected by a RFE method and their importance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=&#39;rfecv_features_importance&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the features selected by a RFE method and their importance &#34;&#34;&#34;
+
+    new_df = pd.DataFrame()
+    new_X = deepcopy(X)
+
+    if len(rfecv.estimator_.feature_importances_) != X.shape[1]:
+        new_X = X.drop(columns=X.columns[np.where(rfecv.support_ == False)[0]])
+
+    new_df[&#39;attr&#39;] = new_X.columns
+
+    new_df[&#39;importance&#39;] = rfecv.estimator_.feature_importances_
+
+    new_df = new_df.sort_values(by=&#39;importance&#39;, ascending=False)
+
+    plt.figure(figsize=figsize)
+    plt.barh(y=new_df[&#39;attr&#39;], width=new_df[&#39;importance&#39;], color=&#39;#1976D2&#39;)
+    plt.title(&#39;RFECV - Feature Importances&#39;, fontsize=20, fontweight=&#39;bold&#39;, pad=20)
+    plt.xlabel(&#39;Importance&#39;, fontsize=14, labelpad=20)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  </code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.charts_functions.plot_models_results"><code class="name flex">
+<span>def <span class="ident">plot_models_results</span></span>(<span>results, names, figsize=(16, 14), save=False, prefix_name_fig='model_results', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plots the model results</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=&#39;model_results&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;Plots the model results&#34;&#34;&#34;
+
+    fig = plt.figure(figsize=figsize)
+    fig.suptitle(&#39;Algorithm Comparison&#39;)
+    ax = fig.add_subplot(111)
+    plt.boxplot(results)
+    ax.set_xticklabels(names)
+    
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)     </code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.charts_functions.plot_observed_predicted"><code class="name flex">
+<span>def <span class="ident">plot_observed_predicted</span></span>(<span>y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig='', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plots the predicted vs the observed values
+Arguments &ndash;&gt; the test target variable values, the predictions made,
+a boolean indicating if predictions are from a glm models, and the glm fitted model to make tests on pearson / deviance residuals</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig=&#39;&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;
+        Plots the predicted vs the observed values
+        Arguments --&gt; the test target variable values, the predictions made,
+                    a boolean indicating if predictions are from a glm models, and the glm fitted model to make tests on pearson / deviance residuals
+    &#34;&#34;&#34;    
+
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.scatter(y_data, y_predict)
+    
+    if ols_line == False:
+        ax.plot([y_data.min(), y_data.max()], [y_data.min(), y_data.max()], &#39;k--&#39;, lw=4)
+
+    else:
+        line_fit = sm.OLS(y_data, sm.add_constant(y_predict, prepend=True)).fit()
+        abline_plot(model_results=line_fit, ax=ax)
+
+    ax.set_title(&#39;Predicted vs Observed&#39;)
+    ax.set_ylabel(&#39;Observed values&#39;)
+    ax.set_xlabel(&#39;Predicted values&#39;)
+
+    if save == True:
+        plt.savefig(folder + &#39;/predict_observed_&#39; + end_name_fig + &#39;.png&#39;)
+
+    if model_fit is not None:
+        
+        fig, ax = plt.subplots(figsize=figsize)
+        ax.scatter(y_predict, model_fit.resid_pearson)
+        ax.hlines(0, 0, 1)
+        ax.set_xlim(0, 1)
+        ax.set_title(&#39;Residual Dependence Plot&#39;)
+        ax.set_ylabel(&#39;Pearson Residuals&#39;)
+        ax.set_xlabel(&#39;Fitted values&#39;) 
+
+        if save == True:
+            plt.savefig(folder + &#39;/pearson_residuals_&#39; + end_name_fig + &#39;.png&#39;)
+
+
+        fig, ax = plt.subplots(figsize=figsize)
+        res_dev_residuals = model_fit.resid_deviance.copy()
+        res_dev_residuals_std = stats.zscore(res_dev_residuals)
+        ax.hist(res_dev_residuals_std, bins=25)
+        ax.set_title(&#39;Histogram of standardized deviance residuals&#39;)
+
+        if save == True:
+            plt.savefig(folder + &#39;/standard_deviance_residuals_&#39; + end_name_fig + &#39;.png&#39;)
+
+        graphics.gofplots.qqplot(res_dev_residuals, line=&#39;r&#39;)
+
+        if save == True:
+            plt.savefig(folder + &#39;/gofplot_&#39; + end_name_fig + &#39;.png&#39;)        </code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.charts_functions.plot_scoring_curve"><code class="name flex">
+<span>def <span class="ident">plot_scoring_curve</span></span>(<span>rfecv, figsize=(16, 9), save=False, prefix_name_fig='rfecv_scoring_curve', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep&#34;&#34;&#34;
+
+    plt.figure(figsize=figsize)
+    plt.title(&#39;Recursive Feature Elimination with Cross-Validation&#39;, fontsize=18, fontweight=&#39;bold&#39;, pad=20)
+    plt.xlabel(&#39;Number of features selected&#39;, fontsize=14, labelpad=20)
+    plt.ylabel(&#39;% Correct Classification&#39;, fontsize=14, labelpad=20)
+    plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_, color=&#39;#303F9F&#39;, linewidth=3)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  </code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="automate_insurance_pricing.risk_prediction" href="index.html">automate_insurance_pricing.risk_prediction</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="automate_insurance_pricing.risk_prediction.charts_functions.display_error_by_param" href="#automate_insurance_pricing.risk_prediction.charts_functions.display_error_by_param">display_error_by_param</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.charts_functions.display_linear_model_features" href="#automate_insurance_pricing.risk_prediction.charts_functions.display_linear_model_features">display_linear_model_features</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.charts_functions.pairplot_cross_val" href="#automate_insurance_pricing.risk_prediction.charts_functions.pairplot_cross_val">pairplot_cross_val</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.charts_functions.plot_features_importance" href="#automate_insurance_pricing.risk_prediction.charts_functions.plot_features_importance">plot_features_importance</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.charts_functions.plot_models_results" href="#automate_insurance_pricing.risk_prediction.charts_functions.plot_models_results">plot_models_results</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.charts_functions.plot_observed_predicted" href="#automate_insurance_pricing.risk_prediction.charts_functions.plot_observed_predicted">plot_observed_predicted</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.charts_functions.plot_scoring_curve" href="#automate_insurance_pricing.risk_prediction.charts_functions.plot_scoring_curve">plot_scoring_curve</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

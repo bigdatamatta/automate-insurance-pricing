@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>automate_insurance_pricing.risk_prediction.features_selection API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>automate_insurance_pricing.risk_prediction.features_selection</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import numpy as np
+
+from sklearn.feature_selection import RFECV, SelectFromModel
+from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from copy import deepcopy
+
+from automate_insurance_pricing.risk_prediction.charts_functions import *
+from automate_insurance_pricing.preprocessing.charts_functions import *
+
+
+def display_scree_plot(pca, save=False, prefix_name_fig=&#39;pca_scree&#39;, folder=&#39;Charts&#39;):
+    scree = pca.explained_variance_ratio_*100
+    plt.bar(np.arange(len(scree))+1, scree)
+    plt.plot(np.arange(len(scree))+1, scree.cumsum(), c=&#34;red&#34;, marker=&#39;o&#39;)
+    plt.xlabel(&#34;Inertia axis rank&#34;)
+    plt.ylabel(&#34;Inertia percentage&#34;)
+    plt.title(&#34;Eigen values&#34;)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
+
+def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None, figsize=(14,5), save=True, prefix_name_fig=&#39;pca_circles&#39;, folder=&#39;Charts&#39;):
+
+    pcs = pca.components_
+
+    for d1, d2 in axis_ranks:
+
+        if d2 &lt; n_comp:
+
+            fig, ax = plt.subplots(figsize=figsize)
+
+            if lims is not None :
+                xmin, xmax, ymin, ymax = lims
+            elif pcs.shape[1] &lt; 30 :
+                xmin, xmax, ymin, ymax = -1, 1, -1, 1
+            else :
+                xmin, xmax, ymin, ymax = min(pcs[d1,:]), max(pcs[d1,:]), min(pcs[d2,:]), max(pcs[d2,:])
+
+            if pcs.shape[1] &lt; 30 :
+                plt.quiver(np.zeros(pcs.shape[1]), np.zeros(pcs.shape[1]),
+                   pcs[d1,:], pcs[d2,:],
+                   angles=&#39;xy&#39;, scale_units=&#39;xy&#39;, scale=1, color=&#34;grey&#34;)
+            else:
+                lines = [[[0,0],[x,y]] for x,y in pcs[[d1,d2]].T]
+                ax.add_collection(LineCollection(lines, axes=ax, alpha=.1, color=&#39;black&#39;))
+
+            if labels is not None:
+                for i, (x, y) in enumerate(pcs[[d1,d2]].T):
+                    if x &gt;= xmin and x &lt;= xmax and y &gt;= ymin and y &lt;= ymax :
+                        plt.text(x, y, labels[i], fontsize=&#39;14&#39;, ha=&#39;center&#39;, va=&#39;center&#39;, rotation=label_rotation, color=&#34;blue&#34;, alpha=0.5)
+
+            circle = plt.Circle((0,0), 1, facecolor=&#39;none&#39;, edgecolor=&#39;b&#39;)
+            plt.gca().add_artist(circle)
+
+            plt.xlim(xmin, xmax)
+            plt.ylim(ymin, ymax)
+
+            plt.plot([-1, 1], [0, 0], color=&#39;grey&#39;, ls=&#39;--&#39;)
+            plt.plot([0, 0], [-1, 1], color=&#39;grey&#39;, ls=&#39;--&#39;)
+
+            plt.xlabel(&#39;F{} ({}%)&#39;.format(d1+1, round(100*pca.explained_variance_ratio_[d1],1)))
+            plt.ylabel(&#39;F{} ({}%)&#39;.format(d2+1, round(100*pca.explained_variance_ratio_[d2],1)))
+
+            plt.title(&#34;Correlations circle (F{} et F{})&#34;.format(d1+1, d2+1))
+
+            if save == True:
+                plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;F&#39; + str(d1+1) + &#39;F&#39; + str(d2+1) + &#39;.png&#39;)
+
+def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, illustrative_var=None, figsize=(14,5), save=True, prefix_name_fig=&#39;factorial_plans&#39;, folder=&#39;Charts&#39;):
+
+    X_projected = pca.features_projected
+
+    for d1,d2 in axis_ranks:
+
+        if d2 &lt; n_comp:
+
+            fig = plt.figure(figsize=figsize)
+
+            if illustrative_var is None:
+                plt.scatter(X_projected[:, d1], X_projected[:, d2], alpha=alpha)
+            else:
+                illustrative_var = np.array(illustrative_var)
+                for value in np.unique(illustrative_var):
+                    selected = np.where(illustrative_var == value)
+                    plt.scatter(X_projected[selected, d1], X_projected[selected, d2], alpha=alpha, label=value)
+                plt.legend()
+
+            if labels is not None:
+                for i,(x,y) in enumerate(X_projected[:,[d1,d2]]):
+                    plt.text(x, y, labels[i],
+                              fontsize=&#39;14&#39;, ha=&#39;center&#39;,va=&#39;center&#39;)
+
+            boundary = np.max(np.abs(X_projected[:, [d1,d2]])) * 1.1
+            plt.xlim([-boundary,boundary])
+            plt.ylim([-boundary,boundary])
+
+            plt.plot([-100, 100], [0, 0], color=&#39;grey&#39;, ls=&#39;--&#39;)
+            plt.plot([0, 0], [-100, 100], color=&#39;grey&#39;, ls=&#39;--&#39;)
+
+            plt.xlabel(&#39;F{} ({}%)&#39;.format(d1+1, round(100*pca.explained_variance_ratio_[d1],1)))
+            plt.ylabel(&#39;F{} ({}%)&#39;.format(d2+1, round(100*pca.explained_variance_ratio_[d2],1)))
+
+            plt.title(&#34;Observation projections on F{} and F{}&#34;.format(d1+1, d2+1))
+
+            if save == True:
+                plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;F&#39; + str(d1+1) + &#39;F&#39; + str(d2+1) + &#39;.png&#39;)            
+            
+
+def run_pca(df, features, scalerMethod, n_components=6):
+
+    features_scaled = scalerMethod().fit_transform(df[features].values)
+
+    pca = PCA(n_components=n_components)
+    pca.fit(features_scaled)
+    pca.features_projected = pca.transform(features_scaled)
+
+    print(&#39;Selected components explain {:.2%} of the total variance&#39;.format(pca.explained_variance_ratio_.sum()))
+
+    return pca
+
+
+
+def run_select_from_model(X, y, model, **params):
+    &#34;&#34;&#34;
+        Runs the algorithmn and finds the most relevant features
+        Arguments --&gt; the features, the dependent variable, the model,
+                    and the params for the selectFromModel method like the number max of features to select
+        Returns --&gt; the selector along with the retained features
+    &#34;&#34;&#34;
+
+    selector = SelectFromModel(model, **params)
+    selector.fit(X, y)
+
+    # Gets the features that have been selected
+    new_X = X.drop(columns=X.columns[np.where(selector.get_support() == False)[0]])
+    relevant_features = new_X.columns.tolist()
+
+    print(&#39;The threshold for selection is {0} and the features that seem to be the most important are: {1}&#39;.format(selector.threshold_, relevant_features))
+
+    return selector, relevant_features
+
+
+
+def run_rfe(X, y, model, with_plot_scoring_curve=True, fig_size_scoring=(16, 9), with_plot_features_importance=True, fig_size_importance=(16, 9), **params):
+
+    &#34;&#34;&#34;
+        Performs a recursive feature elimination to select the most important features
+        Arguments --&gt; the features, the target variable,
+                    a boolean indicating if it needs to plot the score curve depending on the number of features keps, its figure size,
+                    a boolean indicating if it plots the selected feature and their importance,
+        kwargs --&gt; list of arguments like the number of folds to use for cross validation, the scoring method (&#39;accuracy&#39;, &#39;explained variance&#39; etc.)
+        Returns --&gt; the rfe along with the retained features
+    &#34;&#34;&#34;
+
+    rfecv = RFECV(estimator=model, **params)
+    rfecv.fit(X, y)
+
+    # Gets the features that have been selected
+    new_X = X.drop(columns=X.columns[np.where(rfecv.get_support() == False)[0]])
+    relevant_features = new_X.columns.tolist()
+
+    if with_plot_scoring_curve == True:
+        plot_scoring_curve(rfecv, figsize=fig_size_scoring)
+
+    print(&#39;The optimal number of features is {0} and the features that seem to be the most important are: {1}&#39;.format(rfecv.n_features_, relevant_features))
+
+    if with_plot_features_importance == True:
+        plot_features_importance(new_X, rfecv, figsize=fig_size_importance)
+
+    return rfecv, relevant_features
+
+
+
+def correlation_from_model(df, features_corr_matrice, model, draws=5, additional_outputs=None, target_column=None, corr_threshold=0.5, figsize=(10,10)):
+    &#34;&#34;&#34;
+        Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments
+        Arguments --&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.),
+                    the number of draws (equivalent to a cross validation with different data split),
+                    the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart),
+                    the dependent variable, the correlation threshold, the figure size,
+                    the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression)
+        Returns --&gt; a new correlation matrice with the coefficients corresponding to the correlation between the predicted feature value thanks to another feature and with the model specified in the arguments
+    &#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    dict_output = {}
+
+    # Takes the first feature that we will be used to predict the other features
+    # Will do it for each of the features
+    for feature1 in corr_matrice.index:
+        xi = df[feature1].to_frame()
+
+        # Takes another feature. This feature is the one that will be predicted thanks to the first feature
+        # Each feature will be predicted thanks to the selected model and the first feature from the parent loop
+        for feature2 in corr_matrice.columns:
+            xj = df[feature2].to_frame()
+            corr_coefs_list = []
+
+            # Performs several random splits to reduce bias and variance
+            for k in range(0, draws):
+                xi_train, xi_test, xj_train, xj_test = train_test_split(xi, xj, test_size=0.5)
+
+                # instanciates the model with the params specified in the keyword arguments
+                model.fit(xi_train, xj_train.values.ravel())
+                # Predicts the feature2 value
+                mod_predict = model.predict(xi_test)
+
+                # Gets the correlation coef value
+                corr_coef = np.corrcoef(xj_test, mod_predict, rowvar=False)[0, 1]
+                corr_coefs_list.append(corr_coef)
+
+            # The random splits have been done, the average of the feature predicted values is taken
+            corr_matrice.loc[feature1, feature2] = sum(corr_coefs_list) / len(corr_coefs_list)
+
+    dict_output[&#39;corr_matrice&#39;] = corr_matrice
+
+    # Runs extra actions like plotting charts
+    for key in additional_outputs:
+
+        if key == &#39;corr_matrice_plot&#39;:
+            if additional_outputs[key][&#39;display&#39;] == True:
+                plt.subplots(figsize=additional_outputs[key][&#39;figsize&#39;])
+                sns.heatmap(corr_matrice, annot=True)
+
+        else:
+            if additional_outputs[key] == &#39;&#39; or additional_outputs[key] is None:
+                continue
+            dict_output[key] = additional_outputs[key](df=df, features_corr_matrice=corr_matrice, model=model, figsize=figsize, target_column=target_column, corr_threshold=corr_threshold)
+
+    return dict_output
+
+
+
+def get_correlated_features(features_corr_matrice, target_column, corr_threshold=None, **kwargs):
+    &#34;&#34;&#34;Gets the features that have a correlations between each other higher than the threshold specified in the arguments&#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    corr_threshold = corr_threshold if corr_threshold is not None else 0.5
+
+    corr_list = []
+    features = [column for column in corr_matrice.columns if column != target_column]
+    corr_matrice_index = [column for column in corr_matrice.index if column != target_column]
+
+    for feature1 in corr_matrice_index:
+
+        features.remove(feature1)
+
+        for feature2 in features:
+            corr_value = corr_matrice.loc[feature1, feature2]
+
+            if corr_value &gt; corr_threshold or corr_value &lt; -corr_threshold:
+                corr_list.append((feature1, feature2, corr_value))
+
+    corr_list = sorted(corr_list, key=lambda x: -abs(x[2]))
+
+    return corr_list
+
+
+
+def get_relevant_features(features_corr_matrice, target_column, corr_threshold=None, **kwargs):
+    &#34;&#34;&#34;Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments&#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    corr_threshold = corr_threshold if corr_threshold is not None else 0.5
+
+    corr_with_target = abs(features_corr_matrice[target_column])
+    relevant_features = corr_with_target[corr_with_target&gt;corr_threshold].drop(labels=target_column).index
+
+    return relevant_features
+
+
+
+def get_corr_matrice(df, columns, plot_matrice=True, figsize=(16, 9), save=True, prefix_name_fig=&#39;linear_corr_mat&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;Produces the corr matrice between the columns specified in the arguments, and plots it&#34;&#34;&#34;
+
+    features_corr_matrice = df[columns].corr()
+
+    if plot_matrice == True:
+        plt.subplots(figsize=figsize)
+        sns.heatmap(features_corr_matrice, annot=True)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
+
+    return features_corr_matrice</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.correlation_from_model"><code class="name flex">
+<span>def <span class="ident">correlation_from_model</span></span>(<span>df, features_corr_matrice, model, draws=5, additional_outputs=None, target_column=None, corr_threshold=0.5, figsize=(10, 10))</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments
+Arguments &ndash;&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.),
+the number of draws (equivalent to a cross validation with different data split),
+the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart),
+the dependent variable, the correlation threshold, the figure size,
+the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression)
+Returns &ndash;&gt; a new correlation matrice with the coefficients corresponding to the correlation between the predicted feature value thanks to another feature and with the model specified in the arguments</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correlation_from_model(df, features_corr_matrice, model, draws=5, additional_outputs=None, target_column=None, corr_threshold=0.5, figsize=(10,10)):
+    &#34;&#34;&#34;
+        Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments
+        Arguments --&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.),
+                    the number of draws (equivalent to a cross validation with different data split),
+                    the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart),
+                    the dependent variable, the correlation threshold, the figure size,
+                    the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression)
+        Returns --&gt; a new correlation matrice with the coefficients corresponding to the correlation between the predicted feature value thanks to another feature and with the model specified in the arguments
+    &#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    dict_output = {}
+
+    # Takes the first feature that we will be used to predict the other features
+    # Will do it for each of the features
+    for feature1 in corr_matrice.index:
+        xi = df[feature1].to_frame()
+
+        # Takes another feature. This feature is the one that will be predicted thanks to the first feature
+        # Each feature will be predicted thanks to the selected model and the first feature from the parent loop
+        for feature2 in corr_matrice.columns:
+            xj = df[feature2].to_frame()
+            corr_coefs_list = []
+
+            # Performs several random splits to reduce bias and variance
+            for k in range(0, draws):
+                xi_train, xi_test, xj_train, xj_test = train_test_split(xi, xj, test_size=0.5)
+
+                # instanciates the model with the params specified in the keyword arguments
+                model.fit(xi_train, xj_train.values.ravel())
+                # Predicts the feature2 value
+                mod_predict = model.predict(xi_test)
+
+                # Gets the correlation coef value
+                corr_coef = np.corrcoef(xj_test, mod_predict, rowvar=False)[0, 1]
+                corr_coefs_list.append(corr_coef)
+
+            # The random splits have been done, the average of the feature predicted values is taken
+            corr_matrice.loc[feature1, feature2] = sum(corr_coefs_list) / len(corr_coefs_list)
+
+    dict_output[&#39;corr_matrice&#39;] = corr_matrice
+
+    # Runs extra actions like plotting charts
+    for key in additional_outputs:
+
+        if key == &#39;corr_matrice_plot&#39;:
+            if additional_outputs[key][&#39;display&#39;] == True:
+                plt.subplots(figsize=additional_outputs[key][&#39;figsize&#39;])
+                sns.heatmap(corr_matrice, annot=True)
+
+        else:
+            if additional_outputs[key] == &#39;&#39; or additional_outputs[key] is None:
+                continue
+            dict_output[key] = additional_outputs[key](df=df, features_corr_matrice=corr_matrice, model=model, figsize=figsize, target_column=target_column, corr_threshold=corr_threshold)
+
+    return dict_output</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.display_circles"><code class="name flex">
+<span>def <span class="ident">display_circles</span></span>(<span>pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None, figsize=(14, 5), save=True, prefix_name_fig='pca_circles', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None, figsize=(14,5), save=True, prefix_name_fig=&#39;pca_circles&#39;, folder=&#39;Charts&#39;):
+
+    pcs = pca.components_
+
+    for d1, d2 in axis_ranks:
+
+        if d2 &lt; n_comp:
+
+            fig, ax = plt.subplots(figsize=figsize)
+
+            if lims is not None :
+                xmin, xmax, ymin, ymax = lims
+            elif pcs.shape[1] &lt; 30 :
+                xmin, xmax, ymin, ymax = -1, 1, -1, 1
+            else :
+                xmin, xmax, ymin, ymax = min(pcs[d1,:]), max(pcs[d1,:]), min(pcs[d2,:]), max(pcs[d2,:])
+
+            if pcs.shape[1] &lt; 30 :
+                plt.quiver(np.zeros(pcs.shape[1]), np.zeros(pcs.shape[1]),
+                   pcs[d1,:], pcs[d2,:],
+                   angles=&#39;xy&#39;, scale_units=&#39;xy&#39;, scale=1, color=&#34;grey&#34;)
+            else:
+                lines = [[[0,0],[x,y]] for x,y in pcs[[d1,d2]].T]
+                ax.add_collection(LineCollection(lines, axes=ax, alpha=.1, color=&#39;black&#39;))
+
+            if labels is not None:
+                for i, (x, y) in enumerate(pcs[[d1,d2]].T):
+                    if x &gt;= xmin and x &lt;= xmax and y &gt;= ymin and y &lt;= ymax :
+                        plt.text(x, y, labels[i], fontsize=&#39;14&#39;, ha=&#39;center&#39;, va=&#39;center&#39;, rotation=label_rotation, color=&#34;blue&#34;, alpha=0.5)
+
+            circle = plt.Circle((0,0), 1, facecolor=&#39;none&#39;, edgecolor=&#39;b&#39;)
+            plt.gca().add_artist(circle)
+
+            plt.xlim(xmin, xmax)
+            plt.ylim(ymin, ymax)
+
+            plt.plot([-1, 1], [0, 0], color=&#39;grey&#39;, ls=&#39;--&#39;)
+            plt.plot([0, 0], [-1, 1], color=&#39;grey&#39;, ls=&#39;--&#39;)
+
+            plt.xlabel(&#39;F{} ({}%)&#39;.format(d1+1, round(100*pca.explained_variance_ratio_[d1],1)))
+            plt.ylabel(&#39;F{} ({}%)&#39;.format(d2+1, round(100*pca.explained_variance_ratio_[d2],1)))
+
+            plt.title(&#34;Correlations circle (F{} et F{})&#34;.format(d1+1, d2+1))
+
+            if save == True:
+                plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;F&#39; + str(d1+1) + &#39;F&#39; + str(d2+1) + &#39;.png&#39;)</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.display_factorial_planes"><code class="name flex">
+<span>def <span class="ident">display_factorial_planes</span></span>(<span>pca, n_comp, axis_ranks, labels=None, alpha=1, illustrative_var=None, figsize=(14, 5), save=True, prefix_name_fig='factorial_plans', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, illustrative_var=None, figsize=(14,5), save=True, prefix_name_fig=&#39;factorial_plans&#39;, folder=&#39;Charts&#39;):
+
+    X_projected = pca.features_projected
+
+    for d1,d2 in axis_ranks:
+
+        if d2 &lt; n_comp:
+
+            fig = plt.figure(figsize=figsize)
+
+            if illustrative_var is None:
+                plt.scatter(X_projected[:, d1], X_projected[:, d2], alpha=alpha)
+            else:
+                illustrative_var = np.array(illustrative_var)
+                for value in np.unique(illustrative_var):
+                    selected = np.where(illustrative_var == value)
+                    plt.scatter(X_projected[selected, d1], X_projected[selected, d2], alpha=alpha, label=value)
+                plt.legend()
+
+            if labels is not None:
+                for i,(x,y) in enumerate(X_projected[:,[d1,d2]]):
+                    plt.text(x, y, labels[i],
+                              fontsize=&#39;14&#39;, ha=&#39;center&#39;,va=&#39;center&#39;)
+
+            boundary = np.max(np.abs(X_projected[:, [d1,d2]])) * 1.1
+            plt.xlim([-boundary,boundary])
+            plt.ylim([-boundary,boundary])
+
+            plt.plot([-100, 100], [0, 0], color=&#39;grey&#39;, ls=&#39;--&#39;)
+            plt.plot([0, 0], [-100, 100], color=&#39;grey&#39;, ls=&#39;--&#39;)
+
+            plt.xlabel(&#39;F{} ({}%)&#39;.format(d1+1, round(100*pca.explained_variance_ratio_[d1],1)))
+            plt.ylabel(&#39;F{} ({}%)&#39;.format(d2+1, round(100*pca.explained_variance_ratio_[d2],1)))
+
+            plt.title(&#34;Observation projections on F{} and F{}&#34;.format(d1+1, d2+1))
+
+            if save == True:
+                plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;F&#39; + str(d1+1) + &#39;F&#39; + str(d2+1) + &#39;.png&#39;)            </code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.display_scree_plot"><code class="name flex">
+<span>def <span class="ident">display_scree_plot</span></span>(<span>pca, save=False, prefix_name_fig='pca_scree', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def display_scree_plot(pca, save=False, prefix_name_fig=&#39;pca_scree&#39;, folder=&#39;Charts&#39;):
+    scree = pca.explained_variance_ratio_*100
+    plt.bar(np.arange(len(scree))+1, scree)
+    plt.plot(np.arange(len(scree))+1, scree.cumsum(), c=&#34;red&#34;, marker=&#39;o&#39;)
+    plt.xlabel(&#34;Inertia axis rank&#34;)
+    plt.ylabel(&#34;Inertia percentage&#34;)
+    plt.title(&#34;Eigen values&#34;)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.get_corr_matrice"><code class="name flex">
+<span>def <span class="ident">get_corr_matrice</span></span>(<span>df, columns, plot_matrice=True, figsize=(16, 9), save=True, prefix_name_fig='linear_corr_mat', folder='Charts')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Produces the corr matrice between the columns specified in the arguments, and plots it</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_corr_matrice(df, columns, plot_matrice=True, figsize=(16, 9), save=True, prefix_name_fig=&#39;linear_corr_mat&#39;, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;Produces the corr matrice between the columns specified in the arguments, and plots it&#34;&#34;&#34;
+
+    features_corr_matrice = df[columns].corr()
+
+    if plot_matrice == True:
+        plt.subplots(figsize=figsize)
+        sns.heatmap(features_corr_matrice, annot=True)
+
+    if save == True:
+        plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
+
+    return features_corr_matrice</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.get_correlated_features"><code class="name flex">
+<span>def <span class="ident">get_correlated_features</span></span>(<span>features_corr_matrice, target_column, corr_threshold=None, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the features that have a correlations between each other higher than the threshold specified in the arguments</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_correlated_features(features_corr_matrice, target_column, corr_threshold=None, **kwargs):
+    &#34;&#34;&#34;Gets the features that have a correlations between each other higher than the threshold specified in the arguments&#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    corr_threshold = corr_threshold if corr_threshold is not None else 0.5
+
+    corr_list = []
+    features = [column for column in corr_matrice.columns if column != target_column]
+    corr_matrice_index = [column for column in corr_matrice.index if column != target_column]
+
+    for feature1 in corr_matrice_index:
+
+        features.remove(feature1)
+
+        for feature2 in features:
+            corr_value = corr_matrice.loc[feature1, feature2]
+
+            if corr_value &gt; corr_threshold or corr_value &lt; -corr_threshold:
+                corr_list.append((feature1, feature2, corr_value))
+
+    corr_list = sorted(corr_list, key=lambda x: -abs(x[2]))
+
+    return corr_list</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.get_relevant_features"><code class="name flex">
+<span>def <span class="ident">get_relevant_features</span></span>(<span>features_corr_matrice, target_column, corr_threshold=None, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_relevant_features(features_corr_matrice, target_column, corr_threshold=None, **kwargs):
+    &#34;&#34;&#34;Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments&#34;&#34;&#34;
+
+    corr_matrice = deepcopy(features_corr_matrice)
+    corr_threshold = corr_threshold if corr_threshold is not None else 0.5
+
+    corr_with_target = abs(features_corr_matrice[target_column])
+    relevant_features = corr_with_target[corr_with_target&gt;corr_threshold].drop(labels=target_column).index
+
+    return relevant_features</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.run_pca"><code class="name flex">
+<span>def <span class="ident">run_pca</span></span>(<span>df, features, scalerMethod, n_components=6)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_pca(df, features, scalerMethod, n_components=6):
+
+    features_scaled = scalerMethod().fit_transform(df[features].values)
+
+    pca = PCA(n_components=n_components)
+    pca.fit(features_scaled)
+    pca.features_projected = pca.transform(features_scaled)
+
+    print(&#39;Selected components explain {:.2%} of the total variance&#39;.format(pca.explained_variance_ratio_.sum()))
+
+    return pca</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.run_rfe"><code class="name flex">
+<span>def <span class="ident">run_rfe</span></span>(<span>X, y, model, with_plot_scoring_curve=True, fig_size_scoring=(16, 9), with_plot_features_importance=True, fig_size_importance=(16, 9), **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Performs a recursive feature elimination to select the most important features
+Arguments &ndash;&gt; the features, the target variable,
+a boolean indicating if it needs to plot the score curve depending on the number of features keps, its figure size,
+a boolean indicating if it plots the selected feature and their importance,
+kwargs &ndash;&gt; list of arguments like the number of folds to use for cross validation, the scoring method ('accuracy', 'explained variance' etc.)
+Returns &ndash;&gt; the rfe along with the retained features</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_rfe(X, y, model, with_plot_scoring_curve=True, fig_size_scoring=(16, 9), with_plot_features_importance=True, fig_size_importance=(16, 9), **params):
+
+    &#34;&#34;&#34;
+        Performs a recursive feature elimination to select the most important features
+        Arguments --&gt; the features, the target variable,
+                    a boolean indicating if it needs to plot the score curve depending on the number of features keps, its figure size,
+                    a boolean indicating if it plots the selected feature and their importance,
+        kwargs --&gt; list of arguments like the number of folds to use for cross validation, the scoring method (&#39;accuracy&#39;, &#39;explained variance&#39; etc.)
+        Returns --&gt; the rfe along with the retained features
+    &#34;&#34;&#34;
+
+    rfecv = RFECV(estimator=model, **params)
+    rfecv.fit(X, y)
+
+    # Gets the features that have been selected
+    new_X = X.drop(columns=X.columns[np.where(rfecv.get_support() == False)[0]])
+    relevant_features = new_X.columns.tolist()
+
+    if with_plot_scoring_curve == True:
+        plot_scoring_curve(rfecv, figsize=fig_size_scoring)
+
+    print(&#39;The optimal number of features is {0} and the features that seem to be the most important are: {1}&#39;.format(rfecv.n_features_, relevant_features))
+
+    if with_plot_features_importance == True:
+        plot_features_importance(new_X, rfecv, figsize=fig_size_importance)
+
+    return rfecv, relevant_features</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.risk_prediction.features_selection.run_select_from_model"><code class="name flex">
+<span>def <span class="ident">run_select_from_model</span></span>(<span>X, y, model, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Runs the algorithmn and finds the most relevant features
+Arguments &ndash;&gt; the features, the dependent variable, the model,
+and the params for the selectFromModel method like the number max of features to select
+Returns &ndash;&gt; the selector along with the retained features</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_select_from_model(X, y, model, **params):
+    &#34;&#34;&#34;
+        Runs the algorithmn and finds the most relevant features
+        Arguments --&gt; the features, the dependent variable, the model,
+                    and the params for the selectFromModel method like the number max of features to select
+        Returns --&gt; the selector along with the retained features
+    &#34;&#34;&#34;
+
+    selector = SelectFromModel(model, **params)
+    selector.fit(X, y)
+
+    # Gets the features that have been selected
+    new_X = X.drop(columns=X.columns[np.where(selector.get_support() == False)[0]])
+    relevant_features = new_X.columns.tolist()
+
+    print(&#39;The threshold for selection is {0} and the features that seem to be the most important are: {1}&#39;.format(selector.threshold_, relevant_features))
+
+    return selector, relevant_features</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="automate_insurance_pricing.risk_prediction" href="index.html">automate_insurance_pricing.risk_prediction</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.correlation_from_model" href="#automate_insurance_pricing.risk_prediction.features_selection.correlation_from_model">correlation_from_model</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.display_circles" href="#automate_insurance_pricing.risk_prediction.features_selection.display_circles">display_circles</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.display_factorial_planes" href="#automate_insurance_pricing.risk_prediction.features_selection.display_factorial_planes">display_factorial_planes</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.display_scree_plot" href="#automate_insurance_pricing.risk_prediction.features_selection.display_scree_plot">display_scree_plot</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.get_corr_matrice" href="#automate_insurance_pricing.risk_prediction.features_selection.get_corr_matrice">get_corr_matrice</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.get_correlated_features" href="#automate_insurance_pricing.risk_prediction.features_selection.get_correlated_features">get_correlated_features</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.get_relevant_features" href="#automate_insurance_pricing.risk_prediction.features_selection.get_relevant_features">get_relevant_features</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.run_pca" href="#automate_insurance_pricing.risk_prediction.features_selection.run_pca">run_pca</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.run_rfe" href="#automate_insurance_pricing.risk_prediction.features_selection.run_rfe">run_rfe</a></code></li>
+<li><code><a title="automate_insurance_pricing.risk_prediction.features_selection.run_select_from_model" href="#automate_insurance_pricing.risk_prediction.features_selection.run_select_from_model">run_select_from_model</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
