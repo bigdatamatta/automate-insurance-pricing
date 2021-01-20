@@ -2,19 +2,22 @@ from datetime import date
 
 
 def addYears(d, years):
+    """ Gets a new date after adding a number of years to an initial date"""
+
     try:
-#Return same day of the current year        
+    #Return same day of the current year        
         return d.replace(year = d.year + years)
     except ValueError:
-#If not same day, it will return other, i.e.  February 29 to March 1 etc.        
+    #If not same day, it will return other, i.e.  February 29 to March 1 etc.        
         return d + (date(d.year + years, 1, 1) - date(d.year, 1, 1))
 
 
 def remove_words(word, **kwargs):
     """
-        Replaces part of the word by another value
-        Arguments --> the word that has parts to be replaced,
-                    the parts of the word to replace and by value value to replace them specified in tuples
+        Replaces part of the word by another value \n \
+        Arguments --> the word that has parts to be replaced, \n \
+            the kwargs represent the parts of the word to replace and the value to use instead, \n \ 
+            for example (first_replace=('variable', 'feature')) will make the function replace the word variable by feature \n \
         Returns --> the new word with the desired parts replaced
     """
 
@@ -24,16 +27,11 @@ def remove_words(word, **kwargs):
     return word
 
 
-def get_first_letters(x, number_ok, number_ko, size):
-    return x[:number_ko] if len(x) < size else x[:number_ok]
-
-
-
 def get_list_from_list(init_list, list_to_check, is_in_list=True):
-    """ Generates a list from a initial one. 
-        Arguments --> init_list is the one we loop through, 
-        list_to_check is the list that gathers the items to take or to remove,
-        is_in_list is the boolean indicating if items from list_to_check must be removed or kept from the initial list
+    """ Generates a list from a initial one \n \
+        Arguments --> init_list is the one we loop through, \n \
+            list_to_check is the list that gathers the items to take or to remove, \n \
+            is_in_list is the boolean indicating if items from list_to_check must be removed or kept from the initial list \n \
         Returns --> the new list
     """
     if isinstance(list_to_check, str) == True:
@@ -42,18 +40,3 @@ def get_list_from_list(init_list, list_to_check, is_in_list=True):
         list_to_keep = [element for element in init_list if element in list_to_check] if is_in_list == True else [element for element in init_list if element not in list_to_check]
 
     return list_to_keep
-
-
-
-def get_columns_by_type(df, types=None, excluded_columns=None):
-    """
-        Get the features from the dataframe depending on the required features specified in the args
-        Arguments -->df, types of data specified by the user in a list or as string if only one, and the list of features to exclude
-        Returns --> a df with only the selected features
-    """
-
-    df_columns = df.select_dtypes(include=types)
-
-    if excluded_columns is not None:
-        df_columns = df_columns.drop(columns=excluded_columns, errors='ignore')
-    return df_columns

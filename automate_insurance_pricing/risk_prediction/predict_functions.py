@@ -10,9 +10,10 @@ from automate_insurance_pricing.reports.export_functions import *
 
 def get_glm_rating_factors(df, glm_coefs, num_features_analysis, constant_column_name='const', transformer=FunctionTransformer(), export_excel=False, glm_file_path=None):
     """
-        Gets the rating factor values for all features values
-        Arguments --> the df, the coefs values found by the glm for each feature, the transformer object which corresponds to the link and its inverse functions used,
-                    a boolean indicating if it needs to export the results to excel, and the export file path
+        Gets the GLM rating factor values for all features values \n \
+        Arguments --> the dataframe, the coefs values found by the glm for each feature, the numerical features names, the column name for the constant (reference) obtained by the glm \n \
+            the transformer object which corresponds to the link for a GLM, \n \
+            a boolean indicating if it needs to export the results to excel, and the export file path \n \
         Returns --> a dict with feature as keys and tuples as values corresponding to the feature modalities and their impacts on the target variable (i.e. the rating factor applied on the feature value)
     """
 
@@ -59,13 +60,18 @@ def get_glm_rating_factors(df, glm_coefs, num_features_analysis, constant_column
         features_coefs[feature] = list(zip(discrete_values, feature_coefs))
 
         if export_excel == True:
-            export_to_excel(features_coefs, feature, glm_file_path)
+            export_glm_coefs_to_excel(features_coefs, feature, glm_file_path)
 
     return features_coefs
 
 
 
 def print_model_coefs(model_name, results, features, transformer=FunctionTransformer(), sort=True):
+    """ Displays the selected model and its linear predictor expression \n \
+        Arguments --> the model name, its results, the features, \n \
+            the transformer object which corresponds to the link for a GLM, \n \
+            a boolean indicating if coefs must be sorted
+    """
 
     print('Model {}:\n'.format(model_name))
 
@@ -84,6 +90,10 @@ def print_model_coefs(model_name, results, features, transformer=FunctionTransfo
         
 
 def print_linear_predictor(coefs, names=None, transformer=FunctionTransformer(), sort=False):
+    """ Displays the linear predictor expression \n \
+        Arguments --> the coefficients, the features names associated to them, the link function and a boolean indicating if coefs must be sorted
+        Returns --> the expression of the target as linear function of the features
+    """
 
     if names == None:
         names = ["X%s" % x for x in range(len(coefs))]
@@ -97,6 +107,11 @@ def print_linear_predictor(coefs, names=None, transformer=FunctionTransformer(),
 
 
 def run_model_predictions(model_name, model, X_train, X_test, y_train, y_test, features, transformer=FunctionTransformer()):
+    """ Runs a model \n \
+        Arguments --> the model name, the model, the train and test independent and target variables \n \
+            the transformer object which corresponds to the link for a GLM, \n \
+        Returns --> the results obtained by the model
+    """
 
     results = {}
 
@@ -122,7 +137,10 @@ def run_model_predictions(model_name, model, X_train, X_test, y_train, y_test, f
 
 
 def run_simple_model(model, X_test, y_test):
-    """Runs a simple model to quickly obtain its score"""
+    """Runs a simple model with default hyperparameters to quickly obtain its score \n \
+        Arguments --> the model, the independant and dependent variable on the test set \n \
+        Returns --> the model score
+    """
 
     start_time = timer()
     model.fit(X_test, y_test)

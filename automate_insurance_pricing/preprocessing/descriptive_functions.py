@@ -2,7 +2,11 @@ import pandas as pd
 
 
 def derive_termination_rate_year(df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, column_to_sum_name):
-    """Derive the termination rates per year"""
+    """Derives the contracts termination rates per year \n \
+        Arguments --> the dataframe, the business starting year, the extraction year \n \
+            the contracts start date and policy ids and the cancellation columns names \n \
+        Returns --> a dictionnary with the termination rates per year and the overall one
+    """
 
     df_previous_year = df[df[main_column_contract_date].dt.year == start_business_year].drop_duplicates(subset=policy_id_column_name, keep='first')
     policies_previous_year = df_previous_year[policy_id_column_name]
@@ -35,14 +39,10 @@ def derive_termination_rate_year(df, start_business_year, extraction_year, main_
 
 def create_df_unique_values(df, features):
     """
-        Creates a dataframe
-        features --> list of features
+        Gets the unique values of features and the number of these unique values (mainly useful for categorical feature) \n \
+        Arguments --> the dataframe and the list of features (either a list or a string)
         Returns --> A new df with features and number of unique values for each
     """
 
-    if len(features) > 0:
-        df_feature_unique_values = pd.DataFrame.from_dict({'feature': features, 'number_of_uniques': df[features].nunique().values})
-        return df_feature_unique_values.reset_index()
-
-    else:
-        print('Your list of features is empty. Add at least one feature to study.')
+    df_feature_unique_values = pd.DataFrame.from_dict({'feature': features, 'number_of_uniques': df[features].nunique().values})
+    return df_feature_unique_values.reset_index()
