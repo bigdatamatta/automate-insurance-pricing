@@ -80,7 +80,7 @@ def find_wrong_lines(df, main_column_contract_date, lines_ro_remove_name, number
         new_df = new_df.drop(labels=line_to_remove_index).drop(columns=lines_ro_remove_name)
     else:
         df_removed_lines = pd.DataFrame()
-        print('You just agged the lines that are incorrect and should most likely be removed.  
+        print('You just agged the lines that are incorrect and should most likely be removed.  \n \
 Retreat these lines, then run again this function with the remove argument set to True to delete remaining unnecessary lines')
 
     return new_df.reset_index(drop=True), df_removed_lines

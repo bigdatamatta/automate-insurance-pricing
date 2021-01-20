@@ -415,7 +415,7 @@ def get_written_premium_occurrence_year(df, main_column_contract_date, policy_id
 
             if years is None:
                 if start_business_year is None or extraction_year is None:
-                    print('You need to indicate the years, either by setting the year the data has been extracted and the year the business started   
+                    print('You need to indicate the years, either by setting the year the data has been extracted and the year the business started \n \
                     or by directly giving to the function the list of years.')
                     return
                 else:

@@ -42,8 +42,8 @@ from automate_insurance_pricing.preprocessing.charts_functions import *
 
 
 def display_scree_plot(pca, save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots a scree plot \n \
-        Arguments --&gt; the pca, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+    &#34;&#34;&#34; Plots a scree plot   
+        Arguments --&gt; the pca, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     scree = pca.explained_variance_ratio_*100
@@ -58,9 +58,9 @@ def display_scree_plot(pca, save=False, prefix_name_fig=None, folder=&#39;Charts
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
 
 def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None, figsize=(14,5), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the correlation circles from the pca results \n \
-        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes \n \
-            a rotation factor for the labels texts, the chart limits to enforce for the axes \n \
+    &#34;&#34;&#34; Plots the correlation circles from the pca results   
+        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes   
+            a rotation factor for the labels texts, the chart limits to enforce for the axes   
             the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -111,9 +111,9 @@ def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims
                 plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;F&#39; + str(d1+1) + &#39;F&#39; + str(d2+1) + &#39;.png&#39;)
 
 def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, hue=None, figsize=(14,5), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the factorial plans from the pca results \n \
-        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes \n \
-            an opacity alpha factor, the variable to split the data with (for example if the variable has two modalities, then there will be two different color points) \n \
+    &#34;&#34;&#34; Plots the factorial plans from the pca results   
+        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes   
+            an opacity alpha factor, the variable to split the data with (for example if the variable has two modalities, then there will be two different color points)   
             the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -157,8 +157,8 @@ def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, hue=
             
 
 def run_pca(df, features, scalerMethod, n_components=6):
-    &#34;&#34;&#34; Runs the pca analysis \n \
-        Arguments --&gt; the dataframe, the features to reduce, the scaler and the number of components we want to reduce the features to \n \
+    &#34;&#34;&#34; Runs the pca analysis   
+        Arguments --&gt; the dataframe, the features to reduce, the scaler and the number of components we want to reduce the features to   
         Returns --&gt; the pca object
     &#34;&#34;&#34;
     features_scaled = scalerMethod().fit_transform(df[features].values)
@@ -175,9 +175,9 @@ def run_pca(df, features, scalerMethod, n_components=6):
 
 def run_select_from_model(X, y, model, **params):
     &#34;&#34;&#34;
-        Runs the algorithmn SelectFromModel (based on feature importance) and finds the most relevant features \n \
-        Arguments --&gt; the features, the dependent variable, the model, \n \
-            and the params for the selectFromModel method like the number max of features to select \n \
+        Runs the algorithmn SelectFromModel (based on feature importance) and finds the most relevant features   
+        Arguments --&gt; the features, the dependent variable, the model,   
+            and the params for the selectFromModel method like the number max of features to select   
         Returns --&gt; the selector along with the retained features
     &#34;&#34;&#34;
 
@@ -197,11 +197,11 @@ def run_select_from_model(X, y, model, **params):
 def run_rfe(X, y, model, with_plot_scoring_curve=True, fig_size_scoring=(16, 9), with_plot_features_importance=True, fig_size_importance=(16, 9), **params):
 
     &#34;&#34;&#34;
-        Performs a recursive feature elimination to select the most important features \n \
-        Arguments --&gt; the features, the target variable, \n \
-            a boolean indicating if it needs to plot the score curve depending on the number of features kept, its figure size, \n \
-            a boolean indicating if it plots the selected feature importance and the figure size, \n \
-            the kwargs are the arguments for the model like the number of folds to use for cross validation, the scoring method (&#39;accuracy&#39;, &#39;explained variance&#39; etc.) \n \
+        Performs a recursive feature elimination to select the most important features   
+        Arguments --&gt; the features, the target variable,   
+            a boolean indicating if it needs to plot the score curve depending on the number of features kept, its figure size,   
+            a boolean indicating if it plots the selected feature importance and the figure size,   
+            the kwargs are the arguments for the model like the number of folds to use for cross validation, the scoring method (&#39;accuracy&#39;, &#39;explained variance&#39; etc.)   
         Returns --&gt; the rfe along with the retained features
     &#34;&#34;&#34;
 
@@ -226,12 +226,12 @@ def run_rfe(X, y, model, with_plot_scoring_curve=True, fig_size_scoring=(16, 9),
 
 def correlation_from_model(df, features_corr_matrice, model, draws=5, additional_outputs=None, target_column=None, corr_threshold=0.5, figsize=(10,10)):
     &#34;&#34;&#34;
-        Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments \n \
-        Arguments --&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.), \n \
-            the number of draws (equivalent to a cross validation with different data split), \n \
-            the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart), \n \
-            the dependent variable, the correlation threshold, the figure size, \n \
-            the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression) \n \
+        Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments   
+        Arguments --&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.),   
+            the number of draws (equivalent to a cross validation with different data split),   
+            the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart),   
+            the dependent variable, the correlation threshold, the figure size,   
+            the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression)   
         Returns --&gt; a new correlation matrice with the coefficients corresponding to the correlation between the predicted feature value thanks to another feature and with the model specified in the arguments
     &#34;&#34;&#34;
 
@@ -285,8 +285,8 @@ def correlation_from_model(df, features_corr_matrice, model, draws=5, additional
 
 
 def get_correlated_features(features_corr_matrice, target_column, corr_threshold=None):
-    &#34;&#34;&#34;Gets the features that have a correlations between each other higher than the threshold specified in the arguments \n \
-        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold \n \
+    &#34;&#34;&#34;Gets the features that have a correlations between each other higher than the threshold specified in the arguments   
+        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold   
         Returns --&gt; the features that have been considered as correlated
     &#34;&#34;&#34;
 
@@ -314,8 +314,8 @@ def get_correlated_features(features_corr_matrice, target_column, corr_threshold
 
 
 def get_relevant_features(features_corr_matrice, target_column, corr_threshold=None):
-    &#34;&#34;&#34;Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments \n \
-        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold \n \
+    &#34;&#34;&#34;Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments   
+        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold   
         Returns --&gt; the features that have considered correlated to the target variable
     &#34;&#34;&#34;
 
@@ -330,9 +330,9 @@ def get_relevant_features(features_corr_matrice, target_column, corr_threshold=N
 
 
 def get_corr_matrice(df, columns, plot_matrice=True, figsize=(16, 9), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34;Produces the corr matrice between the columns specified in the arguments, and plots it \n \
-        Arguments --&gt; the dataframe, the features, a boolean indicating if we plot a heat map or not, \n \
-            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+    &#34;&#34;&#34;Produces the corr matrice between the columns specified in the arguments, and plots it   
+        Arguments --&gt; the dataframe, the features, a boolean indicating if we plot a heat map or not,   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
         Returns --&gt; the correlation matrice displaying all the features pairs
     &#34;&#34;&#34;
 
@@ -360,12 +360,12 @@ def get_corr_matrice(df, columns, plot_matrice=True, figsize=(16, 9), save=True,
 <span>def <span class="ident">correlation_from_model</span></span>(<span>df, features_corr_matrice, model, draws=5, additional_outputs=None, target_column=None, corr_threshold=0.5, figsize=(10, 10))</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments
-Arguments &ndash;&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.),
-the number of draws (equivalent to a cross validation with different data split),
-the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart),
-the dependent variable, the correlation threshold, the figure size,
-the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression)
+<div class="desc"><p>Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments <br>
+Arguments &ndash;&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.), <br>
+the number of draws (equivalent to a cross validation with different data split), <br>
+the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart), <br>
+the dependent variable, the correlation threshold, the figure size, <br>
+the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression) <br>
 Returns &ndash;&gt; a new correlation matrice with the coefficients corresponding to the correlation between the predicted feature value thanks to another feature and with the model specified in the arguments</p></div>
 <details class="source">
 <summary>
@@ -373,12 +373,12 @@ Returns &ndash;&gt; a new correlation matrice with the coefficients correspondin
 </summary>
 <pre><code class="python">def correlation_from_model(df, features_corr_matrice, model, draws=5, additional_outputs=None, target_column=None, corr_threshold=0.5, figsize=(10,10)):
     &#34;&#34;&#34;
-        Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments \n \
-        Arguments --&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.), \n \
-            the number of draws (equivalent to a cross validation with different data split), \n \
-            the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart), \n \
-            the dependent variable, the correlation threshold, the figure size, \n \
-            the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression) \n \
+        Gets the features correlation coeffient for a specific type of relation determined by the model chosen in arguments   
+        Arguments --&gt; The full data, the corr matrice (used to get the features pairs), the chosen model (e.g. LinearRegression, RandomForest, etc.),   
+            the number of draws (equivalent to a cross validation with different data split),   
+            the dict specifying the other actions to perform by the function. Each value of the dict must be a function or a boolean (e.g. plotting a chart),   
+            the dependent variable, the correlation threshold, the figure size,   
+            the kwargs is used for the model params (e.g. the alpha argument for a Lasso Regression)   
         Returns --&gt; a new correlation matrice with the coefficients corresponding to the correlation between the predicted feature value thanks to another feature and with the model specified in the arguments
     &#34;&#34;&#34;
 
@@ -434,18 +434,18 @@ Returns &ndash;&gt; a new correlation matrice with the coefficients correspondin
 <span>def <span class="ident">display_circles</span></span>(<span>pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None, figsize=(14, 5), save=True, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the correlation circles from the pca results
-Arguments &ndash;&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes
-a rotation factor for the labels texts, the chart limits to enforce for the axes
+<div class="desc"><p>Plots the correlation circles from the pca results <br>
+Arguments &ndash;&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes <br>
+a rotation factor for the labels texts, the chart limits to enforce for the axes <br>
 the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def display_circles(pca, n_comp, axis_ranks, labels=None, label_rotation=0, lims=None, figsize=(14,5), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the correlation circles from the pca results \n \
-        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes \n \
-            a rotation factor for the labels texts, the chart limits to enforce for the axes \n \
+    &#34;&#34;&#34; Plots the correlation circles from the pca results   
+        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes   
+            a rotation factor for the labels texts, the chart limits to enforce for the axes   
             the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -500,18 +500,18 @@ the figure size, a boolean to indicate if the plot has to be saved or not, the p
 <span>def <span class="ident">display_factorial_planes</span></span>(<span>pca, n_comp, axis_ranks, labels=None, alpha=1, hue=None, figsize=(14, 5), save=True, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the factorial plans from the pca results
-Arguments &ndash;&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes
-an opacity alpha factor, the variable to split the data with (for example if the variable has two modalities, then there will be two different color points)
+<div class="desc"><p>Plots the factorial plans from the pca results <br>
+Arguments &ndash;&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes <br>
+an opacity alpha factor, the variable to split the data with (for example if the variable has two modalities, then there will be two different color points) <br>
 the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def display_factorial_planes(pca, n_comp, axis_ranks, labels=None, alpha=1, hue=None, figsize=(14,5), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the factorial plans from the pca results \n \
-        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes \n \
-            an opacity alpha factor, the variable to split the data with (for example if the variable has two modalities, then there will be two different color points) \n \
+    &#34;&#34;&#34; Plots the factorial plans from the pca results   
+        Arguments --&gt; the pca, the number of composantes, the composante axis (a list of tuples representing the composante number), the features names associated to these composantes   
+            an opacity alpha factor, the variable to split the data with (for example if the variable has two modalities, then there will be two different color points)   
             the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -558,15 +558,15 @@ the figure size, a boolean to indicate if the plot has to be saved or not, the p
 <span>def <span class="ident">display_scree_plot</span></span>(<span>pca, save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots a scree plot
+<div class="desc"><p>Plots a scree plot <br>
 Arguments &ndash;&gt; the pca, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def display_scree_plot(pca, save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots a scree plot \n \
-        Arguments --&gt; the pca, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+    &#34;&#34;&#34; Plots a scree plot   
+        Arguments --&gt; the pca, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
     &#34;&#34;&#34;
 
     scree = pca.explained_variance_ratio_*100
@@ -585,18 +585,18 @@ Arguments &ndash;&gt; the pca, a boolean to indicate if the plot has to be saved
 <span>def <span class="ident">get_corr_matrice</span></span>(<span>df, columns, plot_matrice=True, figsize=(16, 9), save=True, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Produces the corr matrice between the columns specified in the arguments, and plots it
-Arguments &ndash;&gt; the dataframe, the features, a boolean indicating if we plot a heat map or not,
-the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+<div class="desc"><p>Produces the corr matrice between the columns specified in the arguments, and plots it <br>
+Arguments &ndash;&gt; the dataframe, the features, a boolean indicating if we plot a heat map or not, <br>
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart <br>
 Returns &ndash;&gt; the correlation matrice displaying all the features pairs</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_corr_matrice(df, columns, plot_matrice=True, figsize=(16, 9), save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34;Produces the corr matrice between the columns specified in the arguments, and plots it \n \
-        Arguments --&gt; the dataframe, the features, a boolean indicating if we plot a heat map or not, \n \
-            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+    &#34;&#34;&#34;Produces the corr matrice between the columns specified in the arguments, and plots it   
+        Arguments --&gt; the dataframe, the features, a boolean indicating if we plot a heat map or not,   
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
         Returns --&gt; the correlation matrice displaying all the features pairs
     &#34;&#34;&#34;
 
@@ -617,16 +617,16 @@ Returns &ndash;&gt; the correlation matrice displaying all the features pairs</p
 <span>def <span class="ident">get_correlated_features</span></span>(<span>features_corr_matrice, target_column, corr_threshold=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gets the features that have a correlations between each other higher than the threshold specified in the arguments
-Arguments &ndash;&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold
+<div class="desc"><p>Gets the features that have a correlations between each other higher than the threshold specified in the arguments <br>
+Arguments &ndash;&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold <br>
 Returns &ndash;&gt; the features that have been considered as correlated</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_correlated_features(features_corr_matrice, target_column, corr_threshold=None):
-    &#34;&#34;&#34;Gets the features that have a correlations between each other higher than the threshold specified in the arguments \n \
-        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold \n \
+    &#34;&#34;&#34;Gets the features that have a correlations between each other higher than the threshold specified in the arguments   
+        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold   
         Returns --&gt; the features that have been considered as correlated
     &#34;&#34;&#34;
 
@@ -656,16 +656,16 @@ Returns &ndash;&gt; the features that have been considered as correlated</p></di
 <span>def <span class="ident">get_relevant_features</span></span>(<span>features_corr_matrice, target_column, corr_threshold=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments
-Arguments &ndash;&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold
+<div class="desc"><p>Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments <br>
+Arguments &ndash;&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold <br>
 Returns &ndash;&gt; the features that have considered correlated to the target variable</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_relevant_features(features_corr_matrice, target_column, corr_threshold=None):
-    &#34;&#34;&#34;Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments \n \
-        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold \n \
+    &#34;&#34;&#34;Gets the potential relevant features for the target variable prediction based on a correlation threshold specified in the arguments   
+        Arguments --&gt; the corr matrice (used to get the features pairs), the dependent variable, the correlation threshold   
         Returns --&gt; the features that have considered correlated to the target variable
     &#34;&#34;&#34;
 
@@ -682,16 +682,16 @@ Returns &ndash;&gt; the features that have considered correlated to the target v
 <span>def <span class="ident">run_pca</span></span>(<span>df, features, scalerMethod, n_components=6)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Runs the pca analysis
-Arguments &ndash;&gt; the dataframe, the features to reduce, the scaler and the number of components we want to reduce the features to
+<div class="desc"><p>Runs the pca analysis <br>
+Arguments &ndash;&gt; the dataframe, the features to reduce, the scaler and the number of components we want to reduce the features to <br>
 Returns &ndash;&gt; the pca object</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_pca(df, features, scalerMethod, n_components=6):
-    &#34;&#34;&#34; Runs the pca analysis \n \
-        Arguments --&gt; the dataframe, the features to reduce, the scaler and the number of components we want to reduce the features to \n \
+    &#34;&#34;&#34; Runs the pca analysis   
+        Arguments --&gt; the dataframe, the features to reduce, the scaler and the number of components we want to reduce the features to   
         Returns --&gt; the pca object
     &#34;&#34;&#34;
     features_scaled = scalerMethod().fit_transform(df[features].values)
@@ -709,11 +709,11 @@ Returns &ndash;&gt; the pca object</p></div>
 <span>def <span class="ident">run_rfe</span></span>(<span>X, y, model, with_plot_scoring_curve=True, fig_size_scoring=(16, 9), with_plot_features_importance=True, fig_size_importance=(16, 9), **params)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Performs a recursive feature elimination to select the most important features
-Arguments &ndash;&gt; the features, the target variable,
-a boolean indicating if it needs to plot the score curve depending on the number of features kept, its figure size,
-a boolean indicating if it plots the selected feature importance and the figure size,
-the kwargs are the arguments for the model like the number of folds to use for cross validation, the scoring method ('accuracy', 'explained variance' etc.)
+<div class="desc"><p>Performs a recursive feature elimination to select the most important features <br>
+Arguments &ndash;&gt; the features, the target variable, <br>
+a boolean indicating if it needs to plot the score curve depending on the number of features kept, its figure size, <br>
+a boolean indicating if it plots the selected feature importance and the figure size, <br>
+the kwargs are the arguments for the model like the number of folds to use for cross validation, the scoring method ('accuracy', 'explained variance' etc.) <br>
 Returns &ndash;&gt; the rfe along with the retained features</p></div>
 <details class="source">
 <summary>
@@ -722,11 +722,11 @@ Returns &ndash;&gt; the rfe along with the retained features</p></div>
 <pre><code class="python">def run_rfe(X, y, model, with_plot_scoring_curve=True, fig_size_scoring=(16, 9), with_plot_features_importance=True, fig_size_importance=(16, 9), **params):
 
     &#34;&#34;&#34;
-        Performs a recursive feature elimination to select the most important features \n \
-        Arguments --&gt; the features, the target variable, \n \
-            a boolean indicating if it needs to plot the score curve depending on the number of features kept, its figure size, \n \
-            a boolean indicating if it plots the selected feature importance and the figure size, \n \
-            the kwargs are the arguments for the model like the number of folds to use for cross validation, the scoring method (&#39;accuracy&#39;, &#39;explained variance&#39; etc.) \n \
+        Performs a recursive feature elimination to select the most important features   
+        Arguments --&gt; the features, the target variable,   
+            a boolean indicating if it needs to plot the score curve depending on the number of features kept, its figure size,   
+            a boolean indicating if it plots the selected feature importance and the figure size,   
+            the kwargs are the arguments for the model like the number of folds to use for cross validation, the scoring method (&#39;accuracy&#39;, &#39;explained variance&#39; etc.)   
         Returns --&gt; the rfe along with the retained features
     &#34;&#34;&#34;
 
@@ -752,9 +752,9 @@ Returns &ndash;&gt; the rfe along with the retained features</p></div>
 <span>def <span class="ident">run_select_from_model</span></span>(<span>X, y, model, **params)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Runs the algorithmn SelectFromModel (based on feature importance) and finds the most relevant features
-Arguments &ndash;&gt; the features, the dependent variable, the model,
-and the params for the selectFromModel method like the number max of features to select
+<div class="desc"><p>Runs the algorithmn SelectFromModel (based on feature importance) and finds the most relevant features <br>
+Arguments &ndash;&gt; the features, the dependent variable, the model, <br>
+and the params for the selectFromModel method like the number max of features to select <br>
 Returns &ndash;&gt; the selector along with the retained features</p></div>
 <details class="source">
 <summary>
@@ -762,9 +762,9 @@ Returns &ndash;&gt; the selector along with the retained features</p></div>
 </summary>
 <pre><code class="python">def run_select_from_model(X, y, model, **params):
     &#34;&#34;&#34;
-        Runs the algorithmn SelectFromModel (based on feature importance) and finds the most relevant features \n \
-        Arguments --&gt; the features, the dependent variable, the model, \n \
-            and the params for the selectFromModel method like the number max of features to select \n \
+        Runs the algorithmn SelectFromModel (based on feature importance) and finds the most relevant features   
+        Arguments --&gt; the features, the dependent variable, the model,   
+            and the params for the selectFromModel method like the number max of features to select   
         Returns --&gt; the selector along with the retained features
     &#34;&#34;&#34;
 

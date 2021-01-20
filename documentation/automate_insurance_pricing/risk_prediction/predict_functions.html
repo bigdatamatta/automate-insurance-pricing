@@ -38,10 +38,10 @@ from automate_insurance_pricing.reports.export_functions import *
 
 def get_glm_rating_factors(df, glm_coefs, num_features_analysis, constant_column_name=&#39;const&#39;, transformer=FunctionTransformer(), export_excel=False, glm_file_path=None):
     &#34;&#34;&#34;
-        Gets the GLM rating factor values for all features values \n \
-        Arguments --&gt; the dataframe, the coefs values found by the glm for each feature, the numerical features names, the column name for the constant (reference) obtained by the glm \n \
-            the transformer object which corresponds to the link for a GLM, \n \
-            a boolean indicating if it needs to export the results to excel, and the export file path \n \
+        Gets the GLM rating factor values for all features values   
+        Arguments --&gt; the dataframe, the coefs values found by the glm for each feature, the numerical features names, the column name for the constant (reference) obtained by the glm   
+            the transformer object which corresponds to the link for a GLM,   
+            a boolean indicating if it needs to export the results to excel, and the export file path   
         Returns --&gt; a dict with feature as keys and tuples as values corresponding to the feature modalities and their impacts on the target variable (i.e. the rating factor applied on the feature value)
     &#34;&#34;&#34;
 
@@ -95,9 +95,9 @@ def get_glm_rating_factors(df, glm_coefs, num_features_analysis, constant_column
 
 
 def print_model_coefs(model_name, results, features, transformer=FunctionTransformer(), sort=True):
-    &#34;&#34;&#34; Displays the selected model and its linear predictor expression \n \
-        Arguments --&gt; the model name, its results, the features, \n \
-            the transformer object which corresponds to the link for a GLM, \n \
+    &#34;&#34;&#34; Displays the selected model and its linear predictor expression   
+        Arguments --&gt; the model name, its results, the features,   
+            the transformer object which corresponds to the link for a GLM,   
             a boolean indicating if coefs must be sorted
     &#34;&#34;&#34;
 
@@ -118,7 +118,7 @@ def print_model_coefs(model_name, results, features, transformer=FunctionTransfo
         
 
 def print_linear_predictor(coefs, names=None, transformer=FunctionTransformer(), sort=False):
-    &#34;&#34;&#34; Displays the linear predictor expression \n \
+    &#34;&#34;&#34; Displays the linear predictor expression   
         Arguments --&gt; the coefficients, the features names associated to them, the link function and a boolean indicating if coefs must be sorted
         Returns --&gt; the expression of the target as linear function of the features
     &#34;&#34;&#34;
@@ -135,9 +135,9 @@ def print_linear_predictor(coefs, names=None, transformer=FunctionTransformer(),
 
 
 def run_model_predictions(model_name, model, X_train, X_test, y_train, y_test, features, transformer=FunctionTransformer()):
-    &#34;&#34;&#34; Runs a model \n \
-        Arguments --&gt; the model name, the model, the train and test independent and target variables \n \
-            the transformer object which corresponds to the link for a GLM, \n \
+    &#34;&#34;&#34; Runs a model   
+        Arguments --&gt; the model name, the model, the train and test independent and target variables   
+            the transformer object which corresponds to the link for a GLM,   
         Returns --&gt; the results obtained by the model
     &#34;&#34;&#34;
 
@@ -165,8 +165,8 @@ def run_model_predictions(model_name, model, X_train, X_test, y_train, y_test, f
 
 
 def run_simple_model(model, X_test, y_test):
-    &#34;&#34;&#34;Runs a simple model with default hyperparameters to quickly obtain its score \n \
-        Arguments --&gt; the model, the independant and dependent variable on the test set \n \
+    &#34;&#34;&#34;Runs a simple model with default hyperparameters to quickly obtain its score   
+        Arguments --&gt; the model, the independant and dependent variable on the test set   
         Returns --&gt; the model score
     &#34;&#34;&#34;
 
@@ -193,10 +193,10 @@ def run_simple_model(model, X_test, y_test):
 <span>def <span class="ident">get_glm_rating_factors</span></span>(<span>df, glm_coefs, num_features_analysis, constant_column_name='const', transformer=FunctionTransformer(), export_excel=False, glm_file_path=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gets the GLM rating factor values for all features values
-Arguments &ndash;&gt; the dataframe, the coefs values found by the glm for each feature, the numerical features names, the column name for the constant (reference) obtained by the glm
-the transformer object which corresponds to the link for a GLM,
-a boolean indicating if it needs to export the results to excel, and the export file path
+<div class="desc"><p>Gets the GLM rating factor values for all features values <br>
+Arguments &ndash;&gt; the dataframe, the coefs values found by the glm for each feature, the numerical features names, the column name for the constant (reference) obtained by the glm <br>
+the transformer object which corresponds to the link for a GLM, <br>
+a boolean indicating if it needs to export the results to excel, and the export file path <br>
 Returns &ndash;&gt; a dict with feature as keys and tuples as values corresponding to the feature modalities and their impacts on the target variable (i.e. the rating factor applied on the feature value)</p></div>
 <details class="source">
 <summary>
@@ -204,10 +204,10 @@ Returns &ndash;&gt; a dict with feature as keys and tuples as values correspondi
 </summary>
 <pre><code class="python">def get_glm_rating_factors(df, glm_coefs, num_features_analysis, constant_column_name=&#39;const&#39;, transformer=FunctionTransformer(), export_excel=False, glm_file_path=None):
     &#34;&#34;&#34;
-        Gets the GLM rating factor values for all features values \n \
-        Arguments --&gt; the dataframe, the coefs values found by the glm for each feature, the numerical features names, the column name for the constant (reference) obtained by the glm \n \
-            the transformer object which corresponds to the link for a GLM, \n \
-            a boolean indicating if it needs to export the results to excel, and the export file path \n \
+        Gets the GLM rating factor values for all features values   
+        Arguments --&gt; the dataframe, the coefs values found by the glm for each feature, the numerical features names, the column name for the constant (reference) obtained by the glm   
+            the transformer object which corresponds to the link for a GLM,   
+            a boolean indicating if it needs to export the results to excel, and the export file path   
         Returns --&gt; a dict with feature as keys and tuples as values corresponding to the feature modalities and their impacts on the target variable (i.e. the rating factor applied on the feature value)
     &#34;&#34;&#34;
 
@@ -263,7 +263,7 @@ Returns &ndash;&gt; a dict with feature as keys and tuples as values correspondi
 <span>def <span class="ident">print_linear_predictor</span></span>(<span>coefs, names=None, transformer=FunctionTransformer(), sort=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Displays the linear predictor expression
+<div class="desc"><p>Displays the linear predictor expression <br>
 Arguments &ndash;&gt; the coefficients, the features names associated to them, the link function and a boolean indicating if coefs must be sorted
 Returns &ndash;&gt; the expression of the target as linear function of the features</p></div>
 <details class="source">
@@ -271,7 +271,7 @@ Returns &ndash;&gt; the expression of the target as linear function of the featu
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_linear_predictor(coefs, names=None, transformer=FunctionTransformer(), sort=False):
-    &#34;&#34;&#34; Displays the linear predictor expression \n \
+    &#34;&#34;&#34; Displays the linear predictor expression   
         Arguments --&gt; the coefficients, the features names associated to them, the link function and a boolean indicating if coefs must be sorted
         Returns --&gt; the expression of the target as linear function of the features
     &#34;&#34;&#34;
@@ -291,18 +291,18 @@ Returns &ndash;&gt; the expression of the target as linear function of the featu
 <span>def <span class="ident">print_model_coefs</span></span>(<span>model_name, results, features, transformer=FunctionTransformer(), sort=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Displays the selected model and its linear predictor expression
-Arguments &ndash;&gt; the model name, its results, the features,
-the transformer object which corresponds to the link for a GLM,
+<div class="desc"><p>Displays the selected model and its linear predictor expression <br>
+Arguments &ndash;&gt; the model name, its results, the features, <br>
+the transformer object which corresponds to the link for a GLM, <br>
 a boolean indicating if coefs must be sorted</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_model_coefs(model_name, results, features, transformer=FunctionTransformer(), sort=True):
-    &#34;&#34;&#34; Displays the selected model and its linear predictor expression \n \
-        Arguments --&gt; the model name, its results, the features, \n \
-            the transformer object which corresponds to the link for a GLM, \n \
+    &#34;&#34;&#34; Displays the selected model and its linear predictor expression   
+        Arguments --&gt; the model name, its results, the features,   
+            the transformer object which corresponds to the link for a GLM,   
             a boolean indicating if coefs must be sorted
     &#34;&#34;&#34;
 
@@ -325,18 +325,18 @@ a boolean indicating if coefs must be sorted</p></div>
 <span>def <span class="ident">run_model_predictions</span></span>(<span>model_name, model, X_train, X_test, y_train, y_test, features, transformer=FunctionTransformer())</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Runs a model
-Arguments &ndash;&gt; the model name, the model, the train and test independent and target variables
-the transformer object which corresponds to the link for a GLM,
+<div class="desc"><p>Runs a model <br>
+Arguments &ndash;&gt; the model name, the model, the train and test independent and target variables <br>
+the transformer object which corresponds to the link for a GLM, <br>
 Returns &ndash;&gt; the results obtained by the model</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_model_predictions(model_name, model, X_train, X_test, y_train, y_test, features, transformer=FunctionTransformer()):
-    &#34;&#34;&#34; Runs a model \n \
-        Arguments --&gt; the model name, the model, the train and test independent and target variables \n \
-            the transformer object which corresponds to the link for a GLM, \n \
+    &#34;&#34;&#34; Runs a model   
+        Arguments --&gt; the model name, the model, the train and test independent and target variables   
+            the transformer object which corresponds to the link for a GLM,   
         Returns --&gt; the results obtained by the model
     &#34;&#34;&#34;
 
@@ -366,16 +366,16 @@ Returns &ndash;&gt; the results obtained by the model</p></div>
 <span>def <span class="ident">run_simple_model</span></span>(<span>model, X_test, y_test)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Runs a simple model with default hyperparameters to quickly obtain its score
-Arguments &ndash;&gt; the model, the independant and dependent variable on the test set
+<div class="desc"><p>Runs a simple model with default hyperparameters to quickly obtain its score <br>
+Arguments &ndash;&gt; the model, the independant and dependent variable on the test set <br>
 Returns &ndash;&gt; the model score</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_simple_model(model, X_test, y_test):
-    &#34;&#34;&#34;Runs a simple model with default hyperparameters to quickly obtain its score \n \
-        Arguments --&gt; the model, the independant and dependent variable on the test set \n \
+    &#34;&#34;&#34;Runs a simple model with default hyperparameters to quickly obtain its score   
+        Arguments --&gt; the model, the independant and dependent variable on the test set   
         Returns --&gt; the model score
     &#34;&#34;&#34;
 

@@ -57,10 +57,10 @@ def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save
 
 def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig=&#39;&#39;, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the predicted vs the observed values \n \
-        Arguments --&gt; the test target variable values, the predictions, \n \
-            a boolean indicating if predictions are from a ols model, \n \ 
-            and the glm fitted model to make tests on pearson / deviance residuals \n \
+        Plots the predicted vs the observed values   
+        Arguments --&gt; the test target variable values, the predictions,   
+            a boolean indicating if predictions are from a ols model,    
+            and the glm fitted model to make tests on pearson / deviance residuals   
             the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart
     &#34;&#34;&#34;    
 
@@ -113,7 +113,7 @@ def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, f
         
 
 def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots a feature importance \n \
+    &#34;&#34;&#34; Plots a feature importance   
         Arguments --&gt; the model name, the coefs obtained, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -127,7 +127,7 @@ def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig
     
 
 def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34;Compare the models plotting their results in a boxplot \n \
+    &#34;&#34;&#34;Compare the models plotting their results in a boxplot   
         Arguments --&gt; the model results, their names, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -143,7 +143,7 @@ def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_nam
     
 
 def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the importance features selected by a RFE method \n \
+    &#34;&#34;&#34; Plots the importance features selected by a RFE method   
         Arguments --&gt; the features, the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -191,7 +191,7 @@ def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=
     &#34;&#34;&#34;
         Plots a scatter plot for all pair of features
         Arguments --&gt; the dataframe, the corr matrice (used to get the features pairs), the model,
-            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
             and kwargs which shoud mainly correspond to the model params
     &#34;&#34;&#34;
 
@@ -278,14 +278,14 @@ def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=
 <span>def <span class="ident">display_linear_model_features</span></span>(<span>model_name, coefs, save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots a feature importance
+<div class="desc"><p>Plots a feature importance <br>
 Arguments &ndash;&gt; the model name, the coefs obtained, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots a feature importance \n \
+    &#34;&#34;&#34; Plots a feature importance   
         Arguments --&gt; the model name, the coefs obtained, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -304,7 +304,7 @@ Arguments &ndash;&gt; the model name, the coefs obtained, a boolean to indicate 
 <dd>
 <div class="desc"><p>Plots a scatter plot for all pair of features
 Arguments &ndash;&gt; the dataframe, the corr matrice (used to get the features pairs), the model,
-the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart <br>
 and kwargs which shoud mainly correspond to the model params</p></div>
 <details class="source">
 <summary>
@@ -314,7 +314,7 @@ and kwargs which shoud mainly correspond to the model params</p></div>
     &#34;&#34;&#34;
         Plots a scatter plot for all pair of features
         Arguments --&gt; the dataframe, the corr matrice (used to get the features pairs), the model,
-            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart   
             and kwargs which shoud mainly correspond to the model params
     &#34;&#34;&#34;
 
@@ -373,14 +373,14 @@ and kwargs which shoud mainly correspond to the model params</p></div>
 <span>def <span class="ident">plot_features_importance</span></span>(<span>X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the importance features selected by a RFE method
+<div class="desc"><p>Plots the importance features selected by a RFE method <br>
 Arguments &ndash;&gt; the features, the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the importance features selected by a RFE method \n \
+    &#34;&#34;&#34; Plots the importance features selected by a RFE method   
         Arguments --&gt; the features, the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -410,14 +410,14 @@ Arguments &ndash;&gt; the features, the rfe model, the figure size, a boolean to
 <span>def <span class="ident">plot_models_results</span></span>(<span>results, names, figsize=(16, 14), save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Compare the models plotting their results in a boxplot
+<div class="desc"><p>Compare the models plotting their results in a boxplot <br>
 Arguments &ndash;&gt; the model results, their names, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34;Compare the models plotting their results in a boxplot \n \
+    &#34;&#34;&#34;Compare the models plotting their results in a boxplot   
         Arguments --&gt; the model results, their names, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
     &#34;&#34;&#34;
 
@@ -436,11 +436,11 @@ Arguments &ndash;&gt; the model results, their names, the figure size, a boolean
 <span>def <span class="ident">plot_observed_predicted</span></span>(<span>y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig='', folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the predicted vs the observed values
-Arguments &ndash;&gt; the test target variable values, the predictions,
+<div class="desc"><p>Plots the predicted vs the observed values <br>
+Arguments &ndash;&gt; the test target variable values, the predictions, <br>
 a boolean indicating if predictions are from a ols model,
-\
-and the glm fitted model to make tests on pearson / deviance residuals
+<br>
+and the glm fitted model to make tests on pearson / deviance residuals <br>
 the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
@@ -448,10 +448,10 @@ the figure size, a boolean to indicate if the plot has to be saved or not, the p
 </summary>
 <pre><code class="python">def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig=&#39;&#39;, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the predicted vs the observed values \n \
-        Arguments --&gt; the test target variable values, the predictions, \n \
-            a boolean indicating if predictions are from a ols model, \n \ 
-            and the glm fitted model to make tests on pearson / deviance residuals \n \
+        Plots the predicted vs the observed values   
+        Arguments --&gt; the test target variable values, the predictions,   
+            a boolean indicating if predictions are from a ols model,    
+            and the glm fitted model to make tests on pearson / deviance residuals   
             the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart
     &#34;&#34;&#34;    
 
