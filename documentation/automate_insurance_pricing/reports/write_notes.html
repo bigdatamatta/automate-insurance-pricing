@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>automate_insurance_pricing.reports.write_notes API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>automate_insurance_pricing.reports.write_notes</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from copy import deepcopy
+
+def merge_assumptions_fields(document, dict_figures=None, field_dict_index_name=None, field_dict_value_name=None, unique_figure=None, field_name_unique=None, style_format_dict=&#39;{:,.0f}&#39;, style_format_unique=&#39;{:.2%}&#39;):
+
+    if dict_figures is not None and field_dict_index_name is not None and field_dict_value_name is not None:
+        rows = [{field_dict_index_name: str(key.year), field_dict_value_name: style_format_dict.format(dict_figures[key])} for key in dict_figures.keys()]
+        document.merge_rows(field_dict_index_name, rows)
+
+    if unique_figure is not None and field_name_unique is not None:
+        rows = [{field_name_unique: style_format_unique.format(unique_figure)}]
+        document.merge_rows(field_name_unique, rows)
+
+        
+
+def merge_analysis_features_fields(document, df, features):
+    &#34;&#34;&#34; Merges the analysis summaries done by feature to word&#34;&#34;&#34;
+
+    new_features = [features] if isinstance(features, str) == True else features
+
+    for index, feature in enumerate(new_features):
+        merge_analysis_fields(document, df, &#39;analysis_variable_&#39; + str(index+1), feature=feature)
+
+        if index == len(new_features) - 1:
+            print(&#39;The merge function successfully worked. The analysis word fields have been merged with the performance analysis done for the specified features.&#39;)
+
+            
+
+def merge_analysis_fields(document, df, first_column_name, exposure_name=&#39;exposure&#39;, written_premium_name=&#39;asif_written_premium_excl_taxes&#39;, earned_premium_name=&#39;asif_earned_premium&#39;, feature=None):
+    &#34;&#34;&#34;
+        Merges the analysis summaries to word fields
+        Arguments --&gt; the df, the word field name and the feature if it is a performance analysis by feature
+    &#34;&#34;&#34;
+
+    if first_column_name == &#39;analysis_total&#39;:
+        total_name = &#39;Total&#39;
+        rows = [
+            {
+                first_column_name: &#39;Total&#39;,
+                &#39;analysis_exposure&#39;: &#39;{:,.0f}&#39;.format(df.loc[total_name, exposure_name]),
+                &#39;analysis_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, written_premium_name], currency),
+                &#39;analysis_gep&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, earned_premium_name], currency),
+                &#39;analysis_observed_capped_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;observed_capped_loss_ratio&#39;]),
+                &#39;analysis_observed_full_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;observed_full_loss_ratio&#39;]),
+                &#39;analysis_projected_capped_cost&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;projected_capped_cost&#39;], currency),
+                &#39;analysis_projected_capped_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;projected_capped_loss_ratio&#39;]),
+                &#39;analysis_projected_full_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;projected_full_loss_ratio&#39;]),
+                &#39;analysis_necessary_rate_adjusment&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;necessary_rate_adjusment&#39;]),
+                &#39;analysis_frequency&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;frequency&#39;]),
+                &#39;analysis_average_cost&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;average_cost&#39;], currency),
+                &#39;analysis_pure_premium_excl_LL&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;pure_premium_excl_LL&#39;], currency),
+                &#39;analysis_pure_premium_incl_LL&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;pure_premium_incl_LL&#39;], currency),
+                &#39;analysis_proposed_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;proposed_gwp_excl_taxes&#39;], currency)
+            }
+        ]
+
+        document.merge_rows(first_column_name, rows)
+
+    else:
+        new_df = deepcopy(df) if feature is None else df[feature]
+        loop_values = new_df.index
+        rows = [
+            {
+                first_column_name: str(value),
+                &#39;analysis_exposure&#39;: &#39;{:,.0f}&#39;.format(new_df.loc[value][exposure_name]),
+                &#39;analysis_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][written_premium_name], currency),
+                &#39;analysis_gep&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][earned_premium_name], currency),
+                &#39;analysis_projected_capped_loss_ratio&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;projected_capped_loss_ratio&#39;]),
+                &#39;analysis_projected_full_loss_ratio&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;projected_full_loss_ratio&#39;]),
+                &#39;analysis_necessary_rate_adjusment&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;necessary_rate_adjusment&#39;]),
+                &#39;analysis_frequency&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;frequency&#39;]),
+                &#39;analysis_average_cost&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][&#39;average_cost&#39;], currency),
+                &#39;analysis_pure_premium_excl_LL&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][&#39;pure_premium_excl_LL&#39;], currency),
+                &#39;analysis_proposed_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][&#39;proposed_gwp_excl_taxes&#39;], currency)
+            }
+
+            for value in loop_values
+        ]
+
+
+        if feature is None:
+            document.merge_rows(first_column_name, rows)
+
+        else:
+            index = list(df.keys()).index(feature)
+            merge_templates = [{
+                &#39;analysis_feature_&#39; + str(index+1): feature.replace(&#39;feature&#39;, &#39;&#39;).replace(&#39;_&#39;, &#39; &#39;).replace(&#39;bins&#39;, &#39;&#39;).capitalize(),
+                first_column_name: rows,
+            }]
+
+            document.merge_templates(merge_templates, separator=&#39;page_break&#39;)
+
+            
+
+def merge_portfolio_fields(document, df, features, num_features_analysis, portfolio_num_features_description=None, termination_rates=None, written_premium_column_name=&#39;asif_written_premium_excl_taxes&#39;, currency=&#39;€&#39;):
+    &#34;&#34;&#34; Merges the portfolio summary figures to word fields&#34;&#34;&#34;
+    
+    new_df = deepcopy(df)
+    new_features = [features] if isinstance(features, str) == True else features
+    rows_to_merge2 = None
+    
+    for index, feature in enumerate(features):
+
+        if portfolio_num_features_description is not None and (feature in num_features_analysis or feature.replace(&#39;_bins&#39;, &#39;&#39;) in num_features_analysis):
+            
+            if feature not in num_features_analysis:
+                # Variables binned have interval/category pandas style. It has to be treated               
+                unique_values = new_df[feature].unique().sort_values().astype(str)
+                new_df[feature] = new_df[feature].astype(str)  
+                
+                row1 = &#39;variable_value_&#39; + str(index+1)
+                rows_to_merge1 = [{
+                    row1: str(value),
+                    &#39;policies_number_by_variable&#39;: &#39;{:,.0f}&#39;.format(new_df[new_df[feature] == value].shape[0]),
+                    &#39;gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].sum(), currency),
+                    &#39;average_gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].mean(), currency)
+                } for value in unique_values]
+                
+                feature = feature.replace(&#39;_bins&#39;, &#39;&#39;)
+            
+            row2 = &#39;average_&#39; + str(index+1)
+            rows_to_merge2 = [{
+                row2: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;mean&#39;, feature]),
+                &#39;median&#39;: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;50%&#39;, feature]),
+                &#39;min&#39;: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;min&#39;, feature]),
+                &#39;max&#39;: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;max&#39;, feature])
+            }] 
+
+            
+        else:
+            row1 = &#39;variable_value_&#39; + str(index+1)                
+            unique_values = new_df[feature].unique()
+            
+            rows_to_merge1 = [{
+                row1: str(value),
+                &#39;policies_number_by_variable&#39;: &#39;{:,.0f}&#39;.format(new_df[new_df[feature] == value].shape[0]),
+                &#39;gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].sum(), currency),
+                &#39;average_gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].mean(), currency)
+            } for value in unique_values]
+        
+        if rows_to_merge2 is None:
+            merge_templates = [{
+                &#39;feature_&#39; + str(index+1): feature.replace(&#39;feature&#39;, &#39;&#39;).replace(&#39;_&#39;, &#39; &#39;).capitalize(),
+                row1: rows_to_merge1,
+            }]
+        else:
+            merge_templates = [{
+                &#39;feature_&#39; + str(index+1): feature.replace(&#39;feature&#39;, &#39;&#39;).replace(&#39;_&#39;, &#39; &#39;).capitalize(),
+                row1: rows_to_merge1,
+                row2: rows_to_merge2
+            }] 
+            
+            rows_to_merge2 = None
+        
+        
+        document.merge_templates(merge_templates, separator=&#39;page_break&#39;) 
+    
+    if termination_rates is not None:
+        rows = [{&#39;termination_rate_occurrence_year&#39;: str(key), &#39;termination_rate&#39;: &#39;{:.1%}&#39;.format(termination_rates[key])} for key in termination_rates.keys()]
+        document.merge_rows(&#39;termination_rate_occurrence_year&#39;, rows)
+    
+    print(&#39;The merge has successfully worked. The word field names have been well merged with the portfolio composition figures.&#39;)   </code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="automate_insurance_pricing.reports.write_notes.merge_analysis_features_fields"><code class="name flex">
+<span>def <span class="ident">merge_analysis_features_fields</span></span>(<span>document, df, features)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Merges the analysis summaries done by feature to word</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def merge_analysis_features_fields(document, df, features):
+    &#34;&#34;&#34; Merges the analysis summaries done by feature to word&#34;&#34;&#34;
+
+    new_features = [features] if isinstance(features, str) == True else features
+
+    for index, feature in enumerate(new_features):
+        merge_analysis_fields(document, df, &#39;analysis_variable_&#39; + str(index+1), feature=feature)
+
+        if index == len(new_features) - 1:
+            print(&#39;The merge function successfully worked. The analysis word fields have been merged with the performance analysis done for the specified features.&#39;)</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.reports.write_notes.merge_analysis_fields"><code class="name flex">
+<span>def <span class="ident">merge_analysis_fields</span></span>(<span>document, df, first_column_name, exposure_name='exposure', written_premium_name='asif_written_premium_excl_taxes', earned_premium_name='asif_earned_premium', feature=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Merges the analysis summaries to word fields
+Arguments &ndash;&gt; the df, the word field name and the feature if it is a performance analysis by feature</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def merge_analysis_fields(document, df, first_column_name, exposure_name=&#39;exposure&#39;, written_premium_name=&#39;asif_written_premium_excl_taxes&#39;, earned_premium_name=&#39;asif_earned_premium&#39;, feature=None):
+    &#34;&#34;&#34;
+        Merges the analysis summaries to word fields
+        Arguments --&gt; the df, the word field name and the feature if it is a performance analysis by feature
+    &#34;&#34;&#34;
+
+    if first_column_name == &#39;analysis_total&#39;:
+        total_name = &#39;Total&#39;
+        rows = [
+            {
+                first_column_name: &#39;Total&#39;,
+                &#39;analysis_exposure&#39;: &#39;{:,.0f}&#39;.format(df.loc[total_name, exposure_name]),
+                &#39;analysis_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, written_premium_name], currency),
+                &#39;analysis_gep&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, earned_premium_name], currency),
+                &#39;analysis_observed_capped_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;observed_capped_loss_ratio&#39;]),
+                &#39;analysis_observed_full_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;observed_full_loss_ratio&#39;]),
+                &#39;analysis_projected_capped_cost&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;projected_capped_cost&#39;], currency),
+                &#39;analysis_projected_capped_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;projected_capped_loss_ratio&#39;]),
+                &#39;analysis_projected_full_loss_ratio&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;projected_full_loss_ratio&#39;]),
+                &#39;analysis_necessary_rate_adjusment&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;necessary_rate_adjusment&#39;]),
+                &#39;analysis_frequency&#39;: &#39;{:.2%}&#39;.format(df.loc[total_name, &#39;frequency&#39;]),
+                &#39;analysis_average_cost&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;average_cost&#39;], currency),
+                &#39;analysis_pure_premium_excl_LL&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;pure_premium_excl_LL&#39;], currency),
+                &#39;analysis_pure_premium_incl_LL&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;pure_premium_incl_LL&#39;], currency),
+                &#39;analysis_proposed_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(df.loc[total_name, &#39;proposed_gwp_excl_taxes&#39;], currency)
+            }
+        ]
+
+        document.merge_rows(first_column_name, rows)
+
+    else:
+        new_df = deepcopy(df) if feature is None else df[feature]
+        loop_values = new_df.index
+        rows = [
+            {
+                first_column_name: str(value),
+                &#39;analysis_exposure&#39;: &#39;{:,.0f}&#39;.format(new_df.loc[value][exposure_name]),
+                &#39;analysis_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][written_premium_name], currency),
+                &#39;analysis_gep&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][earned_premium_name], currency),
+                &#39;analysis_projected_capped_loss_ratio&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;projected_capped_loss_ratio&#39;]),
+                &#39;analysis_projected_full_loss_ratio&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;projected_full_loss_ratio&#39;]),
+                &#39;analysis_necessary_rate_adjusment&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;necessary_rate_adjusment&#39;]),
+                &#39;analysis_frequency&#39;: &#39;{:.2%}&#39;.format(new_df.loc[value][&#39;frequency&#39;]),
+                &#39;analysis_average_cost&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][&#39;average_cost&#39;], currency),
+                &#39;analysis_pure_premium_excl_LL&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][&#39;pure_premium_excl_LL&#39;], currency),
+                &#39;analysis_proposed_gwp&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df.loc[value][&#39;proposed_gwp_excl_taxes&#39;], currency)
+            }
+
+            for value in loop_values
+        ]
+
+
+        if feature is None:
+            document.merge_rows(first_column_name, rows)
+
+        else:
+            index = list(df.keys()).index(feature)
+            merge_templates = [{
+                &#39;analysis_feature_&#39; + str(index+1): feature.replace(&#39;feature&#39;, &#39;&#39;).replace(&#39;_&#39;, &#39; &#39;).replace(&#39;bins&#39;, &#39;&#39;).capitalize(),
+                first_column_name: rows,
+            }]
+
+            document.merge_templates(merge_templates, separator=&#39;page_break&#39;)</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.reports.write_notes.merge_assumptions_fields"><code class="name flex">
+<span>def <span class="ident">merge_assumptions_fields</span></span>(<span>document, dict_figures=None, field_dict_index_name=None, field_dict_value_name=None, unique_figure=None, field_name_unique=None, style_format_dict='{:,.0f}', style_format_unique='{:.2%}')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def merge_assumptions_fields(document, dict_figures=None, field_dict_index_name=None, field_dict_value_name=None, unique_figure=None, field_name_unique=None, style_format_dict=&#39;{:,.0f}&#39;, style_format_unique=&#39;{:.2%}&#39;):
+
+    if dict_figures is not None and field_dict_index_name is not None and field_dict_value_name is not None:
+        rows = [{field_dict_index_name: str(key.year), field_dict_value_name: style_format_dict.format(dict_figures[key])} for key in dict_figures.keys()]
+        document.merge_rows(field_dict_index_name, rows)
+
+    if unique_figure is not None and field_name_unique is not None:
+        rows = [{field_name_unique: style_format_unique.format(unique_figure)}]
+        document.merge_rows(field_name_unique, rows)</code></pre>
+</details>
+</dd>
+<dt id="automate_insurance_pricing.reports.write_notes.merge_portfolio_fields"><code class="name flex">
+<span>def <span class="ident">merge_portfolio_fields</span></span>(<span>document, df, features, num_features_analysis, portfolio_num_features_description=None, termination_rates=None, written_premium_column_name='asif_written_premium_excl_taxes', currency='€')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Merges the portfolio summary figures to word fields</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def merge_portfolio_fields(document, df, features, num_features_analysis, portfolio_num_features_description=None, termination_rates=None, written_premium_column_name=&#39;asif_written_premium_excl_taxes&#39;, currency=&#39;€&#39;):
+    &#34;&#34;&#34; Merges the portfolio summary figures to word fields&#34;&#34;&#34;
+    
+    new_df = deepcopy(df)
+    new_features = [features] if isinstance(features, str) == True else features
+    rows_to_merge2 = None
+    
+    for index, feature in enumerate(features):
+
+        if portfolio_num_features_description is not None and (feature in num_features_analysis or feature.replace(&#39;_bins&#39;, &#39;&#39;) in num_features_analysis):
+            
+            if feature not in num_features_analysis:
+                # Variables binned have interval/category pandas style. It has to be treated               
+                unique_values = new_df[feature].unique().sort_values().astype(str)
+                new_df[feature] = new_df[feature].astype(str)  
+                
+                row1 = &#39;variable_value_&#39; + str(index+1)
+                rows_to_merge1 = [{
+                    row1: str(value),
+                    &#39;policies_number_by_variable&#39;: &#39;{:,.0f}&#39;.format(new_df[new_df[feature] == value].shape[0]),
+                    &#39;gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].sum(), currency),
+                    &#39;average_gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].mean(), currency)
+                } for value in unique_values]
+                
+                feature = feature.replace(&#39;_bins&#39;, &#39;&#39;)
+            
+            row2 = &#39;average_&#39; + str(index+1)
+            rows_to_merge2 = [{
+                row2: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;mean&#39;, feature]),
+                &#39;median&#39;: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;50%&#39;, feature]),
+                &#39;min&#39;: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;min&#39;, feature]),
+                &#39;max&#39;: &#39;{:,.0f}&#39;.format(portfolio_num_features_description.loc[&#39;max&#39;, feature])
+            }] 
+
+            
+        else:
+            row1 = &#39;variable_value_&#39; + str(index+1)                
+            unique_values = new_df[feature].unique()
+            
+            rows_to_merge1 = [{
+                row1: str(value),
+                &#39;policies_number_by_variable&#39;: &#39;{:,.0f}&#39;.format(new_df[new_df[feature] == value].shape[0]),
+                &#39;gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].sum(), currency),
+                &#39;average_gwp_by_variable&#39;: &#39;{0:,.0f} {1}&#39;.format(new_df[new_df[feature] == value][written_premium_column_name].mean(), currency)
+            } for value in unique_values]
+        
+        if rows_to_merge2 is None:
+            merge_templates = [{
+                &#39;feature_&#39; + str(index+1): feature.replace(&#39;feature&#39;, &#39;&#39;).replace(&#39;_&#39;, &#39; &#39;).capitalize(),
+                row1: rows_to_merge1,
+            }]
+        else:
+            merge_templates = [{
+                &#39;feature_&#39; + str(index+1): feature.replace(&#39;feature&#39;, &#39;&#39;).replace(&#39;_&#39;, &#39; &#39;).capitalize(),
+                row1: rows_to_merge1,
+                row2: rows_to_merge2
+            }] 
+            
+            rows_to_merge2 = None
+        
+        
+        document.merge_templates(merge_templates, separator=&#39;page_break&#39;) 
+    
+    if termination_rates is not None:
+        rows = [{&#39;termination_rate_occurrence_year&#39;: str(key), &#39;termination_rate&#39;: &#39;{:.1%}&#39;.format(termination_rates[key])} for key in termination_rates.keys()]
+        document.merge_rows(&#39;termination_rate_occurrence_year&#39;, rows)
+    
+    print(&#39;The merge has successfully worked. The word field names have been well merged with the portfolio composition figures.&#39;)   </code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="automate_insurance_pricing.reports" href="index.html">automate_insurance_pricing.reports</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="automate_insurance_pricing.reports.write_notes.merge_analysis_features_fields" href="#automate_insurance_pricing.reports.write_notes.merge_analysis_features_fields">merge_analysis_features_fields</a></code></li>
+<li><code><a title="automate_insurance_pricing.reports.write_notes.merge_analysis_fields" href="#automate_insurance_pricing.reports.write_notes.merge_analysis_fields">merge_analysis_fields</a></code></li>
+<li><code><a title="automate_insurance_pricing.reports.write_notes.merge_assumptions_fields" href="#automate_insurance_pricing.reports.write_notes.merge_assumptions_fields">merge_assumptions_fields</a></code></li>
+<li><code><a title="automate_insurance_pricing.reports.write_notes.merge_portfolio_fields" href="#automate_insurance_pricing.reports.write_notes.merge_portfolio_fields">merge_portfolio_fields</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
