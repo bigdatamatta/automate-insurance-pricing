@@ -41,10 +41,10 @@ from automate_insurance_pricing.standard_functions import *
 
 def resample_data(X_train, y_train, upsample=True, replace=True, proportion_neg_over_pos=0.3, random_state=42):
     &#34;&#34;&#34;
-        Resamples the data either duplicating negative values (i.e. the label in minority) or by removing positive values, but risk of information loss
-        Arguments --&gt; the features, the predicted variable, a replace indicating if sampled data overwrites the current data,
-                    the proportion of negative values over the positive value,
-                    the seed to reproduce the exact same results
+        Resamples the data either duplicating negative values (i.e. the label in minority) or by removing positive values \n \
+        Arguments --&gt; the features, the predicted variable, a replace boolean indicating if sampled data overwrites the current data, \n \
+            the proportion of negative values over the positive value, \n \
+            the seed to reproduce the exact same results \n \
         Returns --&gt; the resampled data
     &#34;&#34;&#34;
 
@@ -65,21 +65,15 @@ def resample_data(X_train, y_train, upsample=True, replace=True, proportion_neg_
 
 
 
-def create_year_month(row, date_to_use):
-    year = str(row[date_to_use].year)
-    month_int = row[date_to_use].month
-    month = str(month_int) if month_int &gt; 9 else &#39;0&#39; + str(month_int)
-    return year + &#39;-&#39; + month
-
-
-
-def create_bins(df_portfolio, cut_func=&#39;pd.cut&#39;, column_to_use=None, bins=5, df_claims=None, bins_labels=None, right=False, duplicates=&#39;raise&#39;):
+def create_bins(df_portfolio, cut_func=&#39;pd.cut&#39;, column_to_use=None, df_claims=None, bins=5, bins_labels=None, right=False, duplicates=&#39;raise&#39;):
 
     &#34;&#34;&#34;
-        Gathers feature values within bins
-        Arguments --&gt; the df, the function to split in bucket, the column to reduce into bins,
-                    the name of the second df where to split the variable in buckets, the bins we want and their names
-        Returns --&gt; Nothing, it directly changes the df arguments
+        Bucketizes features values \n \
+        Arguments --&gt; the dataframe, the function to split in bucket, the column to bucketize, \n \
+            the second dataframe we want to bucketize with the same bins found for the first dataframe (for instance, if you work on both portfolio and claims data), \n \
+            the number of bins we want and their names, a boolean indicating if the bins are inclusive on the right \n \
+            a duplicates params (either drop or raise) indicating what to do if non-unique bins are created (might happen for example for claims data as most of amount values will be 0) \n \ 
+        Returns --&gt; a dataframe column with the buckets \n \
     &#34;&#34;&#34;
 
     portfolio_new_column = eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, right=right, duplicates=duplicates) if cut_func == &#39;pd.cut&#39; else eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, duplicates=duplicates)
@@ -101,10 +95,10 @@ def create_bins(df_portfolio, cut_func=&#39;pd.cut&#39;, column_to_use=None, bin
 
 def derive_policy_totals(row, start_business_year, extraction_year, column_to_use):
     &#34;&#34;&#34;
-        Sums the earned amounts (premium, commission, etc.) in a same row
-        Arguments --&gt; the df row, the start / end year of the business production
-                        and the column for which we calculate the sum
-        Returns --&gt; the total earned amount for a specific row (most time the annual contract earned amount)
+        Sums the earned amounts (premium, commission, etc.) in a same row \n \
+        Arguments --&gt; the dataframe row, the start / end year of the business production \n \
+                        and the column for which we calculate the sum \n \
+        Returns --&gt; the total earned amount for a specific row (most time the annual contract earned amount) \n \
     &#34;&#34;&#34;
 
     total_sum = 0
@@ -118,12 +112,12 @@ def derive_policy_totals(row, start_business_year, extraction_year, column_to_us
 
 def derive_yearly_amounts(df, start_business_year, extraction_date, contract_start_date_column_name, contract_end_date=&#39;actual_contract_end_date&#39;, row_per_each_contract_year=True, add_one_day=False, written_premium_column_name=&#39;asif_written_premium_excl_taxes&#39;, number_paid_premium_column_name=&#39;written_multiplier&#39;):
     &#34;&#34;&#34;
-        Derives the earned amounts (premium, commission, etc.) for each occurrence year
-        Arguments --&gt; the df row, the business start year, the data extraction date, the contract start and end columns names
-                    a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
-                    a flag indicating if a day must be added to the end date to derive the dates differences,
-                    the columns names to use for premium and for the number of times premiums was paid 
-        Returns --&gt; a new row with the columns created
+        Derives the earned amounts (premium, commission, etc.) for each occurrence year \n \
+        Arguments --&gt; the dataframe row, the business start year, the data extraction date, the contract start and end columns names \n \
+                    a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment, \n \
+                    a flag indicating if a day must be added to the end date to derive the dates differences, \n \
+                    the columns names to use for premium and for the number of times premiums was paid \n \
+        Returns --&gt; the modified dataframe with the amounts by occurrence year 
     &#34;&#34;&#34;
 
     df_copy = deepcopy(df)
@@ -169,10 +163,11 @@ def derive_yearly_amounts(df, start_business_year, extraction_date, contract_sta
 
 def derive_yearly_amount(row, year, extraction_date, contract_start_date_column_name, written_premium_column_name, contract_end_date, number_paid_premium_column_name):
     &#34;&#34;&#34;
-        Derives the written premium per year if the data has a single row per contract (i.e. the premium reflects the full contract duration) 
-        Arguments --&gt; the df row, the year on which we want the premium value, the extraction year
-                    the written premium column name on which we perform calculations 
-        Returns --&gt; the written premium per year
+        Derives the written premium per year if the data has a single row per contract (i.e. the premium reflects the full contract duration) \n \ 
+        Arguments --&gt; the dataframe row, the year on which we want the premium value, the extraction date \n \
+            the contract start date, the written premium column name on which we perform calculations, the contract end date \n \ 
+            the number of yearly payments (i.e. the number of contract years an insured started, even if he didn&#39;t make it till the end) \n \
+        Returns --&gt; the written premium per year \n \
     &#34;&#34;&#34;
 
     multiplier = row[number_paid_premium_column_name]
@@ -225,9 +220,9 @@ def derive_yearly_amount(row, year, extraction_date, contract_start_date_column_
 
 def derive_annual_exposure(row, year, extraction_date, contract_start_date_column_name, contract_end_date, add_one_day):
     &#34;&#34;&#34;
-        Derives the annual exposure
-        Arguments --&gt; the df row, the year in which we calculate the exposure, the data extraction date, the contract start and end date columns names
-            a flag indicating if a day must be added to the end date to derive the dates differences
+        Derives the annual exposure \n \
+        Arguments --&gt; the dataframe row, the year in which we calculate the exposure, the data extraction date, the contract start and end date columns names \n \
+            a flag indicating if a day must be added to the end date to derive the dates differences \n \
         Returns --&gt; the exposure in years
     &#34;&#34;&#34;
 
@@ -242,13 +237,14 @@ def derive_annual_exposure(row, year, extraction_date, contract_start_date_colum
 
 
 
-def inflate_amounts(df, extraction_year, contract_start_date_column_name, inflation_rate, portfolio=True, row_per_each_contract_year=True, latest_premium=True, number_paid_premium_column_name=&#39;written_multiplier&#39;, occurrence_date_column_name=&#39;occurrence_date&#39;, column_to_use=&#39;written_premium_excl_taxes&#39;, min_value=None):
+def inflate_amounts(df, extraction_year, contract_start_date_column_name, inflation_rate, portfolio=True, row_per_each_contract_year=True, latest_premium=True, number_paid_premium_column_name=&#39;written_multiplier&#39;, occurrence_date_column_name=&#39;occurrence_date&#39;, column_to_use=&#39;written_premium_excl_taxes&#39;, only_positive=None):
     &#34;&#34;&#34;
-        Derives as-if amounts due to inflation rate
-        Arguments --&gt; the df row, the data extraction year, the contracts dates columns name, the average inflation rate 
-                a flag indicating if the inflation is on the portfolio side or not, if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
-                if the premium are the latest one or at inception (in the case of data with a row per full contract duration), the number of premiums paid at inception, the claim occurrence date column name
-                which column to inflate 
+        Derives as-if amounts due to inflation rate \n \
+        Arguments --&gt; the dataframe row, the data extraction year, the contracts dates columns name, the average inflation rate \n \ 
+            a flag indicating if we are inflating on the portfolio data or not, if the portfolio has a unique row for the full policy contract or a row per yearly amendment, \n \
+            if the premiums are the latest one or at inception (in the case of data with a row per full contract duration), the number of premiums paid at inception (i.e. the number of new yearly contracts), the claim occurrence date column name \n \
+            the claim occurrence date column name (if the inflation has to be made on claims), the column to inflate name \n \ 
+            a boolean indicating if values must be positive (e.g. setting to 0 claims that are lower than 0)
         Returns --&gt; An inflated amount
     &#34;&#34;&#34;
 
@@ -267,7 +263,7 @@ def inflate_amounts(df, extraction_year, contract_start_date_column_name, inflat
 
     inflated_values = df[column_to_use] * (1 + inflation_rate)**(extraction_year - start_years - latest_premium_adjustment)
 
-    if min_value is not None:
+    if only_positive is not None:
         inflated_values = np.where(inflated_values &lt; 0, 0, inflated_values)
 
     return inflated_values
@@ -276,10 +272,12 @@ def inflate_amounts(df, extraction_year, contract_start_date_column_name, inflat
 
 def derive_premium_multiplier(df, contract_start_date_column_name, row_per_each_contract_year=True, actual_contract_length_column_name=&#39;actual_contract_length&#39;, actual_contract_end_date_column_name=&#39;actual_contract_end_date&#39;, annual_premium=True):
     &#34;&#34;&#34;
-        Derives the total premium for the whole coverage period. One use case will be especially for db with a single row by policy
-        with the latest annual written premium even though the policyholder remained several years in the portfolio
-        Arguments --&gt; the df row, the data main contract date (if it&#39;s at effective or inception year), a boolean indicating if only the annual premium is indicated,
-                    a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment
+        Derives the total premium for the whole coverage period. One use case will be especially for databases with a single row by policy \n \
+        with the latest annual written premium even though the policyholder remained several years in the portfolio \n \
+        Arguments --&gt; the dataframe row, the contract start date name, \n \
+            a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment \n \
+            the column name indicating the contract total length and the one indicating the contract end date \n \
+            a boolean indicating if only the annual premium is indicated, \n \
         Returns --&gt; The total premium depending on the contract length
     &#34;&#34;&#34; 
 
@@ -306,10 +304,8 @@ def derive_premium_multiplier(df, contract_start_date_column_name, row_per_each_
 
 def change_value(df, columns=None, current_values=None, new_values=None):
     &#34;&#34;&#34;
-        Updates df columns with new values
-        Arguments --&gt; the df to work on, the columns, their respective current values to change and the new values to replace them with
-                        if column is a string or a list of length one, then the current and new values are associated to
-                        this unique column
+        Updates the dataframe columns with new values \n \
+        Arguments --&gt; the dataframe to work on, the columns to modify (either a list of a string), their respective current values (either a list or a string) to change and the new values (either a list or a string) to replace them with \n \
         Returns --&gt; a tuple of pandas series if several columns have to be changed, otherwise a pandas serie
     &#34;&#34;&#34;
 
@@ -346,10 +342,9 @@ def change_value(df, columns=None, current_values=None, new_values=None):
 
 def impute_mean_mode(df, columns):
     &#34;&#34;&#34;
-        Works on the dataframe columns defined in the args and returns a new df with mean and mode imputing
-        for numerical/categorical variables
-        Arguments --&gt; df and columns to impute
-        Returns --&gt; df with missing values filled by mode or mean
+        Imputes numerical columns with their mean values and categorical with their mode values \n \ 
+        Arguments --&gt; the dataframe, its columns to impute \n \
+        Returns --&gt; the modified dataframe
     &#34;&#34;&#34;
 
     columns_to_fill = {}
@@ -368,36 +363,24 @@ def impute_mean_mode(df, columns):
 
 
 def check_create_datetime(df, column, format=&#39;%d/%m/%Y&#39;):
-    &#34;&#34;&#34;Checks if the column is a datetime or if it needs to be converted&#34;&#34;&#34;
+    &#34;&#34;&#34; Checks if the column is a datetime or if it needs to be converted \n \
+        Arguments --&gt; The dataframe, the column to check, and the date format of this column \n \
+        Returns --&gt; The column in a datetime format
+    &#34;&#34;&#34;
 
     try:
         check = df[column].dt.year
         return df[column]
     except:
-        return convert_to_datetime(df, column, format=format)
-
-    
-
-def convert_to_datetime(df, columns=None, format=&#39;%d/%m/%Y&#39;):
-    return df[columns].apply(pd.to_datetime, format=format)
-
-
-
-def derive_age(df, columns):
-    &#34;&#34;&#34;
-        Derives years between specified date columns and today
-        Returns --&gt; series values
-    &#34;&#34;&#34;
-
-    today = datetime.today()
-    return df[columns].apply(lambda x: today.year - x.dt.year - ((today.month &lt; x.dt.month) &amp; (today.day &lt; x.dt.day)))
+        return df[column].apply(pd.to_datetime, format=format)
 
 
 
 def derive_years_from_two_dates(df, start_date, end_date, year_number_of_days=365, extraction_date=None):
     &#34;&#34;&#34;
-        Derives days between two dates
-        Arguments --&gt; columns names for start and for end dates
+        Derives the number of days days between two dates \n \
+        Arguments --&gt; the dataframe, the columns names for start and for end dates \n \
+            the number of days in a year to consider, the extraction date \n \
         Returns --&gt; difference in days between the two dates
     &#34;&#34;&#34;
 
@@ -406,29 +389,7 @@ def derive_years_from_two_dates(df, start_date, end_date, year_number_of_days=36
     else:
         contract_length = df.apply(lambda x: (x[end_date] + timedelta(1) - x[start_date]).days / year_number_of_days, axis=1)
 
-    return contract_length
-
-
-
-def create_columns(df, columns):
-    &#34;&#34;&#34;
-        Creates new columns - for the ones on which calculations are performed - if they are not yet in the df or if they have only null values
-        Arguments --&gt; the list of columns that are affected by calculations (claims costs, premiums etc.)
-        Returns --&gt; a new df with the new columns added
-    &#34;&#34;&#34;
-    new_df = deepcopy(df)
-    new_df_columns = new_df.columns
-
-    for column in columns:
-        if column not in new_df_columns or new_df[column].isnull().all() == True:
-            new_df[column] = 0
-
-    return new_df
-
-
-
-def rename_columns(df, names_mapping):
-    return df.rename(columns=names_mapping)</code></pre>
+    return contract_length</code></pre>
 </details>
 </section>
 <section>
@@ -442,10 +403,8 @@ def rename_columns(df, names_mapping):
 <span>def <span class="ident">change_value</span></span>(<span>df, columns=None, current_values=None, new_values=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Updates df columns with new values
-Arguments &ndash;&gt; the df to work on, the columns, their respective current values to change and the new values to replace them with
-if column is a string or a list of length one, then the current and new values are associated to
-this unique column
+<div class="desc"><p>Updates the dataframe columns with new values
+Arguments &ndash;&gt; the dataframe to work on, the columns to modify (either a list of a string), their respective current values (either a list or a string) to change and the new values (either a list or a string) to replace them with
 Returns &ndash;&gt; a tuple of pandas series if several columns have to be changed, otherwise a pandas serie</p></div>
 <details class="source">
 <summary>
@@ -453,10 +412,8 @@ Returns &ndash;&gt; a tuple of pandas series if several columns have to be chang
 </summary>
 <pre><code class="python">def change_value(df, columns=None, current_values=None, new_values=None):
     &#34;&#34;&#34;
-        Updates df columns with new values
-        Arguments --&gt; the df to work on, the columns, their respective current values to change and the new values to replace them with
-                        if column is a string or a list of length one, then the current and new values are associated to
-                        this unique column
+        Updates the dataframe columns with new values \n \
+        Arguments --&gt; the dataframe to work on, the columns to modify (either a list of a string), their respective current values (either a list or a string) to change and the new values (either a list or a string) to replace them with \n \
         Returns --&gt; a tuple of pandas series if several columns have to be changed, otherwise a pandas serie
     &#34;&#34;&#34;
 
@@ -494,53 +451,50 @@ Returns &ndash;&gt; a tuple of pandas series if several columns have to be chang
 <span>def <span class="ident">check_create_datetime</span></span>(<span>df, column, format='%d/%m/%Y')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Checks if the column is a datetime or if it needs to be converted</p></div>
+<div class="desc"><p>Checks if the column is a datetime or if it needs to be converted
+Arguments &ndash;&gt; The dataframe, the column to check, and the date format of this column
+Returns &ndash;&gt; The column in a datetime format</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def check_create_datetime(df, column, format=&#39;%d/%m/%Y&#39;):
-    &#34;&#34;&#34;Checks if the column is a datetime or if it needs to be converted&#34;&#34;&#34;
+    &#34;&#34;&#34; Checks if the column is a datetime or if it needs to be converted \n \
+        Arguments --&gt; The dataframe, the column to check, and the date format of this column \n \
+        Returns --&gt; The column in a datetime format
+    &#34;&#34;&#34;
 
     try:
         check = df[column].dt.year
         return df[column]
     except:
-        return convert_to_datetime(df, column, format=format)</code></pre>
-</details>
-</dd>
-<dt id="automate_insurance_pricing.preprocessing.create_functions.convert_to_datetime"><code class="name flex">
-<span>def <span class="ident">convert_to_datetime</span></span>(<span>df, columns=None, format='%d/%m/%Y')</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def convert_to_datetime(df, columns=None, format=&#39;%d/%m/%Y&#39;):
-    return df[columns].apply(pd.to_datetime, format=format)</code></pre>
+        return df[column].apply(pd.to_datetime, format=format)</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.create_functions.create_bins"><code class="name flex">
-<span>def <span class="ident">create_bins</span></span>(<span>df_portfolio, cut_func='pd.cut', column_to_use=None, bins=5, df_claims=None, bins_labels=None, right=False, duplicates='raise')</span>
+<span>def <span class="ident">create_bins</span></span>(<span>df_portfolio, cut_func='pd.cut', column_to_use=None, df_claims=None, bins=5, bins_labels=None, right=False, duplicates='raise')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gathers feature values within bins
-Arguments &ndash;&gt; the df, the function to split in bucket, the column to reduce into bins,
-the name of the second df where to split the variable in buckets, the bins we want and their names
-Returns &ndash;&gt; Nothing, it directly changes the df arguments</p></div>
+<div class="desc"><p>Bucketizes features values
+Arguments &ndash;&gt; the dataframe, the function to split in bucket, the column to bucketize,
+the second dataframe we want to bucketize with the same bins found for the first dataframe (for instance, if you work on both portfolio and claims data),
+the number of bins we want and their names, a boolean indicating if the bins are inclusive on the right
+a duplicates params (either drop or raise) indicating what to do if non-unique bins are created (might happen for example for claims data as most of amount values will be 0)
+\
+Returns &ndash;&gt; a dataframe column with the buckets</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_bins(df_portfolio, cut_func=&#39;pd.cut&#39;, column_to_use=None, bins=5, df_claims=None, bins_labels=None, right=False, duplicates=&#39;raise&#39;):
+<pre><code class="python">def create_bins(df_portfolio, cut_func=&#39;pd.cut&#39;, column_to_use=None, df_claims=None, bins=5, bins_labels=None, right=False, duplicates=&#39;raise&#39;):
 
     &#34;&#34;&#34;
-        Gathers feature values within bins
-        Arguments --&gt; the df, the function to split in bucket, the column to reduce into bins,
-                    the name of the second df where to split the variable in buckets, the bins we want and their names
-        Returns --&gt; Nothing, it directly changes the df arguments
+        Bucketizes features values \n \
+        Arguments --&gt; the dataframe, the function to split in bucket, the column to bucketize, \n \
+            the second dataframe we want to bucketize with the same bins found for the first dataframe (for instance, if you work on both portfolio and claims data), \n \
+            the number of bins we want and their names, a boolean indicating if the bins are inclusive on the right \n \
+            a duplicates params (either drop or raise) indicating what to do if non-unique bins are created (might happen for example for claims data as most of amount values will be 0) \n \ 
+        Returns --&gt; a dataframe column with the buckets \n \
     &#34;&#34;&#34;
 
     portfolio_new_column = eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, right=right, duplicates=duplicates) if cut_func == &#39;pd.cut&#39; else eval(cut_func)(df_portfolio[column_to_use], bins, labels=bins_labels, duplicates=duplicates)
@@ -561,75 +515,12 @@ Returns &ndash;&gt; Nothing, it directly changes the df arguments</p></div>
     return portfolio_new_column</code></pre>
 </details>
 </dd>
-<dt id="automate_insurance_pricing.preprocessing.create_functions.create_columns"><code class="name flex">
-<span>def <span class="ident">create_columns</span></span>(<span>df, columns)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Creates new columns - for the ones on which calculations are performed - if they are not yet in the df or if they have only null values
-Arguments &ndash;&gt; the list of columns that are affected by calculations (claims costs, premiums etc.)
-Returns &ndash;&gt; a new df with the new columns added</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def create_columns(df, columns):
-    &#34;&#34;&#34;
-        Creates new columns - for the ones on which calculations are performed - if they are not yet in the df or if they have only null values
-        Arguments --&gt; the list of columns that are affected by calculations (claims costs, premiums etc.)
-        Returns --&gt; a new df with the new columns added
-    &#34;&#34;&#34;
-    new_df = deepcopy(df)
-    new_df_columns = new_df.columns
-
-    for column in columns:
-        if column not in new_df_columns or new_df[column].isnull().all() == True:
-            new_df[column] = 0
-
-    return new_df</code></pre>
-</details>
-</dd>
-<dt id="automate_insurance_pricing.preprocessing.create_functions.create_year_month"><code class="name flex">
-<span>def <span class="ident">create_year_month</span></span>(<span>row, date_to_use)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def create_year_month(row, date_to_use):
-    year = str(row[date_to_use].year)
-    month_int = row[date_to_use].month
-    month = str(month_int) if month_int &gt; 9 else &#39;0&#39; + str(month_int)
-    return year + &#39;-&#39; + month</code></pre>
-</details>
-</dd>
-<dt id="automate_insurance_pricing.preprocessing.create_functions.derive_age"><code class="name flex">
-<span>def <span class="ident">derive_age</span></span>(<span>df, columns)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Derives years between specified date columns and today
-Returns &ndash;&gt; series values</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def derive_age(df, columns):
-    &#34;&#34;&#34;
-        Derives years between specified date columns and today
-        Returns --&gt; series values
-    &#34;&#34;&#34;
-
-    today = datetime.today()
-    return df[columns].apply(lambda x: today.year - x.dt.year - ((today.month &lt; x.dt.month) &amp; (today.day &lt; x.dt.day)))</code></pre>
-</details>
-</dd>
 <dt id="automate_insurance_pricing.preprocessing.create_functions.derive_annual_exposure"><code class="name flex">
 <span>def <span class="ident">derive_annual_exposure</span></span>(<span>row, year, extraction_date, contract_start_date_column_name, contract_end_date, add_one_day)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Derives the annual exposure
-Arguments &ndash;&gt; the df row, the year in which we calculate the exposure, the data extraction date, the contract start and end date columns names
+Arguments &ndash;&gt; the dataframe row, the year in which we calculate the exposure, the data extraction date, the contract start and end date columns names
 a flag indicating if a day must be added to the end date to derive the dates differences
 Returns &ndash;&gt; the exposure in years</p></div>
 <details class="source">
@@ -638,9 +529,9 @@ Returns &ndash;&gt; the exposure in years</p></div>
 </summary>
 <pre><code class="python">def derive_annual_exposure(row, year, extraction_date, contract_start_date_column_name, contract_end_date, add_one_day):
     &#34;&#34;&#34;
-        Derives the annual exposure
-        Arguments --&gt; the df row, the year in which we calculate the exposure, the data extraction date, the contract start and end date columns names
-            a flag indicating if a day must be added to the end date to derive the dates differences
+        Derives the annual exposure \n \
+        Arguments --&gt; the dataframe row, the year in which we calculate the exposure, the data extraction date, the contract start and end date columns names \n \
+            a flag indicating if a day must be added to the end date to derive the dates differences \n \
         Returns --&gt; the exposure in years
     &#34;&#34;&#34;
 
@@ -659,7 +550,7 @@ Returns &ndash;&gt; the exposure in years</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Sums the earned amounts (premium, commission, etc.) in a same row
-Arguments &ndash;&gt; the df row, the start / end year of the business production
+Arguments &ndash;&gt; the dataframe row, the start / end year of the business production
 and the column for which we calculate the sum
 Returns &ndash;&gt; the total earned amount for a specific row (most time the annual contract earned amount)</p></div>
 <details class="source">
@@ -668,10 +559,10 @@ Returns &ndash;&gt; the total earned amount for a specific row (most time the an
 </summary>
 <pre><code class="python">def derive_policy_totals(row, start_business_year, extraction_year, column_to_use):
     &#34;&#34;&#34;
-        Sums the earned amounts (premium, commission, etc.) in a same row
-        Arguments --&gt; the df row, the start / end year of the business production
-                        and the column for which we calculate the sum
-        Returns --&gt; the total earned amount for a specific row (most time the annual contract earned amount)
+        Sums the earned amounts (premium, commission, etc.) in a same row \n \
+        Arguments --&gt; the dataframe row, the start / end year of the business production \n \
+                        and the column for which we calculate the sum \n \
+        Returns --&gt; the total earned amount for a specific row (most time the annual contract earned amount) \n \
     &#34;&#34;&#34;
 
     total_sum = 0
@@ -686,10 +577,12 @@ Returns &ndash;&gt; the total earned amount for a specific row (most time the an
 <span>def <span class="ident">derive_premium_multiplier</span></span>(<span>df, contract_start_date_column_name, row_per_each_contract_year=True, actual_contract_length_column_name='actual_contract_length', actual_contract_end_date_column_name='actual_contract_end_date', annual_premium=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Derives the total premium for the whole coverage period. One use case will be especially for db with a single row by policy
+<div class="desc"><p>Derives the total premium for the whole coverage period. One use case will be especially for databases with a single row by policy
 with the latest annual written premium even though the policyholder remained several years in the portfolio
-Arguments &ndash;&gt; the df row, the data main contract date (if it's at effective or inception year), a boolean indicating if only the annual premium is indicated,
+Arguments &ndash;&gt; the dataframe row, the contract start date name,
 a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment
+the column name indicating the contract total length and the one indicating the contract end date
+a boolean indicating if only the annual premium is indicated,
 Returns &ndash;&gt; The total premium depending on the contract length</p></div>
 <details class="source">
 <summary>
@@ -697,10 +590,12 @@ Returns &ndash;&gt; The total premium depending on the contract length</p></div>
 </summary>
 <pre><code class="python">def derive_premium_multiplier(df, contract_start_date_column_name, row_per_each_contract_year=True, actual_contract_length_column_name=&#39;actual_contract_length&#39;, actual_contract_end_date_column_name=&#39;actual_contract_end_date&#39;, annual_premium=True):
     &#34;&#34;&#34;
-        Derives the total premium for the whole coverage period. One use case will be especially for db with a single row by policy
-        with the latest annual written premium even though the policyholder remained several years in the portfolio
-        Arguments --&gt; the df row, the data main contract date (if it&#39;s at effective or inception year), a boolean indicating if only the annual premium is indicated,
-                    a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment
+        Derives the total premium for the whole coverage period. One use case will be especially for databases with a single row by policy \n \
+        with the latest annual written premium even though the policyholder remained several years in the portfolio \n \
+        Arguments --&gt; the dataframe row, the contract start date name, \n \
+            a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment \n \
+            the column name indicating the contract total length and the one indicating the contract end date \n \
+            a boolean indicating if only the annual premium is indicated, \n \
         Returns --&gt; The total premium depending on the contract length
     &#34;&#34;&#34; 
 
@@ -729,8 +624,11 @@ Returns &ndash;&gt; The total premium depending on the contract length</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Derives the written premium per year if the data has a single row per contract (i.e. the premium reflects the full contract duration)
-Arguments &ndash;&gt; the df row, the year on which we want the premium value, the extraction year
-the written premium column name on which we perform calculations
+\
+Arguments &ndash;&gt; the dataframe row, the year on which we want the premium value, the extraction date
+the contract start date, the written premium column name on which we perform calculations, the contract end date
+\
+the number of yearly payments (i.e. the number of contract years an insured started, even if he didn't make it till the end)
 Returns &ndash;&gt; the written premium per year</p></div>
 <details class="source">
 <summary>
@@ -738,10 +636,11 @@ Returns &ndash;&gt; the written premium per year</p></div>
 </summary>
 <pre><code class="python">def derive_yearly_amount(row, year, extraction_date, contract_start_date_column_name, written_premium_column_name, contract_end_date, number_paid_premium_column_name):
     &#34;&#34;&#34;
-        Derives the written premium per year if the data has a single row per contract (i.e. the premium reflects the full contract duration) 
-        Arguments --&gt; the df row, the year on which we want the premium value, the extraction year
-                    the written premium column name on which we perform calculations 
-        Returns --&gt; the written premium per year
+        Derives the written premium per year if the data has a single row per contract (i.e. the premium reflects the full contract duration) \n \ 
+        Arguments --&gt; the dataframe row, the year on which we want the premium value, the extraction date \n \
+            the contract start date, the written premium column name on which we perform calculations, the contract end date \n \ 
+            the number of yearly payments (i.e. the number of contract years an insured started, even if he didn&#39;t make it till the end) \n \
+        Returns --&gt; the written premium per year \n \
     &#34;&#34;&#34;
 
     multiplier = row[number_paid_premium_column_name]
@@ -768,23 +667,23 @@ Returns &ndash;&gt; the written premium per year</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Derives the earned amounts (premium, commission, etc.) for each occurrence year
-Arguments &ndash;&gt; the df row, the business start year, the data extraction date, the contract start and end columns names
+Arguments &ndash;&gt; the dataframe row, the business start year, the data extraction date, the contract start and end columns names
 a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
 a flag indicating if a day must be added to the end date to derive the dates differences,
 the columns names to use for premium and for the number of times premiums was paid
-Returns &ndash;&gt; a new row with the columns created</p></div>
+Returns &ndash;&gt; the modified dataframe with the amounts by occurrence year</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def derive_yearly_amounts(df, start_business_year, extraction_date, contract_start_date_column_name, contract_end_date=&#39;actual_contract_end_date&#39;, row_per_each_contract_year=True, add_one_day=False, written_premium_column_name=&#39;asif_written_premium_excl_taxes&#39;, number_paid_premium_column_name=&#39;written_multiplier&#39;):
     &#34;&#34;&#34;
-        Derives the earned amounts (premium, commission, etc.) for each occurrence year
-        Arguments --&gt; the df row, the business start year, the data extraction date, the contract start and end columns names
-                    a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
-                    a flag indicating if a day must be added to the end date to derive the dates differences,
-                    the columns names to use for premium and for the number of times premiums was paid 
-        Returns --&gt; a new row with the columns created
+        Derives the earned amounts (premium, commission, etc.) for each occurrence year \n \
+        Arguments --&gt; the dataframe row, the business start year, the data extraction date, the contract start and end columns names \n \
+                    a flag indicating if the portfolio has a unique row for the full policy contract or a row per yearly amendment, \n \
+                    a flag indicating if a day must be added to the end date to derive the dates differences, \n \
+                    the columns names to use for premium and for the number of times premiums was paid \n \
+        Returns --&gt; the modified dataframe with the amounts by occurrence year 
     &#34;&#34;&#34;
 
     df_copy = deepcopy(df)
@@ -808,8 +707,9 @@ Returns &ndash;&gt; a new row with the columns created</p></div>
 <span>def <span class="ident">derive_years_from_two_dates</span></span>(<span>df, start_date, end_date, year_number_of_days=365, extraction_date=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Derives days between two dates
-Arguments &ndash;&gt; columns names for start and for end dates
+<div class="desc"><p>Derives the number of days days between two dates
+Arguments &ndash;&gt; the dataframe, the columns names for start and for end dates
+the number of days in a year to consider, the extraction date
 Returns &ndash;&gt; difference in days between the two dates</p></div>
 <details class="source">
 <summary>
@@ -817,8 +717,9 @@ Returns &ndash;&gt; difference in days between the two dates</p></div>
 </summary>
 <pre><code class="python">def derive_years_from_two_dates(df, start_date, end_date, year_number_of_days=365, extraction_date=None):
     &#34;&#34;&#34;
-        Derives days between two dates
-        Arguments --&gt; columns names for start and for end dates
+        Derives the number of days days between two dates \n \
+        Arguments --&gt; the dataframe, the columns names for start and for end dates \n \
+            the number of days in a year to consider, the extraction date \n \
         Returns --&gt; difference in days between the two dates
     &#34;&#34;&#34;
 
@@ -834,20 +735,19 @@ Returns &ndash;&gt; difference in days between the two dates</p></div>
 <span>def <span class="ident">impute_mean_mode</span></span>(<span>df, columns)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Works on the dataframe columns defined in the args and returns a new df with mean and mode imputing
-for numerical/categorical variables
-Arguments &ndash;&gt; df and columns to impute
-Returns &ndash;&gt; df with missing values filled by mode or mean</p></div>
+<div class="desc"><p>Imputes numerical columns with their mean values and categorical with their mode values
+\
+Arguments &ndash;&gt; the dataframe, its columns to impute
+Returns &ndash;&gt; the modified dataframe</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def impute_mean_mode(df, columns):
     &#34;&#34;&#34;
-        Works on the dataframe columns defined in the args and returns a new df with mean and mode imputing
-        for numerical/categorical variables
-        Arguments --&gt; df and columns to impute
-        Returns --&gt; df with missing values filled by mode or mean
+        Imputes numerical columns with their mean values and categorical with their mode values \n \ 
+        Arguments --&gt; the dataframe, its columns to impute \n \
+        Returns --&gt; the modified dataframe
     &#34;&#34;&#34;
 
     columns_to_fill = {}
@@ -865,26 +765,30 @@ Returns &ndash;&gt; df with missing values filled by mode or mean</p></div>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.create_functions.inflate_amounts"><code class="name flex">
-<span>def <span class="ident">inflate_amounts</span></span>(<span>df, extraction_year, contract_start_date_column_name, inflation_rate, portfolio=True, row_per_each_contract_year=True, latest_premium=True, number_paid_premium_column_name='written_multiplier', occurrence_date_column_name='occurrence_date', column_to_use='written_premium_excl_taxes', min_value=None)</span>
+<span>def <span class="ident">inflate_amounts</span></span>(<span>df, extraction_year, contract_start_date_column_name, inflation_rate, portfolio=True, row_per_each_contract_year=True, latest_premium=True, number_paid_premium_column_name='written_multiplier', occurrence_date_column_name='occurrence_date', column_to_use='written_premium_excl_taxes', only_positive=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Derives as-if amounts due to inflation rate
-Arguments &ndash;&gt; the df row, the data extraction year, the contracts dates columns name, the average inflation rate
-a flag indicating if the inflation is on the portfolio side or not, if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
-if the premium are the latest one or at inception (in the case of data with a row per full contract duration), the number of premiums paid at inception, the claim occurrence date column name
-which column to inflate
+Arguments &ndash;&gt; the dataframe row, the data extraction year, the contracts dates columns name, the average inflation rate
+\
+a flag indicating if we are inflating on the portfolio data or not, if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
+if the premiums are the latest one or at inception (in the case of data with a row per full contract duration), the number of premiums paid at inception (i.e. the number of new yearly contracts), the claim occurrence date column name
+the claim occurrence date column name (if the inflation has to be made on claims), the column to inflate name
+\
+a boolean indicating if values must be positive (e.g. setting to 0 claims that are lower than 0)
 Returns &ndash;&gt; An inflated amount</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def inflate_amounts(df, extraction_year, contract_start_date_column_name, inflation_rate, portfolio=True, row_per_each_contract_year=True, latest_premium=True, number_paid_premium_column_name=&#39;written_multiplier&#39;, occurrence_date_column_name=&#39;occurrence_date&#39;, column_to_use=&#39;written_premium_excl_taxes&#39;, min_value=None):
+<pre><code class="python">def inflate_amounts(df, extraction_year, contract_start_date_column_name, inflation_rate, portfolio=True, row_per_each_contract_year=True, latest_premium=True, number_paid_premium_column_name=&#39;written_multiplier&#39;, occurrence_date_column_name=&#39;occurrence_date&#39;, column_to_use=&#39;written_premium_excl_taxes&#39;, only_positive=None):
     &#34;&#34;&#34;
-        Derives as-if amounts due to inflation rate
-        Arguments --&gt; the df row, the data extraction year, the contracts dates columns name, the average inflation rate 
-                a flag indicating if the inflation is on the portfolio side or not, if the portfolio has a unique row for the full policy contract or a row per yearly amendment,
-                if the premium are the latest one or at inception (in the case of data with a row per full contract duration), the number of premiums paid at inception, the claim occurrence date column name
-                which column to inflate 
+        Derives as-if amounts due to inflation rate \n \
+        Arguments --&gt; the dataframe row, the data extraction year, the contracts dates columns name, the average inflation rate \n \ 
+            a flag indicating if we are inflating on the portfolio data or not, if the portfolio has a unique row for the full policy contract or a row per yearly amendment, \n \
+            if the premiums are the latest one or at inception (in the case of data with a row per full contract duration), the number of premiums paid at inception (i.e. the number of new yearly contracts), the claim occurrence date column name \n \
+            the claim occurrence date column name (if the inflation has to be made on claims), the column to inflate name \n \ 
+            a boolean indicating if values must be positive (e.g. setting to 0 claims that are lower than 0)
         Returns --&gt; An inflated amount
     &#34;&#34;&#34;
 
@@ -903,31 +807,18 @@ Returns &ndash;&gt; An inflated amount</p></div>
 
     inflated_values = df[column_to_use] * (1 + inflation_rate)**(extraction_year - start_years - latest_premium_adjustment)
 
-    if min_value is not None:
+    if only_positive is not None:
         inflated_values = np.where(inflated_values &lt; 0, 0, inflated_values)
 
     return inflated_values</code></pre>
-</details>
-</dd>
-<dt id="automate_insurance_pricing.preprocessing.create_functions.rename_columns"><code class="name flex">
-<span>def <span class="ident">rename_columns</span></span>(<span>df, names_mapping)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def rename_columns(df, names_mapping):
-    return df.rename(columns=names_mapping)</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.create_functions.resample_data"><code class="name flex">
 <span>def <span class="ident">resample_data</span></span>(<span>X_train, y_train, upsample=True, replace=True, proportion_neg_over_pos=0.3, random_state=42)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Resamples the data either duplicating negative values (i.e. the label in minority) or by removing positive values, but risk of information loss
-Arguments &ndash;&gt; the features, the predicted variable, a replace indicating if sampled data overwrites the current data,
+<div class="desc"><p>Resamples the data either duplicating negative values (i.e. the label in minority) or by removing positive values
+Arguments &ndash;&gt; the features, the predicted variable, a replace boolean indicating if sampled data overwrites the current data,
 the proportion of negative values over the positive value,
 the seed to reproduce the exact same results
 Returns &ndash;&gt; the resampled data</p></div>
@@ -937,10 +828,10 @@ Returns &ndash;&gt; the resampled data</p></div>
 </summary>
 <pre><code class="python">def resample_data(X_train, y_train, upsample=True, replace=True, proportion_neg_over_pos=0.3, random_state=42):
     &#34;&#34;&#34;
-        Resamples the data either duplicating negative values (i.e. the label in minority) or by removing positive values, but risk of information loss
-        Arguments --&gt; the features, the predicted variable, a replace indicating if sampled data overwrites the current data,
-                    the proportion of negative values over the positive value,
-                    the seed to reproduce the exact same results
+        Resamples the data either duplicating negative values (i.e. the label in minority) or by removing positive values \n \
+        Arguments --&gt; the features, the predicted variable, a replace boolean indicating if sampled data overwrites the current data, \n \
+            the proportion of negative values over the positive value, \n \
+            the seed to reproduce the exact same results \n \
         Returns --&gt; the resampled data
     &#34;&#34;&#34;
 
@@ -980,11 +871,7 @@ Returns &ndash;&gt; the resampled data</p></div>
 <ul class="">
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.change_value" href="#automate_insurance_pricing.preprocessing.create_functions.change_value">change_value</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.check_create_datetime" href="#automate_insurance_pricing.preprocessing.create_functions.check_create_datetime">check_create_datetime</a></code></li>
-<li><code><a title="automate_insurance_pricing.preprocessing.create_functions.convert_to_datetime" href="#automate_insurance_pricing.preprocessing.create_functions.convert_to_datetime">convert_to_datetime</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.create_bins" href="#automate_insurance_pricing.preprocessing.create_functions.create_bins">create_bins</a></code></li>
-<li><code><a title="automate_insurance_pricing.preprocessing.create_functions.create_columns" href="#automate_insurance_pricing.preprocessing.create_functions.create_columns">create_columns</a></code></li>
-<li><code><a title="automate_insurance_pricing.preprocessing.create_functions.create_year_month" href="#automate_insurance_pricing.preprocessing.create_functions.create_year_month">create_year_month</a></code></li>
-<li><code><a title="automate_insurance_pricing.preprocessing.create_functions.derive_age" href="#automate_insurance_pricing.preprocessing.create_functions.derive_age">derive_age</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.derive_annual_exposure" href="#automate_insurance_pricing.preprocessing.create_functions.derive_annual_exposure">derive_annual_exposure</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.derive_policy_totals" href="#automate_insurance_pricing.preprocessing.create_functions.derive_policy_totals">derive_policy_totals</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.derive_premium_multiplier" href="#automate_insurance_pricing.preprocessing.create_functions.derive_premium_multiplier">derive_premium_multiplier</a></code></li>
@@ -993,7 +880,6 @@ Returns &ndash;&gt; the resampled data</p></div>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.derive_years_from_two_dates" href="#automate_insurance_pricing.preprocessing.create_functions.derive_years_from_two_dates">derive_years_from_two_dates</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.impute_mean_mode" href="#automate_insurance_pricing.preprocessing.create_functions.impute_mean_mode">impute_mean_mode</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.inflate_amounts" href="#automate_insurance_pricing.preprocessing.create_functions.inflate_amounts">inflate_amounts</a></code></li>
-<li><code><a title="automate_insurance_pricing.preprocessing.create_functions.rename_columns" href="#automate_insurance_pricing.preprocessing.create_functions.rename_columns">rename_columns</a></code></li>
 <li><code><a title="automate_insurance_pricing.preprocessing.create_functions.resample_data" href="#automate_insurance_pricing.preprocessing.create_functions.resample_data">resample_data</a></code></li>
 </ul>
 </li>

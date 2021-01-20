@@ -36,8 +36,12 @@ from datetime import date, timedelta, datetime
 
 
 
-def update_costs_for_year(x, df, policy_id_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days):
-    &#34;&#34;&#34;Checks if the line should be in the df or if it is a wrong or true duplicate that should be removed&#34;&#34;&#34;
+def check_row_consistency(x, df, policy_id_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days):
+    &#34;&#34;&#34;Checks if the line should be kept in the data or not  
+        Arguments --&gt; the row, the dataframe, the policy, contract start and claim occurrence dates columns,:
+            The value associated to rows for which we do not have enough information, and the number of days for each contract (usually 365)\n \
+        Returns --&gt; a boolean with 1 if the row is consistent and 0 otherwise
+    &#34;&#34;&#34;
 
     row = df.loc[x]
     policy_id = row[policy_id_column_name]
@@ -59,11 +63,12 @@ def update_costs_for_year(x, df, policy_id_column_name, main_column_contract_dat
     return result
 
 
-def add_back_lines(df, df_removed, main_column_contract_date, claim_id_column_name, claim_occurrence_date_column_name, lines_ro_remove_name):
+def add_back_lines(df, df_removed, main_column_contract_date, claim_id_column_name, claim_occurrence_date_column_name):
     &#34;&#34;&#34;
-        Add backs lines that were mistakenly removed from the df
-        Arguments --&gt; the reduced df and the df that stores the removed lines
-        Returns --&gt; a new df which now have back the lines that were wrongly removed
+        Adds backs to the data some of the claims that were removed if they were removed only due to an inconsistent occurrence date \n \
+        Arguments --&gt; the dataframe with only the correct claims, the dataframe storing the removed ones \n \
+            the contract start and occurrence date column name \n \
+        Returns --&gt; a new df that now have back the claims that were removed
     &#34;&#34;&#34;
 
     year_name = main_column_contract_date
@@ -77,24 +82,25 @@ def add_back_lines(df, df_removed, main_column_contract_date, claim_id_column_na
     # Changes the dates so that it is now consistent. It means there might be cost overestimation for some occurrence year, but it won&#39;t have any impact overall
     new_df.loc[new_df.shape[0]-wrongly_removed.shape[0]:, claim_occurrence_date_column_name] = new_df.loc[new_df.shape[0]-wrongly_removed.shape[0]:, year_name] + timedelta(days=1)
 
-    return new_df.drop(columns=lines_ro_remove_name, errors=&#39;ignore&#39;)
+    return new_df
 
 
 
 def find_wrong_lines(df, main_column_contract_date, lines_ro_remove_name, number_of_days=None, remove=False):
     &#34;&#34;&#34;
-        Finds the lines that seems to be wrong either because they are true duplicates or because a date inconsistency has been detected
-        Arguments --&gt; the df on which we are doing the check, the number of days that should serve as a threshold \n \
-                    i.e. for a given policy and its effective date, a claim occurring beyond that number of days should not be associate to it,
-                    and a remove argument that if set to True means all the lines considered wrong are removed from the df
-        Returns --&gt; 2 df, one which is either with a flat for potential wrong lines or with all these lines removed, \n \
-and a new one which contains only the removed lines
+        Finds the lines that seem to be wrong either because they are duplicates or because a date inconsistency has been detected \n \
+        Arguments --&gt; the df on which we are doing the check, the constract start date columns, \n \
+            the name that will be given to the rows flagged as wrong, the number of days that should serve to check dates consistency (usually 365 for yearly contracts) \n \
+            i.e. for a given policy and its effective date, a claim occurring beyond that number of days should not be associate to it (usually 365 for yearly contracts), \n \
+            and a remove argument that if set to True means all the lines considered wrong are removed from the df \n \
+        Returns --&gt; 2 dataframes, one which will be either with a flag for wrong lines or with all these lines removed, \n \
+                    and a new one which contains only the removed lines
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
     number_of_days = 365 if number_of_days is None else number_of_days
 
-    new_df[lines_ro_remove_name] = new_df.index.to_frame()[0].apply(lambda x: update_costs_for_year(x, new_df, main_column_contract_date, number_of_days))
+    new_df[lines_ro_remove_name] = new_df.index.to_frame()[0].apply(lambda x: check_row_consistency(x, new_df, main_column_contract_date, number_of_days))
 
     if remove == True:
         df_removed_lines = new_df[new_df[lines_ro_remove_name] == 1]
@@ -102,7 +108,7 @@ and a new one which contains only the removed lines
         new_df = new_df.drop(labels=line_to_remove_index).drop(columns=lines_ro_remove_name)
     else:
         df_removed_lines = pd.DataFrame()
-        print(&#39;You just tagged the lines that are incorrect and should most likely be removed.\n \
+        print(&#39;You just agged the lines that are incorrect and should most likely be removed.\n \
 Retreat these lines, then run again this function with the remove argument set to True to delete remaining unnecessary lines&#39;)
 
     return new_df.reset_index(drop=True), df_removed_lines
@@ -110,7 +116,12 @@ Retreat these lines, then run again this function with the remove argument set t
 
 
 def create_unknown_policy(df_portfolio, df_claims, features_analysis, policy_id_column_name=&#39;policy_id&#39;, unknown_row_name=&#39;UNKNOWN&#39;):
-    &#34;&#34;&#34; Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies&#34;&#34;&#34;
+    &#34;&#34;&#34; Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies \n \
+        Arguments -&gt; the portfolio and claims dataframes, the features for which we will impute a value for the identified policies, \n \
+            (since the policies are added in the porfolio, a value has to be assumed for each of their features) \n \
+            the policy id column name to use and the policy id name we will give to these policies found in the claims but not in the porfolio \n \
+        Returns --&gt; a new portfolio and claims dataframe with the new policy name given to the identified policies  
+    &#34;&#34;&#34;
 
     new_df_portfolio, new_df_claims = deepcopy(df_portfolio), deepcopy(df_claims)
 
@@ -142,9 +153,10 @@ def create_unknown_policy(df_portfolio, df_claims, features_analysis, policy_id_
 
 def find_outliers(df, columns=None, method=&#39;interquartile&#39;, z_score_threshold=3, interquartile_lower_bound=0.25, interquartile_upper_bound=0.75):
     &#34;&#34;&#34;
-        Finds outliers for the specified features
-        Arguments --&gt; the df on which to find outliers, the features as a name or list of names and the method to use to find outliers
-        Returns --&gt; a full copy of df, the df with only outliers and the new df without the outliers
+        Finds outliers for the specified features \n \
+        Arguments --&gt; the dataframe on which to find outliers, the features as a name or list of names and the method to use to find outliers (either interquartile or z-score) \n \
+            the z-score and the interquartile thresholds to use \n \
+        Returns --&gt; the initial dataframe, the dataframe with only outliers and the new df without the outliers
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -181,20 +193,18 @@ def find_outliers(df, columns=None, method=&#39;interquartile&#39;, z_score_thre
 
 def perform_sense_check(df, new_cell_name=None, **kwargs):
     &#34;&#34;&#34;
-       Finds data which is inconsistent on the columns specified in the kwargs
-       Arguments --&gt; the df, the name of the new column created to flag if the comparison is true or not,
-                if not specified, then the function creates a new df composed of the rows for which the comparison check is true
-                   kwargs --&gt; tuples like (column1, column2, comparison_to_do, strict_comparison)
-                   or (column1, integer, comparison_to_do) ; comparison_to_do must be 0 for ==, 1 for &lt;=, 2 for &gt;=
-                    if strict_comparison is True, then the comparison must be strict
-       Returns --&gt; either a new df containing all rows that meet the comparison check or the current df with a new cell that flags them
+       Finds data which is inconsistent on the columns specified in the kwargs \n \
+       Arguments --&gt; the dataframe, the name of the new column created to flag if the row is consistent or not, \n \
+            if not specified, then the function creates a new df composed of the rows for which the comparison check is true \n \
+            kwargs --&gt; tuples like (column1, column2, comparison_to_do, strict_comparison) \n \
+            or (column1, integer, comparison_to_do) ; comparison_to_do must be 0 for ==, 1 for &lt;=, 2 for &gt;= \n \
+            if strict_comparison is True, then the comparison must be strict (&gt; or &lt;) \n \
+       Returns --&gt; either a new dataframe containing all rows that meet the comparison check or the current dataframe with a new cell that flags them
    &#34;&#34;&#34;
 
+    # Defines if the second argument to compare with is a integer/float or a pandas serie \n \
+    # Returns --&gt; the right element that must be used for the comparison
     def get_compare():
-        &#34;&#34;&#34;
-            Defines if the second argument to compare with is a integer/float or a pandas serie
-            Returns --&gt; the right element that must be used for the comparison
-        &#34;&#34;&#34;
 
         if isinstance(value[1], str) == True:
             # The second element of the tuple being a column name, we get the pandas serie
@@ -206,9 +216,8 @@ def perform_sense_check(df, new_cell_name=None, **kwargs):
 
         return compare
 
-
+    #Returns the concatenated dataframe validating the check or updates the df column used to flag if the comparison is true or not
     def create_new_cell_or_df(): 
-        &#34;&#34;&#34; Returns the concatenated df validating the check or updates the df column used to flag if the comparison is true or not&#34;&#34;&#34;
 
         # Cell name not being defined, it means the function must create a dataframe
         if new_cell_name is None:
@@ -242,16 +251,7 @@ def perform_sense_check(df, new_cell_name=None, **kwargs):
     if new_cell_name is None:
         print(&#39;There are {} rows concerned&#39;.format(df_check.shape[0]))
         return df_check
-      
-
-
-def build_duplicated_df(df, columns=None, keep_method=False):
-    &#34;&#34;&#34; Finds the duplicated values depending on the args
-        columns --&gt; columns names specified by the user as a list. Can be just a string if it is for only one column
-        Returns --&gt; a new dataframe with only duplicated values
-    &#34;&#34;&#34;
-
-    return df[df.duplicated(subset=columns, keep=keep_method)].sort_values(columns)</code></pre>
+    </code></pre>
 </details>
 </section>
 <section>
@@ -262,21 +262,23 @@ def build_duplicated_df(df, columns=None, keep_method=False):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="automate_insurance_pricing.exploration.checks_functions.add_back_lines"><code class="name flex">
-<span>def <span class="ident">add_back_lines</span></span>(<span>df, df_removed, main_column_contract_date, claim_id_column_name, claim_occurrence_date_column_name, lines_ro_remove_name)</span>
+<span>def <span class="ident">add_back_lines</span></span>(<span>df, df_removed, main_column_contract_date, claim_id_column_name, claim_occurrence_date_column_name)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Add backs lines that were mistakenly removed from the df
-Arguments &ndash;&gt; the reduced df and the df that stores the removed lines
-Returns &ndash;&gt; a new df which now have back the lines that were wrongly removed</p></div>
+<div class="desc"><p>Adds backs to the data some of the claims that were removed if they were removed only due to an inconsistent occurrence date
+Arguments &ndash;&gt; the dataframe with only the correct claims, the dataframe storing the removed ones
+the contract start and occurrence date column name
+Returns &ndash;&gt; a new df that now have back the claims that were removed</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_back_lines(df, df_removed, main_column_contract_date, claim_id_column_name, claim_occurrence_date_column_name, lines_ro_remove_name):
+<pre><code class="python">def add_back_lines(df, df_removed, main_column_contract_date, claim_id_column_name, claim_occurrence_date_column_name):
     &#34;&#34;&#34;
-        Add backs lines that were mistakenly removed from the df
-        Arguments --&gt; the reduced df and the df that stores the removed lines
-        Returns --&gt; a new df which now have back the lines that were wrongly removed
+        Adds backs to the data some of the claims that were removed if they were removed only due to an inconsistent occurrence date \n \
+        Arguments --&gt; the dataframe with only the correct claims, the dataframe storing the removed ones \n \
+            the contract start and occurrence date column name \n \
+        Returns --&gt; a new df that now have back the claims that were removed
     &#34;&#34;&#34;
 
     year_name = main_column_contract_date
@@ -290,40 +292,68 @@ Returns &ndash;&gt; a new df which now have back the lines that were wrongly rem
     # Changes the dates so that it is now consistent. It means there might be cost overestimation for some occurrence year, but it won&#39;t have any impact overall
     new_df.loc[new_df.shape[0]-wrongly_removed.shape[0]:, claim_occurrence_date_column_name] = new_df.loc[new_df.shape[0]-wrongly_removed.shape[0]:, year_name] + timedelta(days=1)
 
-    return new_df.drop(columns=lines_ro_remove_name, errors=&#39;ignore&#39;)</code></pre>
+    return new_df</code></pre>
 </details>
 </dd>
-<dt id="automate_insurance_pricing.exploration.checks_functions.build_duplicated_df"><code class="name flex">
-<span>def <span class="ident">build_duplicated_df</span></span>(<span>df, columns=None, keep_method=False)</span>
+<dt id="automate_insurance_pricing.exploration.checks_functions.check_row_consistency"><code class="name flex">
+<span>def <span class="ident">check_row_consistency</span></span>(<span>x, df, policy_id_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Finds the duplicated values depending on the args
-columns &ndash;&gt; columns names specified by the user as a list. Can be just a string if it is for only one column
-Returns &ndash;&gt; a new dataframe with only duplicated values</p></div>
+<div class="desc"><p>Checks if the line should be kept in the data or not<br>
+Arguments &ndash;&gt; the row, the dataframe, the policy, contract start and claim occurrence dates columns,:
+The value associated to rows for which we do not have enough information, and the number of days for each contract (usually 365)
+Returns &ndash;&gt; a boolean with 1 if the row is consistent and 0 otherwise</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def build_duplicated_df(df, columns=None, keep_method=False):
-    &#34;&#34;&#34; Finds the duplicated values depending on the args
-        columns --&gt; columns names specified by the user as a list. Can be just a string if it is for only one column
-        Returns --&gt; a new dataframe with only duplicated values
+<pre><code class="python">def check_row_consistency(x, df, policy_id_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days):
+    &#34;&#34;&#34;Checks if the line should be kept in the data or not  
+        Arguments --&gt; the row, the dataframe, the policy, contract start and claim occurrence dates columns,:
+            The value associated to rows for which we do not have enough information, and the number of days for each contract (usually 365)\n \
+        Returns --&gt; a boolean with 1 if the row is consistent and 0 otherwise
     &#34;&#34;&#34;
 
-    return df[df.duplicated(subset=columns, keep=keep_method)].sort_values(columns)</code></pre>
+    row = df.loc[x]
+    policy_id = row[policy_id_column_name]
+    year_name = main_column_contract_date
+    result = 0
+    effective_date = row[year_name]
+    effective_dates = df[df[policy_id_column_name]==policy_id][year_name]
+
+    # For policy_id with UNKNOWN value, we keep all claims because we cannot link them to a policy but we group them in an UNKNOWN block so that we don&#39;t understimate the total cost
+    if policy_id != unknown_row_name:
+        # Contract started after the claim occurrence
+        if effective_date &gt; row[claim_occurrence_date]:
+            result = 1
+        # The claim did not occurr during the yearly contract cover;
+        # By prudency, also checks if there is a contract amendment. if not we assume it is a date mistake and we do not set the cost to 0
+        elif effective_date + timedelta(number_of_days) &lt;= row[claim_occurrence_date] and effective_date &lt; effective_dates.max():
+            result = 1
+
+    return result</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.exploration.checks_functions.create_unknown_policy"><code class="name flex">
 <span>def <span class="ident">create_unknown_policy</span></span>(<span>df_portfolio, df_claims, features_analysis, policy_id_column_name='policy_id', unknown_row_name='UNKNOWN')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies</p></div>
+<div class="desc"><p>Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies
+Arguments -&gt; the portfolio and claims dataframes, the features for which we will impute a value for the identified policies,
+(since the policies are added in the porfolio, a value has to be assumed for each of their features)
+the policy id column name to use and the policy id name we will give to these policies found in the claims but not in the porfolio
+Returns &ndash;&gt; a new portfolio and claims dataframe with the new policy name given to the identified policies</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_unknown_policy(df_portfolio, df_claims, features_analysis, policy_id_column_name=&#39;policy_id&#39;, unknown_row_name=&#39;UNKNOWN&#39;):
-    &#34;&#34;&#34; Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies&#34;&#34;&#34;
+    &#34;&#34;&#34; Finds policies that are in the claims data but not in the porfolio, and generates a new policy on the portfolio data to represent these unknown policies \n \
+        Arguments -&gt; the portfolio and claims dataframes, the features for which we will impute a value for the identified policies, \n \
+            (since the policies are added in the porfolio, a value has to be assumed for each of their features) \n \
+            the policy id column name to use and the policy id name we will give to these policies found in the claims but not in the porfolio \n \
+        Returns --&gt; a new portfolio and claims dataframe with the new policy name given to the identified policies  
+    &#34;&#34;&#34;
 
     new_df_portfolio, new_df_claims = deepcopy(df_portfolio), deepcopy(df_claims)
 
@@ -357,17 +387,19 @@ Returns &ndash;&gt; a new dataframe with only duplicated values</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Finds outliers for the specified features
-Arguments &ndash;&gt; the df on which to find outliers, the features as a name or list of names and the method to use to find outliers
-Returns &ndash;&gt; a full copy of df, the df with only outliers and the new df without the outliers</p></div>
+Arguments &ndash;&gt; the dataframe on which to find outliers, the features as a name or list of names and the method to use to find outliers (either interquartile or z-score)
+the z-score and the interquartile thresholds to use
+Returns &ndash;&gt; the initial dataframe, the dataframe with only outliers and the new df without the outliers</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def find_outliers(df, columns=None, method=&#39;interquartile&#39;, z_score_threshold=3, interquartile_lower_bound=0.25, interquartile_upper_bound=0.75):
     &#34;&#34;&#34;
-        Finds outliers for the specified features
-        Arguments --&gt; the df on which to find outliers, the features as a name or list of names and the method to use to find outliers
-        Returns --&gt; a full copy of df, the df with only outliers and the new df without the outliers
+        Finds outliers for the specified features \n \
+        Arguments --&gt; the dataframe on which to find outliers, the features as a name or list of names and the method to use to find outliers (either interquartile or z-score) \n \
+            the z-score and the interquartile thresholds to use \n \
+        Returns --&gt; the initial dataframe, the dataframe with only outliers and the new df without the outliers
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
@@ -405,11 +437,12 @@ Returns &ndash;&gt; a full copy of df, the df with only outliers and the new df 
 <span>def <span class="ident">find_wrong_lines</span></span>(<span>df, main_column_contract_date, lines_ro_remove_name, number_of_days=None, remove=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Finds the lines that seems to be wrong either because they are true duplicates or because a date inconsistency has been detected
-Arguments &ndash;&gt; the df on which we are doing the check, the number of days that should serve as a threshold
-i.e. for a given policy and its effective date, a claim occurring beyond that number of days should not be associate to it,
+<div class="desc"><p>Finds the lines that seem to be wrong either because they are duplicates or because a date inconsistency has been detected
+Arguments &ndash;&gt; the df on which we are doing the check, the constract start date columns,
+the name that will be given to the rows flagged as wrong, the number of days that should serve to check dates consistency (usually 365 for yearly contracts)
+i.e. for a given policy and its effective date, a claim occurring beyond that number of days should not be associate to it (usually 365 for yearly contracts),
 and a remove argument that if set to True means all the lines considered wrong are removed from the df
-Returns &ndash;&gt; 2 df, one which is either with a flat for potential wrong lines or with all these lines removed,
+Returns &ndash;&gt; 2 dataframes, one which will be either with a flag for wrong lines or with all these lines removed,
 and a new one which contains only the removed lines</p></div>
 <details class="source">
 <summary>
@@ -417,18 +450,19 @@ and a new one which contains only the removed lines</p></div>
 </summary>
 <pre><code class="python">def find_wrong_lines(df, main_column_contract_date, lines_ro_remove_name, number_of_days=None, remove=False):
     &#34;&#34;&#34;
-        Finds the lines that seems to be wrong either because they are true duplicates or because a date inconsistency has been detected
-        Arguments --&gt; the df on which we are doing the check, the number of days that should serve as a threshold \n \
-                    i.e. for a given policy and its effective date, a claim occurring beyond that number of days should not be associate to it,
-                    and a remove argument that if set to True means all the lines considered wrong are removed from the df
-        Returns --&gt; 2 df, one which is either with a flat for potential wrong lines or with all these lines removed, \n \
-and a new one which contains only the removed lines
+        Finds the lines that seem to be wrong either because they are duplicates or because a date inconsistency has been detected \n \
+        Arguments --&gt; the df on which we are doing the check, the constract start date columns, \n \
+            the name that will be given to the rows flagged as wrong, the number of days that should serve to check dates consistency (usually 365 for yearly contracts) \n \
+            i.e. for a given policy and its effective date, a claim occurring beyond that number of days should not be associate to it (usually 365 for yearly contracts), \n \
+            and a remove argument that if set to True means all the lines considered wrong are removed from the df \n \
+        Returns --&gt; 2 dataframes, one which will be either with a flag for wrong lines or with all these lines removed, \n \
+                    and a new one which contains only the removed lines
     &#34;&#34;&#34;
 
     new_df = deepcopy(df)
     number_of_days = 365 if number_of_days is None else number_of_days
 
-    new_df[lines_ro_remove_name] = new_df.index.to_frame()[0].apply(lambda x: update_costs_for_year(x, new_df, main_column_contract_date, number_of_days))
+    new_df[lines_ro_remove_name] = new_df.index.to_frame()[0].apply(lambda x: check_row_consistency(x, new_df, main_column_contract_date, number_of_days))
 
     if remove == True:
         df_removed_lines = new_df[new_df[lines_ro_remove_name] == 1]
@@ -436,7 +470,7 @@ and a new one which contains only the removed lines
         new_df = new_df.drop(labels=line_to_remove_index).drop(columns=lines_ro_remove_name)
     else:
         df_removed_lines = pd.DataFrame()
-        print(&#39;You just tagged the lines that are incorrect and should most likely be removed.\n \
+        print(&#39;You just agged the lines that are incorrect and should most likely be removed.\n \
 Retreat these lines, then run again this function with the remove argument set to True to delete remaining unnecessary lines&#39;)
 
     return new_df.reset_index(drop=True), df_removed_lines</code></pre>
@@ -447,32 +481,30 @@ Retreat these lines, then run again this function with the remove argument set t
 </code></dt>
 <dd>
 <div class="desc"><p>Finds data which is inconsistent on the columns specified in the kwargs
-Arguments &ndash;&gt; the df, the name of the new column created to flag if the comparison is true or not,
+Arguments &ndash;&gt; the dataframe, the name of the new column created to flag if the row is consistent or not,
 if not specified, then the function creates a new df composed of the rows for which the comparison check is true
 kwargs &ndash;&gt; tuples like (column1, column2, comparison_to_do, strict_comparison)
 or (column1, integer, comparison_to_do) ; comparison_to_do must be 0 for ==, 1 for &lt;=, 2 for &gt;=
-if strict_comparison is True, then the comparison must be strict
-Returns &ndash;&gt; either a new df containing all rows that meet the comparison check or the current df with a new cell that flags them</p></div>
+if strict_comparison is True, then the comparison must be strict (&gt; or &lt;)
+Returns &ndash;&gt; either a new dataframe containing all rows that meet the comparison check or the current dataframe with a new cell that flags them</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def perform_sense_check(df, new_cell_name=None, **kwargs):
     &#34;&#34;&#34;
-       Finds data which is inconsistent on the columns specified in the kwargs
-       Arguments --&gt; the df, the name of the new column created to flag if the comparison is true or not,
-                if not specified, then the function creates a new df composed of the rows for which the comparison check is true
-                   kwargs --&gt; tuples like (column1, column2, comparison_to_do, strict_comparison)
-                   or (column1, integer, comparison_to_do) ; comparison_to_do must be 0 for ==, 1 for &lt;=, 2 for &gt;=
-                    if strict_comparison is True, then the comparison must be strict
-       Returns --&gt; either a new df containing all rows that meet the comparison check or the current df with a new cell that flags them
+       Finds data which is inconsistent on the columns specified in the kwargs \n \
+       Arguments --&gt; the dataframe, the name of the new column created to flag if the row is consistent or not, \n \
+            if not specified, then the function creates a new df composed of the rows for which the comparison check is true \n \
+            kwargs --&gt; tuples like (column1, column2, comparison_to_do, strict_comparison) \n \
+            or (column1, integer, comparison_to_do) ; comparison_to_do must be 0 for ==, 1 for &lt;=, 2 for &gt;= \n \
+            if strict_comparison is True, then the comparison must be strict (&gt; or &lt;) \n \
+       Returns --&gt; either a new dataframe containing all rows that meet the comparison check or the current dataframe with a new cell that flags them
    &#34;&#34;&#34;
 
+    # Defines if the second argument to compare with is a integer/float or a pandas serie \n \
+    # Returns --&gt; the right element that must be used for the comparison
     def get_compare():
-        &#34;&#34;&#34;
-            Defines if the second argument to compare with is a integer/float or a pandas serie
-            Returns --&gt; the right element that must be used for the comparison
-        &#34;&#34;&#34;
 
         if isinstance(value[1], str) == True:
             # The second element of the tuple being a column name, we get the pandas serie
@@ -484,9 +516,8 @@ Returns &ndash;&gt; either a new df containing all rows that meet the comparison
 
         return compare
 
-
+    #Returns the concatenated dataframe validating the check or updates the df column used to flag if the comparison is true or not
     def create_new_cell_or_df(): 
-        &#34;&#34;&#34; Returns the concatenated df validating the check or updates the df column used to flag if the comparison is true or not&#34;&#34;&#34;
 
         # Cell name not being defined, it means the function must create a dataframe
         if new_cell_name is None:
@@ -522,38 +553,6 @@ Returns &ndash;&gt; either a new df containing all rows that meet the comparison
         return df_check</code></pre>
 </details>
 </dd>
-<dt id="automate_insurance_pricing.exploration.checks_functions.update_costs_for_year"><code class="name flex">
-<span>def <span class="ident">update_costs_for_year</span></span>(<span>x, df, policy_id_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Checks if the line should be in the df or if it is a wrong or true duplicate that should be removed</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def update_costs_for_year(x, df, policy_id_column_name, main_column_contract_date, claim_occurrence_date, unknown_row_name, number_of_days):
-    &#34;&#34;&#34;Checks if the line should be in the df or if it is a wrong or true duplicate that should be removed&#34;&#34;&#34;
-
-    row = df.loc[x]
-    policy_id = row[policy_id_column_name]
-    year_name = main_column_contract_date
-    result = 0
-    effective_date = row[year_name]
-    effective_dates = df[df[policy_id_column_name]==policy_id][year_name]
-
-    # For policy_id with UNKNOWN value, we keep all claims because we cannot link them to a policy but we group them in an UNKNOWN block so that we don&#39;t understimate the total cost
-    if policy_id != unknown_row_name:
-        # Contract started after the claim occurrence
-        if effective_date &gt; row[claim_occurrence_date]:
-            result = 1
-        # The claim did not occurr during the yearly contract cover;
-        # By prudency, also checks if there is a contract amendment. if not we assume it is a date mistake and we do not set the cost to 0
-        elif effective_date + timedelta(number_of_days) &lt;= row[claim_occurrence_date] and effective_date &lt; effective_dates.max():
-            result = 1
-
-    return result</code></pre>
-</details>
-</dd>
 </dl>
 </section>
 <section>
@@ -573,12 +572,11 @@ Returns &ndash;&gt; either a new df containing all rows that meet the comparison
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="automate_insurance_pricing.exploration.checks_functions.add_back_lines" href="#automate_insurance_pricing.exploration.checks_functions.add_back_lines">add_back_lines</a></code></li>
-<li><code><a title="automate_insurance_pricing.exploration.checks_functions.build_duplicated_df" href="#automate_insurance_pricing.exploration.checks_functions.build_duplicated_df">build_duplicated_df</a></code></li>
+<li><code><a title="automate_insurance_pricing.exploration.checks_functions.check_row_consistency" href="#automate_insurance_pricing.exploration.checks_functions.check_row_consistency">check_row_consistency</a></code></li>
 <li><code><a title="automate_insurance_pricing.exploration.checks_functions.create_unknown_policy" href="#automate_insurance_pricing.exploration.checks_functions.create_unknown_policy">create_unknown_policy</a></code></li>
 <li><code><a title="automate_insurance_pricing.exploration.checks_functions.find_outliers" href="#automate_insurance_pricing.exploration.checks_functions.find_outliers">find_outliers</a></code></li>
 <li><code><a title="automate_insurance_pricing.exploration.checks_functions.find_wrong_lines" href="#automate_insurance_pricing.exploration.checks_functions.find_wrong_lines">find_wrong_lines</a></code></li>
 <li><code><a title="automate_insurance_pricing.exploration.checks_functions.perform_sense_check" href="#automate_insurance_pricing.exploration.checks_functions.perform_sense_check">perform_sense_check</a></code></li>
-<li><code><a title="automate_insurance_pricing.exploration.checks_functions.update_costs_for_year" href="#automate_insurance_pricing.exploration.checks_functions.update_costs_for_year">update_costs_for_year</a></code></li>
 </ul>
 </li>
 </ul>

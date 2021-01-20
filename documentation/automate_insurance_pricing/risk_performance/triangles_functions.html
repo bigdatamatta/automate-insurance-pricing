@@ -36,7 +36,10 @@ import matplotlib.pyplot as plt
 
 
 def add_ibnr(row, ibnr_rates, extraction_year, claims_column_name=&#39;asif_total_capped_cost&#39;, occurrence_date_column_name=&#39;occurrence_date&#39;):
-
+    &#34;&#34;&#34; Adds IBNR to claims costs \n \
+        Arguments --&gt; the dataframe row, the list of ibnr rates per year, the extraction year, \n \
+            the claims amounts and occurrence dates columns names
+    &#34;&#34;&#34;
     claim_year = row[occurrence_date_column_name].year
 
     try:
@@ -49,12 +52,13 @@ def add_ibnr(row, ibnr_rates, extraction_year, claims_column_name=&#39;asif_tota
 
 def get_triangle_projections(triangles, average_methods=None, n_periods=None, grain=&#39;OYDY&#39;):
     &#34;&#34;&#34;
-        Generates the main kpis such as ultimate loss, ibnr, loss development factors
-        Arguments --&gt; A dict of triangles or a single triangle,
-                    the methods to derive the LDF (simple or volume average) defined as a list if there are several ultimate triangles to produce,
-                    the number of periods to look at (-1 means all periods by default)
-                    the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q))
-        Returns --&gt; a dict composed where keys are the name of the figures (cost, count of claims, etc.) and the kpis like ldf, ibnr
+        Generates the main kpis such as ultimate loss, ibnr, loss development factors \n \
+        Arguments --&gt; A dictionnary of triangles or a single triangle, \n \
+            the methods to derive the LDF (simple or volume average) defined as a list if there are several ultimate triangles to produce, \n \
+            the number of periods to look at (-1 means all periods by default) \n \
+            the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q)) \n \
+        Returns --&gt; a dictionnary storing the triangles and other kpis \n \
+            the dict keys are &#39;ldf&#39; for loss development factors, &#39;cdf&#39; for the cumulative ones, &#39;fit&#39; to get the fitted model and &#39;full_triangle&#39; to get the full triangle produced
 
     &#34;&#34;&#34;
 
@@ -91,10 +95,10 @@ def get_triangle_projections(triangles, average_methods=None, n_periods=None, gr
 
 def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the development patterns for the desired figures
-        Arguments --&gt; the triangles dict gathering triangles of different types of figures (amounts, counts, etc.),
-                    the kpis we want to plot and the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q)),
-                    arguments to indicate if the graphs must be saved and with which prefix name
+        Plots the development patterns for the desired figures \n \
+        Arguments --&gt; the dictionnary gathering the triangles of different types of figures (amounts, counts, etc.), \n \
+            the kpis we want to plot and the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q)), \n \
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart \n \
         Returns --&gt; Nothing. It just displays the graphs
     &#34;&#34;&#34;
 
@@ -118,13 +122,13 @@ def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_na
 
 def select_triangles(multi_triangles, all_indexes_total=True, columns=None):
     &#34;&#34;&#34;
-        Gets the triangles from a chainladder triangle class depending
-        Arguments --&gt; the chainladder multi triangles class,
-                    a boolean indicating if the function must build the total triangle ignoring its index values.
-                    Index values are equivalent to a groupby aggregation variable ; so setting all_indexes_total to True is equivalent to undo the aggregation and to get the triangle for the whole portfolio,
-                    setting it to False will make you get a triangle for each of the index (e.g. a triangle by guarantee)
-                    the columns (KPIs) to look at,
-        Returns --&gt; a dict of triangles with index_values and columns as keys and triangles as values
+        Gets the triangles from a chainladder triangle class depending \n \
+        Arguments --&gt; the chainladder multi triangles class (i.e. a triangle with segmentation level like the figures by guarantee), \n \
+            a boolean indicating if the function must build the total triangle ignoring its index values (i.e. the totals with no data segmentation). \n \
+            Index values are equivalent to a groupby aggregation variable ; so setting all_indexes_total to True is equivalent to undo the aggregation and to get the triangle for the whole portfolio, \n \
+            setting it to False will make you get a triangle for each of the index (e.g. for each guarantee) \n \
+            the columns (amounts, number of claims etc.) to look at, \n \
+        Returns --&gt; a dictionnary of triangles with index_values and columns as keys and triangles as values
     &#34;&#34;&#34;
 
     triangles = []
@@ -167,13 +171,18 @@ def select_triangles(multi_triangles, all_indexes_total=True, columns=None):
 <span>def <span class="ident">add_ibnr</span></span>(<span>row, ibnr_rates, extraction_year, claims_column_name='asif_total_capped_cost', occurrence_date_column_name='occurrence_date')</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Adds IBNR to claims costs
+Arguments &ndash;&gt; the dataframe row, the list of ibnr rates per year, the extraction year,
+the claims amounts and occurrence dates columns names</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add_ibnr(row, ibnr_rates, extraction_year, claims_column_name=&#39;asif_total_capped_cost&#39;, occurrence_date_column_name=&#39;occurrence_date&#39;):
-
+    &#34;&#34;&#34; Adds IBNR to claims costs \n \
+        Arguments --&gt; the dataframe row, the list of ibnr rates per year, the extraction year, \n \
+            the claims amounts and occurrence dates columns names
+    &#34;&#34;&#34;
     claim_year = row[occurrence_date_column_name].year
 
     try:
@@ -189,23 +198,25 @@ def select_triangles(multi_triangles, all_indexes_total=True, columns=None):
 </code></dt>
 <dd>
 <div class="desc"><p>Generates the main kpis such as ultimate loss, ibnr, loss development factors
-Arguments &ndash;&gt; A dict of triangles or a single triangle,
+Arguments &ndash;&gt; A dictionnary of triangles or a single triangle,
 the methods to derive the LDF (simple or volume average) defined as a list if there are several ultimate triangles to produce,
 the number of periods to look at (-1 means all periods by default)
 the origin/development pattern ('OxDy' with x and y in (Y, M, Q))
-Returns &ndash;&gt; a dict composed where keys are the name of the figures (cost, count of claims, etc.) and the kpis like ldf, ibnr</p></div>
+Returns &ndash;&gt; a dictionnary storing the triangles and other kpis
+the dict keys are 'ldf' for loss development factors, 'cdf' for the cumulative ones, 'fit' to get the fitted model and 'full_triangle' to get the full triangle produced</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_triangle_projections(triangles, average_methods=None, n_periods=None, grain=&#39;OYDY&#39;):
     &#34;&#34;&#34;
-        Generates the main kpis such as ultimate loss, ibnr, loss development factors
-        Arguments --&gt; A dict of triangles or a single triangle,
-                    the methods to derive the LDF (simple or volume average) defined as a list if there are several ultimate triangles to produce,
-                    the number of periods to look at (-1 means all periods by default)
-                    the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q))
-        Returns --&gt; a dict composed where keys are the name of the figures (cost, count of claims, etc.) and the kpis like ldf, ibnr
+        Generates the main kpis such as ultimate loss, ibnr, loss development factors \n \
+        Arguments --&gt; A dictionnary of triangles or a single triangle, \n \
+            the methods to derive the LDF (simple or volume average) defined as a list if there are several ultimate triangles to produce, \n \
+            the number of periods to look at (-1 means all periods by default) \n \
+            the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q)) \n \
+        Returns --&gt; a dictionnary storing the triangles and other kpis \n \
+            the dict keys are &#39;ldf&#39; for loss development factors, &#39;cdf&#39; for the cumulative ones, &#39;fit&#39; to get the fitted model and &#39;full_triangle&#39; to get the full triangle produced
 
     &#34;&#34;&#34;
 
@@ -245,9 +256,9 @@ Returns &ndash;&gt; a dict composed where keys are the name of the figures (cost
 </code></dt>
 <dd>
 <div class="desc"><p>Plots the development patterns for the desired figures
-Arguments &ndash;&gt; the triangles dict gathering triangles of different types of figures (amounts, counts, etc.),
+Arguments &ndash;&gt; the dictionnary gathering the triangles of different types of figures (amounts, counts, etc.),
 the kpis we want to plot and the origin/development pattern ('OxDy' with x and y in (Y, M, Q)),
-arguments to indicate if the graphs must be saved and with which prefix name
+a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart
 Returns &ndash;&gt; Nothing. It just displays the graphs</p></div>
 <details class="source">
 <summary>
@@ -255,10 +266,10 @@ Returns &ndash;&gt; Nothing. It just displays the graphs</p></div>
 </summary>
 <pre><code class="python">def plot_triangles_dev(triangles, columns=None, grain=None, save=True, prefix_name_fig=None, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the development patterns for the desired figures
-        Arguments --&gt; the triangles dict gathering triangles of different types of figures (amounts, counts, etc.),
-                    the kpis we want to plot and the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q)),
-                    arguments to indicate if the graphs must be saved and with which prefix name
+        Plots the development patterns for the desired figures \n \
+        Arguments --&gt; the dictionnary gathering the triangles of different types of figures (amounts, counts, etc.), \n \
+            the kpis we want to plot and the origin/development pattern (&#39;OxDy&#39; with x and y in (Y, M, Q)), \n \
+            a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart \n \
         Returns --&gt; Nothing. It just displays the graphs
     &#34;&#34;&#34;
 
@@ -285,25 +296,25 @@ Returns &ndash;&gt; Nothing. It just displays the graphs</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the triangles from a chainladder triangle class depending
-Arguments &ndash;&gt; the chainladder multi triangles class,
-a boolean indicating if the function must build the total triangle ignoring its index values.
+Arguments &ndash;&gt; the chainladder multi triangles class (i.e. a triangle with segmentation level like the figures by guarantee),
+a boolean indicating if the function must build the total triangle ignoring its index values (i.e. the totals with no data segmentation).
 Index values are equivalent to a groupby aggregation variable ; so setting all_indexes_total to True is equivalent to undo the aggregation and to get the triangle for the whole portfolio,
-setting it to False will make you get a triangle for each of the index (e.g. a triangle by guarantee)
-the columns (KPIs) to look at,
-Returns &ndash;&gt; a dict of triangles with index_values and columns as keys and triangles as values</p></div>
+setting it to False will make you get a triangle for each of the index (e.g. for each guarantee)
+the columns (amounts, number of claims etc.) to look at,
+Returns &ndash;&gt; a dictionnary of triangles with index_values and columns as keys and triangles as values</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def select_triangles(multi_triangles, all_indexes_total=True, columns=None):
     &#34;&#34;&#34;
-        Gets the triangles from a chainladder triangle class depending
-        Arguments --&gt; the chainladder multi triangles class,
-                    a boolean indicating if the function must build the total triangle ignoring its index values.
-                    Index values are equivalent to a groupby aggregation variable ; so setting all_indexes_total to True is equivalent to undo the aggregation and to get the triangle for the whole portfolio,
-                    setting it to False will make you get a triangle for each of the index (e.g. a triangle by guarantee)
-                    the columns (KPIs) to look at,
-        Returns --&gt; a dict of triangles with index_values and columns as keys and triangles as values
+        Gets the triangles from a chainladder triangle class depending \n \
+        Arguments --&gt; the chainladder multi triangles class (i.e. a triangle with segmentation level like the figures by guarantee), \n \
+            a boolean indicating if the function must build the total triangle ignoring its index values (i.e. the totals with no data segmentation). \n \
+            Index values are equivalent to a groupby aggregation variable ; so setting all_indexes_total to True is equivalent to undo the aggregation and to get the triangle for the whole portfolio, \n \
+            setting it to False will make you get a triangle for each of the index (e.g. for each guarantee) \n \
+            the columns (amounts, number of claims etc.) to look at, \n \
+        Returns --&gt; a dictionnary of triangles with index_values and columns as keys and triangles as values
     &#34;&#34;&#34;
 
     triangles = []

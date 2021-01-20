@@ -30,7 +30,11 @@
 
 
 def derive_termination_rate_year(df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, column_to_sum_name):
-    &#34;&#34;&#34;Derive the termination rates per year&#34;&#34;&#34;
+    &#34;&#34;&#34;Derives the contracts termination rates per year \n \
+        Arguments --&gt; the dataframe, the business starting year, the extraction year \n \
+            the contracts start date and policy ids and the cancellation columns names \n \
+        Returns --&gt; a dictionnary with the termination rates per year and the overall one
+    &#34;&#34;&#34;
 
     df_previous_year = df[df[main_column_contract_date].dt.year == start_business_year].drop_duplicates(subset=policy_id_column_name, keep=&#39;first&#39;)
     policies_previous_year = df_previous_year[policy_id_column_name]
@@ -63,17 +67,13 @@ def derive_termination_rate_year(df, start_business_year, extraction_year, main_
 
 def create_df_unique_values(df, features):
     &#34;&#34;&#34;
-        Creates a dataframe
-        features --&gt; list of features
+        Gets the unique values of features and the number of these unique values (mainly useful for categorical feature) \n \
+        Arguments --&gt; the dataframe and the list of features (either a list or a string)
         Returns --&gt; A new df with features and number of unique values for each
     &#34;&#34;&#34;
 
-    if len(features) &gt; 0:
-        df_feature_unique_values = pd.DataFrame.from_dict({&#39;feature&#39;: features, &#39;number_of_uniques&#39;: df[features].nunique().values})
-        return df_feature_unique_values.reset_index()
-
-    else:
-        print(&#39;Your list of features is empty. Add at least one feature to study.&#39;)</code></pre>
+    df_feature_unique_values = pd.DataFrame.from_dict({&#39;feature&#39;: features, &#39;number_of_uniques&#39;: df[features].nunique().values})
+    return df_feature_unique_values.reset_index()</code></pre>
 </details>
 </section>
 <section>
@@ -87,8 +87,8 @@ def create_df_unique_values(df, features):
 <span>def <span class="ident">create_df_unique_values</span></span>(<span>df, features)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates a dataframe
-features &ndash;&gt; list of features
+<div class="desc"><p>Gets the unique values of features and the number of these unique values (mainly useful for categorical feature)
+Arguments &ndash;&gt; the dataframe and the list of features (either a list or a string)
 Returns &ndash;&gt; A new df with features and number of unique values for each</p></div>
 <details class="source">
 <summary>
@@ -96,30 +96,33 @@ Returns &ndash;&gt; A new df with features and number of unique values for each<
 </summary>
 <pre><code class="python">def create_df_unique_values(df, features):
     &#34;&#34;&#34;
-        Creates a dataframe
-        features --&gt; list of features
+        Gets the unique values of features and the number of these unique values (mainly useful for categorical feature) \n \
+        Arguments --&gt; the dataframe and the list of features (either a list or a string)
         Returns --&gt; A new df with features and number of unique values for each
     &#34;&#34;&#34;
 
-    if len(features) &gt; 0:
-        df_feature_unique_values = pd.DataFrame.from_dict({&#39;feature&#39;: features, &#39;number_of_uniques&#39;: df[features].nunique().values})
-        return df_feature_unique_values.reset_index()
-
-    else:
-        print(&#39;Your list of features is empty. Add at least one feature to study.&#39;)</code></pre>
+    df_feature_unique_values = pd.DataFrame.from_dict({&#39;feature&#39;: features, &#39;number_of_uniques&#39;: df[features].nunique().values})
+    return df_feature_unique_values.reset_index()</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.preprocessing.descriptive_functions.derive_termination_rate_year"><code class="name flex">
 <span>def <span class="ident">derive_termination_rate_year</span></span>(<span>df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, column_to_sum_name)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Derive the termination rates per year</p></div>
+<div class="desc"><p>Derives the contracts termination rates per year
+Arguments &ndash;&gt; the dataframe, the business starting year, the extraction year
+the contracts start date and policy ids and the cancellation columns names
+Returns &ndash;&gt; a dictionnary with the termination rates per year and the overall one</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def derive_termination_rate_year(df, start_business_year, extraction_year, main_column_contract_date, policy_id_column_name, column_to_sum_name):
-    &#34;&#34;&#34;Derive the termination rates per year&#34;&#34;&#34;
+    &#34;&#34;&#34;Derives the contracts termination rates per year \n \
+        Arguments --&gt; the dataframe, the business starting year, the extraction year \n \
+            the contracts start date and policy ids and the cancellation columns names \n \
+        Returns --&gt; a dictionnary with the termination rates per year and the overall one
+    &#34;&#34;&#34;
 
     df_previous_year = df[df[main_column_contract_date].dt.year == start_business_year].drop_duplicates(subset=policy_id_column_name, keep=&#39;first&#39;)
     policies_previous_year = df_previous_year[policy_id_column_name]

@@ -43,23 +43,28 @@ from copy import deepcopy
 
 
 def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+
     param = &#39;param_&#39; + param
     sns.lineplot(cv_results[param].data, cv_results[name_score])
     fig = plt.gcf()
     fig.set_size_inches(figsize[1], figsize[2])
-    prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
 
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + param + &#39;.png&#39;)
     
     
 
 def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig=&#39;&#39;, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the predicted vs the observed values
-        Arguments --&gt; the test target variable values, the predictions made,
-                    a boolean indicating if predictions are from a glm models, and the glm fitted model to make tests on pearson / deviance residuals
+        Plots the predicted vs the observed values \n \
+        Arguments --&gt; the test target variable values, the predictions, \n \
+            a boolean indicating if predictions are from a ols model, \n \ 
+            and the glm fitted model to make tests on pearson / deviance residuals \n \
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart
     &#34;&#34;&#34;    
+
+    end_name_fig = end_name_fig + &#39;_&#39; if end_name_fig is not None else &#39;&#39;
 
     fig, ax = plt.subplots(figsize=figsize)
     ax.scatter(y_data, y_predict)
@@ -107,18 +112,24 @@ def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, f
             plt.savefig(folder + &#39;/gofplot_&#39; + end_name_fig + &#39;.png&#39;)        
         
 
-def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=&#39;linear_features_importance&#39;, folder=&#39;Charts&#39;):
+def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots a feature importance \n \
+        Arguments --&gt; the model name, the coefs obtained, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+    &#34;&#34;&#34;
 
     imp_coefs = coefs.sort_values()
     imp_coefs.plot(kind = &#34;barh&#34;)
     plt.title(&#34;Feature importance using {} Model&#34;.format(model_name))
     
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)    
     
 
-def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=&#39;model_results&#39;, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34;Plots the model results&#34;&#34;&#34;
+def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;Compare the models plotting their results in a boxplot \n \
+        Arguments --&gt; the model results, their names, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+    &#34;&#34;&#34;
 
     fig = plt.figure(figsize=figsize)
     fig.suptitle(&#39;Algorithm Comparison&#39;)
@@ -127,11 +138,14 @@ def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_nam
     ax.set_xticklabels(names)
     
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)     
     
 
-def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=&#39;rfecv_features_importance&#39;, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the features selected by a RFE method and their importance &#34;&#34;&#34;
+def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the importance features selected by a RFE method \n \
+        Arguments --&gt; the features, the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+    &#34;&#34;&#34;
 
     new_df = pd.DataFrame()
     new_X = deepcopy(X)
@@ -151,12 +165,15 @@ def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name
     plt.xlabel(&#39;Importance&#39;, fontsize=14, labelpad=20)
 
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  
 
     
 
-def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep&#34;&#34;&#34;
+def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep
+        Arguments --&gt; the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart 
+    &#34;&#34;&#34;
 
     plt.figure(figsize=figsize)
     plt.title(&#39;Recursive Feature Elimination with Cross-Validation&#39;, fontsize=18, fontweight=&#39;bold&#39;, pad=20)
@@ -165,19 +182,21 @@ def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig=&#39;
     plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_, color=&#39;#303F9F&#39;, linewidth=3)
 
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  
     
     
 
-def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;, **kwargs):
+def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;, **kwargs):
     &#34;&#34;&#34;
-        Plots a scatter plot
-        Arguments --&gt; the data df, the corr matrice (used to get the features pairs), the model,
-                    the figure size, args, and kwargs which shoud mainly correspond to the model params
+        Plots a scatter plot for all pair of features
+        Arguments --&gt; the dataframe, the corr matrice (used to get the features pairs), the model,
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+            and kwargs which shoud mainly correspond to the model params
     &#34;&#34;&#34;
 
     corr_matrice = deepcopy(features_corr_matrice)
-    features_number = len(corr_matrice.columns)
+    features_number = len(corr_matrice.columns) 
 
     fig, ax = plt.subplots(features_number, features_number, figsize=figsize)
 
@@ -221,6 +240,7 @@ def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=
             ax[index1, index2].plot([mi, ma], [mi, ma], &#34;--&#34;)
 
             if save == True:
+                prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
                 plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
                 
     return ax</code></pre>
@@ -243,55 +263,63 @@ def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def display_error_by_param(cv_results, name_score, param, figsize=(15, 10), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+
     param = &#39;param_&#39; + param
     sns.lineplot(cv_results[param].data, cv_results[name_score])
     fig = plt.gcf()
     fig.set_size_inches(figsize[1], figsize[2])
-    prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
 
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + param + &#39;.png&#39;)</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.risk_prediction.charts_functions.display_linear_model_features"><code class="name flex">
-<span>def <span class="ident">display_linear_model_features</span></span>(<span>model_name, coefs, save=False, prefix_name_fig='linear_features_importance', folder='Charts')</span>
+<span>def <span class="ident">display_linear_model_features</span></span>(<span>model_name, coefs, save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Plots a feature importance
+Arguments &ndash;&gt; the model name, the coefs obtained, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=&#39;linear_features_importance&#39;, folder=&#39;Charts&#39;):
+<pre><code class="python">def display_linear_model_features(model_name, coefs, save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots a feature importance \n \
+        Arguments --&gt; the model name, the coefs obtained, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+    &#34;&#34;&#34;
 
     imp_coefs = coefs.sort_values()
     imp_coefs.plot(kind = &#34;barh&#34;)
     plt.title(&#34;Feature importance using {} Model&#34;.format(model_name))
     
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)    </code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.risk_prediction.charts_functions.pairplot_cross_val"><code class="name flex">
-<span>def <span class="ident">pairplot_cross_val</span></span>(<span>df=None, features_corr_matrice=None, model=None, figsize=(10, 10), save=False, prefix_name_fig='rfecv_scoring_curve', folder='Charts', **kwargs)</span>
+<span>def <span class="ident">pairplot_cross_val</span></span>(<span>df=None, features_corr_matrice=None, model=None, figsize=(10, 10), save=False, prefix_name_fig=None, folder='Charts', **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots a scatter plot
-Arguments &ndash;&gt; the data df, the corr matrice (used to get the features pairs), the model,
-the figure size, args, and kwargs which shoud mainly correspond to the model params</p></div>
+<div class="desc"><p>Plots a scatter plot for all pair of features
+Arguments &ndash;&gt; the dataframe, the corr matrice (used to get the features pairs), the model,
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+and kwargs which shoud mainly correspond to the model params</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;, **kwargs):
+<pre><code class="python">def pairplot_cross_val(df=None, features_corr_matrice=None, model=None, figsize=(10,10), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;, **kwargs):
     &#34;&#34;&#34;
-        Plots a scatter plot
-        Arguments --&gt; the data df, the corr matrice (used to get the features pairs), the model,
-                    the figure size, args, and kwargs which shoud mainly correspond to the model params
+        Plots a scatter plot for all pair of features
+        Arguments --&gt; the dataframe, the corr matrice (used to get the features pairs), the model,
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart \n \
+            and kwargs which shoud mainly correspond to the model params
     &#34;&#34;&#34;
 
     corr_matrice = deepcopy(features_corr_matrice)
-    features_number = len(corr_matrice.columns)
+    features_number = len(corr_matrice.columns) 
 
     fig, ax = plt.subplots(features_number, features_number, figsize=figsize)
 
@@ -335,22 +363,26 @@ the figure size, args, and kwargs which shoud mainly correspond to the model par
             ax[index1, index2].plot([mi, ma], [mi, ma], &#34;--&#34;)
 
             if save == True:
+                prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
                 plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)
                 
     return ax</code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.risk_prediction.charts_functions.plot_features_importance"><code class="name flex">
-<span>def <span class="ident">plot_features_importance</span></span>(<span>X, rfecv, figsize=(16, 14), save=False, prefix_name_fig='rfecv_features_importance', folder='Charts')</span>
+<span>def <span class="ident">plot_features_importance</span></span>(<span>X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the features selected by a RFE method and their importance</p></div>
+<div class="desc"><p>Plots the importance features selected by a RFE method
+Arguments &ndash;&gt; the features, the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=&#39;rfecv_features_importance&#39;, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the features selected by a RFE method and their importance &#34;&#34;&#34;
+<pre><code class="python">def plot_features_importance(X, rfecv, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the importance features selected by a RFE method \n \
+        Arguments --&gt; the features, the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+    &#34;&#34;&#34;
 
     new_df = pd.DataFrame()
     new_X = deepcopy(X)
@@ -370,20 +402,24 @@ the figure size, args, and kwargs which shoud mainly correspond to the model par
     plt.xlabel(&#39;Importance&#39;, fontsize=14, labelpad=20)
 
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  </code></pre>
 </details>
 </dd>
 <dt id="automate_insurance_pricing.risk_prediction.charts_functions.plot_models_results"><code class="name flex">
-<span>def <span class="ident">plot_models_results</span></span>(<span>results, names, figsize=(16, 14), save=False, prefix_name_fig='model_results', folder='Charts')</span>
+<span>def <span class="ident">plot_models_results</span></span>(<span>results, names, figsize=(16, 14), save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the model results</p></div>
+<div class="desc"><p>Compare the models plotting their results in a boxplot
+Arguments &ndash;&gt; the model results, their names, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=&#39;model_results&#39;, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34;Plots the model results&#34;&#34;&#34;
+<pre><code class="python">def plot_models_results(results, names, figsize=(16, 14), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34;Compare the models plotting their results in a boxplot \n \
+        Arguments --&gt; the model results, their names, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart
+    &#34;&#34;&#34;
 
     fig = plt.figure(figsize=figsize)
     fig.suptitle(&#39;Algorithm Comparison&#39;)
@@ -392,6 +428,7 @@ the figure size, args, and kwargs which shoud mainly correspond to the model par
     ax.set_xticklabels(names)
     
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)     </code></pre>
 </details>
 </dd>
@@ -400,18 +437,25 @@ the figure size, args, and kwargs which shoud mainly correspond to the model par
 </code></dt>
 <dd>
 <div class="desc"><p>Plots the predicted vs the observed values
-Arguments &ndash;&gt; the test target variable values, the predictions made,
-a boolean indicating if predictions are from a glm models, and the glm fitted model to make tests on pearson / deviance residuals</p></div>
+Arguments &ndash;&gt; the test target variable values, the predictions,
+a boolean indicating if predictions are from a ols model,
+\
+and the glm fitted model to make tests on pearson / deviance residuals
+the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_observed_predicted(y_data, y_predict, ols_line=False, model_fit=None, figsize=(15, 10), save=False, end_name_fig=&#39;&#39;, folder=&#39;Charts&#39;):
     &#34;&#34;&#34;
-        Plots the predicted vs the observed values
-        Arguments --&gt; the test target variable values, the predictions made,
-                    a boolean indicating if predictions are from a glm models, and the glm fitted model to make tests on pearson / deviance residuals
+        Plots the predicted vs the observed values \n \
+        Arguments --&gt; the test target variable values, the predictions, \n \
+            a boolean indicating if predictions are from a ols model, \n \ 
+            and the glm fitted model to make tests on pearson / deviance residuals \n \
+            the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file, the chart title and the folder where to save the chart
     &#34;&#34;&#34;    
+
+    end_name_fig = end_name_fig + &#39;_&#39; if end_name_fig is not None else &#39;&#39;
 
     fig, ax = plt.subplots(figsize=figsize)
     ax.scatter(y_data, y_predict)
@@ -460,16 +504,19 @@ a boolean indicating if predictions are from a glm models, and the glm fitted mo
 </details>
 </dd>
 <dt id="automate_insurance_pricing.risk_prediction.charts_functions.plot_scoring_curve"><code class="name flex">
-<span>def <span class="ident">plot_scoring_curve</span></span>(<span>rfecv, figsize=(16, 9), save=False, prefix_name_fig='rfecv_scoring_curve', folder='Charts')</span>
+<span>def <span class="ident">plot_scoring_curve</span></span>(<span>rfecv, figsize=(16, 9), save=False, prefix_name_fig=None, folder='Charts')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep</p></div>
+<div class="desc"><p>Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep
+Arguments &ndash;&gt; the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig=&#39;rfecv_scoring_curve&#39;, folder=&#39;Charts&#39;):
-    &#34;&#34;&#34; Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep&#34;&#34;&#34;
+<pre><code class="python">def plot_scoring_curve(rfecv, figsize=(16, 9), save=False, prefix_name_fig=None, folder=&#39;Charts&#39;):
+    &#34;&#34;&#34; Plots the scoring curve obtained from a RFE method and shows what is the optimal number of features to keep
+        Arguments --&gt; the rfe model, the figure size, a boolean to indicate if the plot has to be saved or not, the prefix name for the saved file and the folder where to save the chart 
+    &#34;&#34;&#34;
 
     plt.figure(figsize=figsize)
     plt.title(&#39;Recursive Feature Elimination with Cross-Validation&#39;, fontsize=18, fontweight=&#39;bold&#39;, pad=20)
@@ -478,6 +525,7 @@ a boolean indicating if predictions are from a glm models, and the glm fitted mo
     plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_, color=&#39;#303F9F&#39;, linewidth=3)
 
     if save == True:
+        prefix_name_fig = prefix_name_fig + &#39;_&#39; if prefix_name_fig is not None else &#39;&#39;
         plt.savefig(folder + &#39;/&#39; + prefix_name_fig + &#39;.png&#39;)  </code></pre>
 </details>
 </dd>
